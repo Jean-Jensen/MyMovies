@@ -62,13 +62,17 @@ public class AppController implements Initializable {
     public void addMovie(ActionEvent actionEvent) {
         FileChooser chooser = new FileChooser();
         chooser.setTitle("Select Movie");
-        chooser.getExtensionFilters().addAll(filter1, filter2);
-        File selected = chooser.showOpenDialog(tblMovie.getScene().getWindow());
+        chooser.getExtensionFilters().addAll(filter1, filter2); //applying filters so we can only select MP4s and MPEG4s
+        File selected = chooser.showOpenDialog(tblMovie.getScene().getWindow()); //opening the filechooser in from our window
 
         if(selected != null){
             System.out.println(selected.getName());
             System.out.println(selected.getPath());
-            //dont set rating or last time viewed
+            selected.getName().substring(0,selected.getName().indexOf('.'));
+
+            //we don't set rating or last time viewed since you can't get that from just the file alone.
+            BLL.createMovie(selected.getName(), null, selected.getPath(), null);
+
         }
     }
 

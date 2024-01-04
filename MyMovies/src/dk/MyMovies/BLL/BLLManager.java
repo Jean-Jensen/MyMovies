@@ -19,8 +19,12 @@ public class BLLManager {
         }
     }
 
-    public void createMovie(){
-
+    public void createMovie(String name, Double Rating, String filePath, String LastView){
+        if(filePath == null || LastView == null){
+            DAO.createMovie(name,filePath);
+        } else{
+            DAO.createMovie(name,Rating,filePath,LastView);
+        }
     }
 
 }
