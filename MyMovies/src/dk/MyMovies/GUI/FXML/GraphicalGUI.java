@@ -1,5 +1,6 @@
 package dk.MyMovies.GUI.FXML;
 
+import dk.MyMovies.DAL.ConnectionManager;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
