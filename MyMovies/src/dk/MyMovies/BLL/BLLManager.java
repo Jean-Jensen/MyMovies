@@ -2,14 +2,15 @@ package dk.MyMovies.BLL;
 
 import com.microsoft.sqlserver.jdbc.SQLServerException;
 import dk.MyMovies.BE.Movies;
+import dk.MyMovies.DAL.CategoriesDAO;
 import dk.MyMovies.DAL.MoviesDAO;
+
 
 import java.util.List;
 
 public class BLLManager {
 
     MoviesDAO DAO = new MoviesDAO();
-
     public List<Movies> getAllMovies(){
         try {
             return DAO.getAllMovies();
@@ -22,5 +23,4 @@ public class BLLManager {
     public void createMovie(){
 
     }
-
 }
