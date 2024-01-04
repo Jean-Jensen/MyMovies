@@ -12,7 +12,7 @@ public class CatMovDAO implements ICatMovDAO{
 
     ConnectionManager cm = new ConnectionManager();
 
-    public void addMovieToCategory(int categoryID, int movieID) throws MyMoviesExceptions{
+    public void addMovieToCategory(int catID, int movID) throws MyMoviesExceptions{
         try (Connection con = cm.getConnection()) {
 
 
