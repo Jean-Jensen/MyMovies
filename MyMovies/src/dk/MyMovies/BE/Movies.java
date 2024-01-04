@@ -1,8 +1,6 @@
 package dk.MyMovies.BE;
 
 
-import java.util.Date;
-
 public class Movies {
 
     private int id;
