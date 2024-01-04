@@ -1,16 +1,17 @@
 package dk.MyMovies.BLL;
 
 import com.microsoft.sqlserver.jdbc.SQLServerException;
-import dk.MyMovies.BE.Movies;
+import dk.MyMovies.BE.Movie;
 import dk.MyMovies.DAL.MoviesDAO;
 
+import java.io.File;
 import java.util.List;
 
 public class BLLManager {
 
     MoviesDAO DAO = new MoviesDAO();
 
-    public List<Movies> getAllMovies(){
+    public List<Movie> getAllMovies(){
         try {
             return DAO.getAllMovies();
         } catch (SQLServerException e) {
@@ -25,6 +26,14 @@ public class BLLManager {
         } else{
             DAO.createMovie(name,Rating,filePath,LastView);
         }
+    }
+
+    public void deleteMovie(int ID){
+        DAO.deleteMovie(ID);
+    }
+
+    public void editMovie(int ID, String Name, Double Rating, String FilePath, String LastView){
+        DAO.editMovie(ID,Name,Rating,FilePath,LastView);
     }
 
 }
