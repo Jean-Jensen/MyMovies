@@ -20,7 +20,10 @@ public class MoviesDAO implements IMoviesDAO {
                 String name = rs.getString("Name");
                 double rating = rs.getDouble("Rating");
                 String filePath = rs.getString("FilePath");
-                String date = rs.getDate("LastView").toString();
+                String date = "";
+                if(rs.getDate("LastView") != null){
+                    date = rs.getDate("LastView").toString();
+                }
                 Movies mov = new Movies(id,name,rating,filePath,date);
                 movies.add(mov);
             }
@@ -31,14 +34,30 @@ public class MoviesDAO implements IMoviesDAO {
         return movies;
     }
 
-    public void createMovie(Movies m){
+    public void createMovie(String name, Double rating, String filePath, String LastView){
         try(Connection con = cm.getConnection()){
             String sql = "INSERT INTO Movie(Name, Rating, FilePath, LastView) VALUES(?,?,?,?)";
             PreparedStatement pstmt = con.prepareStatement(sql);
-            pstmt.setString(1,m.getName());
-            pstmt.setDouble(2,m.getRating());
-            pstmt.setString(3,m.getFilePath());
-            pstmt.setDate(4, Date.valueOf(m.getLastView()));
+            pstmt.setString(1,name);
+            pstmt.setDouble(2,rating);
+            pstmt.setString(3,filePath);
+            pstmt.setDate(4, Date.valueOf(LastView));
+
+            pstmt.executeUpdate();
+        } catch (SQLServerException e) {
+            throw new RuntimeException(e);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    public void createMovie(String name, String filePath){
+        try(Connection con = cm.getConnection()){
+            String sql = "INSERT INTO Movie(Name, FilePath) VALUES(?,?)";
+            PreparedStatement pstmt = con.prepareStatement(sql);
+            pstmt.setString(1,name);
+            pstmt.setString(2,filePath);
 
             pstmt.executeUpdate();
         } catch (SQLServerException e) {
