@@ -37,6 +37,6 @@ public class EditMovieController {
     }
 
     public void EditMovie(ActionEvent actionEvent) {
-
+     BLL.editMovie(ID, txtName.getText(),Double.valueOf(txtRating.getText()),txtFile.getText(), PckLast.getValue().toString());
     }
 }
