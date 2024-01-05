@@ -6,9 +6,10 @@ import dk.MyMovies.BE.Movie;
 import dk.MyMovies.DAL.MovieDAO;
 import java.util.List;
 
-
 public class BLLMovie {
+
     MovieDAO DAO = new MovieDAO();
+
     public List<Movie> getAllMovies(){
         try {
             return DAO.getAllMovies();
@@ -25,6 +26,15 @@ public class BLLMovie {
             DAO.createMovie(name,Rating,filePath,LastView);
         }
     }
+
+    public void deleteMovie(int ID){
+        DAO.deleteMovie(ID);
+    }
+
+    public void editMovie(int ID, String Name, Double Rating, String FilePath, String LastView){
+        DAO.editMovie(ID,Name,Rating,FilePath,LastView);
+    }
+
 }
 =======
 package dk.MyMovies.BLL;
