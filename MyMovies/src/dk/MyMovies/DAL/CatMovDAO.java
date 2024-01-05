@@ -1,11 +1,8 @@
 package dk.MyMovies.DAL;
 
-import com.microsoft.sqlserver.jdbc.SQLServerException;
 import dk.MyMovies.Exceptions.MyMoviesExceptions;
-import dk.MyMovies.DAL.CategoriesDAO;
 
 import java.sql.Connection;
-import java.sql.SQLDataException;
 import java.sql.SQLException;
 
 public class CatMovDAO implements ICatMovDAO{

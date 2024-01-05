@@ -1,6 +1,6 @@
 package dk.MyMovies.BE;
 
-public class CatMovConnection extends Movies {
+public class CatMovConnection extends Movie {
     private int catMovID;
     public CatMovConnection(int id, String name, double rating, String filePath, String lastView, int catMovID) {
         super(id, name, rating, filePath, lastView);
