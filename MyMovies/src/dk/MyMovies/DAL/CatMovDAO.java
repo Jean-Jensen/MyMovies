@@ -1,18 +1,15 @@
 package dk.MyMovies.DAL;
 
-import com.microsoft.sqlserver.jdbc.SQLServerException;
 import dk.MyMovies.Exceptions.MyMoviesExceptions;
-import dk.MyMovies.DAL.CategoriesDAO;
 
 import java.sql.Connection;
-import java.sql.SQLDataException;
 import java.sql.SQLException;
 
 public class CatMovDAO implements ICatMovDAO{
 
     ConnectionManager cm = new ConnectionManager();
 
-    public void addMovieToCategory(int categoryID, int movieID) throws MyMoviesExceptions{
+    public void addMovieToCategory(int catID, int movID) throws MyMoviesExceptions{
         try (Connection con = cm.getConnection()) {
 
 

@@ -17,7 +17,7 @@ public class DeleteMovieController implements Initializable {
     BLLMovie BLL = new BLLMovie();
 
     public void deleteMovie(ActionEvent actionEvent) {
-        BLL.deleteMovie(ID);
+       // BLL.deleteMovie(ID);
     }
 
     @Override
