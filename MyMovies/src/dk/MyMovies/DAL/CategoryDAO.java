@@ -31,7 +31,7 @@ public class CategoryDAO implements ICategoryDAO {
         try(Connection con = cm.getConnection()){
             String sql = "INSERT INTO Category(Name) VALUES(?)";
             PreparedStatement pstmt = con.prepareStatement(sql);
-            pstmt.setString(1,c.getName());
+            pstmt.setString(1,c.getCatName());
             pstmt.executeUpdate();
         } catch (SQLServerException e) {
             throw new RuntimeException(e);
