@@ -17,7 +17,11 @@ public class DeleteMovieController implements Initializable {
     BLLMovie BLL = new BLLMovie();
 
     public void deleteMovie(ActionEvent actionEvent) {
+<<<<<<< Updated upstream
        // BLL.deleteMovie(ID);
+=======
+        //BLL.deleteMovie(ID);
+>>>>>>> Stashed changes
     }
 
     @Override
