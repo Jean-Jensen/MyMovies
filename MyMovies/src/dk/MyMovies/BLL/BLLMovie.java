@@ -3,8 +3,6 @@ package dk.MyMovies.BLL;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
 import dk.MyMovies.BE.Movie;
 import dk.MyMovies.DAL.MoviesDAO;
-
-import java.io.File;
 import java.util.List;
 
 public class BLLMovie {
