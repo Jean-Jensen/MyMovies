@@ -1,31 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.text.Font?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dk.MyMovies.GUI.AppController">
-   <children>
-      <TableView fx:id="tblMovie" layoutX="34.0" layoutY="64.0" prefHeight="312.0" prefWidth="532.0">
-        <columns>
-          <TableColumn fx:id="colId" prefWidth="31.20001220703125" text="ID" />
-          <TableColumn fx:id="colName" prefWidth="161.60003662109375" text="Name" />
-            <TableColumn fx:id="colRating" prefWidth="47.199951171875" text="Rating" />
-            <TableColumn fx:id="colFile" prefWidth="216.0" text="Filepath" />
-            <TableColumn fx:id="colLast" prefWidth="75.20001220703125" text="LastView" />
-        </columns>
-      </TableView>
-      <Label layoutX="34.0" layoutY="20.0" text="Test UI">
-         <font>
-            <Font name="Comic Sans MS" size="24.0" />
-         </font>
-      </Label>
-      <Button fx:id="btnAdd" layoutX="423.0" layoutY="25.0" mnemonicParsing="false" onAction="#addMovie" text="Add" />
-      <Button fx:id="btnDelete" layoutX="470.0" layoutY="25.0" mnemonicParsing="false" onAction="#deleteMovie" text="Delete" />
-      <Button fx:id="btnEdit" layoutX="529.0" layoutY="25.0" mnemonicParsing="false" onAction="#editMovie" text="Edit" />
-   </children>
-</AnchorPane>
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="513.0" prefWidth="802.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dk.MyMovies.GUI.AppController">
+    <left>
+        <VBox BorderPane.alignment="CENTER">
+            <children>
+                <Label text="Title" />
+                <TextField prefHeight="8.0" prefWidth="85.0" />
+                <Label text="Categories" />
+                <TextField />
+                <HBox>
+                    <VBox.margin>
+                        <Insets />
+                    </VBox.margin>
+                    <children>
+                        <Label text="Rating" />
+                        <Label text="(number)">
+                            <HBox.margin>
+                                <Insets left="180.0" />
+                            </HBox.margin>
+                        </Label>
+                    </children>
+                </HBox>
+                <Slider prefHeight="14.0" prefWidth="143.0" />
+                <TableView fx:id="tblMovie" prefHeight="312.0" prefWidth="212.0">
+                    <columns>
+                        <TableColumn fx:id="colName" prefWidth="50.0" text="Title" />
+                        <TableColumn fx:id="colCat" prefWidth="67.0" text="Category" />
+                        <TableColumn fx:id="colImdb" prefWidth="43.0" text="IMDB" />
+                        <TableColumn fx:id="colRating" prefWidth="52.0" text="Rating" />
+                        <TableColumn fx:id="colLast" prefWidth="52.0" text="Last view" />
+                    </columns>
+                </TableView>
+                <Button fx:id="btnAdd" mnemonicParsing="false" text="Add" />
+            </children>
+        </VBox>
+    </left>
+</BorderPane>
