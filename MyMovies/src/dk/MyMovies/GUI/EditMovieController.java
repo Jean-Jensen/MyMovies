@@ -37,10 +37,6 @@ public class EditMovieController {
     }
 
     public void EditMovie(ActionEvent actionEvent) {
-<<<<<<< Updated upstream
-      //  BLL.editMovie(ID, txtName.getText(),Double.valueOf(txtRating.getText()),txtFile.getText(), PckLast.getValue().toString());
-=======
-       // BLL.editMovie(ID, txtName.getText(),Double.valueOf(txtRating.getText()),txtFile.getText(), PckLast.getValue().toString());
->>>>>>> Stashed changes
+     BLL.editMovie(ID, txtName.getText(),Double.valueOf(txtRating.getText()),txtFile.getText(), PckLast.getValue().toString());
     }
 }
