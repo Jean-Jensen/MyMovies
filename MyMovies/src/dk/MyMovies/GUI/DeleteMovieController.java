@@ -1,6 +1,6 @@
 package dk.MyMovies.GUI;
 
-import dk.MyMovies.BLL.BLLManager;
+import dk.MyMovies.BLL.BLLMovie;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -14,10 +14,10 @@ public class DeleteMovieController implements Initializable {
     @FXML
     private Label lblMovName;
     private int ID;
-    BLLManager BLL = new BLLManager();
+    BLLMovie BLL = new BLLMovie();
 
     public void deleteMovie(ActionEvent actionEvent) {
-        BLL.deleteMovie(ID);
+       // BLL.deleteMovie(ID);
     }
 
     @Override

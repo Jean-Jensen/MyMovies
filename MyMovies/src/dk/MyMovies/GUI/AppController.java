@@ -2,7 +2,7 @@ package dk.MyMovies.GUI;
 
 import com.microsoft.sqlserver.jdbc.SQLServerException;
 import dk.MyMovies.BE.Movie;
-import dk.MyMovies.BLL.BLLManager;
+import dk.MyMovies.BLL.BLLMovie;
 import dk.MyMovies.DAL.ConnectionManager;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -17,7 +17,6 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.FileChooser;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.File;
@@ -28,7 +27,7 @@ import java.util.ResourceBundle;
 public class AppController implements Initializable {
 
     ConnectionManager con = new ConnectionManager();
-    BLLManager BLL = new BLLManager();
+    BLLMovie BLL = new BLLMovie();
 
     @FXML
     private TableView<Movie> tblMovie;
