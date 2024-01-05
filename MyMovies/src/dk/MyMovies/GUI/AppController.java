@@ -2,8 +2,10 @@ package dk.MyMovies.GUI;
 
 import com.microsoft.sqlserver.jdbc.SQLServerException;
 import dk.MyMovies.BE.Movie;
+import dk.MyMovies.BLL.BLLCatMov;
 import dk.MyMovies.BLL.BLLMovie;
 import dk.MyMovies.DAL.ConnectionManager;
+import dk.MyMovies.Exceptions.MyMoviesExceptions;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -21,12 +23,14 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class AppController implements Initializable {
 
     ConnectionManager con = new ConnectionManager();
     BLLMovie BLL = new BLLMovie();
+    BLLCatMov bllCatMov = new BLLCatMov();
 
     @FXML
     private TableView<Movie> tblMovie;
@@ -120,6 +124,31 @@ public class AppController implements Initializable {
         Stage stag = new Stage();
         stag.setScene(scene);
         stag.show();
+    }
+
+
+    public void addMovieToCategory(int catID, int movID) throws MyMoviesExceptions {
+        try {
+            bllCatMov.addMovieToCategory(catID, movID);
+        } catch (MyMoviesExceptions e) {
+            throw new MyMoviesExceptions("Error adding movie to category: AppController", e);
+        }
+    }
+
+    public void removeMovieFromCategory(int catMovID) throws MyMoviesExceptions {
+        try {
+            bllCatMov.removeMovieFromCategory(catMovID);
+        } catch (MyMoviesExceptions e) {
+            throw new MyMoviesExceptions("Error removing movie from category: AppController", e);
+        }
+    }
+
+    public List<Integer> getCategoriesForMovie(int movID) throws MyMoviesExceptions {
+        try {
+            return bllCatMov.getCategoriesForMovie(movID);
+        } catch (MyMoviesExceptions e) {
+            throw new MyMoviesExceptions("Error retrieving categories for movie: AppController", e);
+        }
     }
 
 }
