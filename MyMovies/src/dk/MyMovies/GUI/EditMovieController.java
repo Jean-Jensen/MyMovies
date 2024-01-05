@@ -5,6 +5,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 
 import java.sql.Date;
 
@@ -22,9 +23,9 @@ public class EditMovieController {
     private DatePicker PckLast;
 
     private int ID = -1;
+    private AppController control;
 
-
-    public void setData(int ID, String name, String rating, String Path, String date){
+    public void setData(int ID, String name, String rating, String Path, String date, AppController control){
         this.ID = ID;
         txtName.setText(name);
         txtFile.setText(Path);
@@ -34,9 +35,16 @@ public class EditMovieController {
         if(!date.isEmpty()){
             PckLast.setValue(Date.valueOf(date).toLocalDate());
         }
+        this.control = control;
     }
 
     public void EditMovie(ActionEvent actionEvent) {
-      //  BLL.editMovie(ID, txtName.getText(),Double.valueOf(txtRating.getText()),txtFile.getText(), PckLast.getValue().toString());
+        BLL.editMovie(ID, txtName.getText(),Double.valueOf(txtRating.getText()),txtFile.getText(), PckLast.getValue().toString());
+        control.displayMovies();
+        closeWindow();
+    }
+    private void closeWindow(){
+        Stage stage = (Stage) txtName.getScene().getWindow();
+        stage.close();
     }
 }

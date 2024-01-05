@@ -2,6 +2,7 @@ package dk.MyMovies.DAL;
 
 import com.microsoft.sqlserver.jdbc.SQLServerException;
 import dk.MyMovies.BE.Movie;
+import dk.MyMovies.Exceptions.MyMoviesExceptions;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -9,7 +10,7 @@ import java.util.List;
 
 public class MovieDAO implements IMovieDAO {
     ConnectionManager cm = new ConnectionManager();
-    public List<Movie> getAllMovies() throws SQLServerException {
+    public List<Movie> getAllMovies() throws MyMoviesExceptions {
         List<Movie> movies = new ArrayList<>();
         try(Connection con = cm.getConnection()){
             String sql = "SELECT * FROM Movie";
@@ -29,12 +30,12 @@ public class MovieDAO implements IMovieDAO {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            throw new RuntimeException(e);
+            throw new MyMoviesExceptions("Error retrieving all movies",e);
         }
         return movies;
     }
 
-    public void createMovie(String name, Double rating, String filePath, String LastView){
+    public void createMovie(String name, Double rating, String filePath, String LastView) throws MyMoviesExceptions {
         try(Connection con = cm.getConnection()){
             String sql = "INSERT INTO Movie(Name, Rating, FilePath, LastView) VALUES(?,?,?,?)";
             PreparedStatement pstmt = con.prepareStatement(sql);
@@ -44,10 +45,8 @@ public class MovieDAO implements IMovieDAO {
             pstmt.setDate(4, Date.valueOf(LastView));
 
             pstmt.executeUpdate();
-        } catch (SQLServerException e) {
-            throw new RuntimeException(e);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new MyMoviesExceptions("Error creating movie",e);
         }
     }
 

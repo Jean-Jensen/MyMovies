@@ -4,6 +4,7 @@ import com.microsoft.sqlserver.jdbc.SQLServerException;
 import dk.MyMovies.BE.Movie;
 import dk.MyMovies.BLL.BLLMovie;
 import dk.MyMovies.DAL.ConnectionManager;
+import dk.MyMovies.Exceptions.MyMoviesExceptions;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -27,7 +28,7 @@ import java.util.ResourceBundle;
 public class AppController implements Initializable {
 
     ConnectionManager con = new ConnectionManager();
-    BLLMovie BLL = new BLLMovie();
+    BLLMovie bllMovie = new BLLMovie();
 
     @FXML
     private TableView<Movie> tblMovie;
@@ -62,7 +63,7 @@ public class AppController implements Initializable {
         displayMovies();
     }
 
-    private void displayMovies(){
+    public void displayMovies(){
         colId.setCellValueFactory(new PropertyValueFactory<Movie, Integer>("id"));
         colName.setCellValueFactory(new PropertyValueFactory<Movie, String>("Name"));
         colRating.setCellValueFactory(new PropertyValueFactory<Movie, Double>("Rating"));
@@ -70,25 +71,23 @@ public class AppController implements Initializable {
         colLast.setCellValueFactory(new PropertyValueFactory<Movie, String>("LastView"));
 
         ObservableList<Movie> value = FXCollections.observableArrayList();
-        value.setAll(BLL.getAllMovies());
+        value.setAll(bllMovie.getAllMovies());
         tblMovie.setItems(value);
     }
 
     @FXML
-    private void addMovie(ActionEvent actionEvent) {
+    private void addMovie(ActionEvent actionEvent) throws MyMoviesExceptions {
         FileChooser chooser = new FileChooser();
         chooser.setTitle("Select Movie");
         chooser.getExtensionFilters().addAll(filter1, filter2); //applying filters so we can only select MP4s and MPEG4s
         File selected = chooser.showOpenDialog(tblMovie.getScene().getWindow()); //opening the filechooser in from our window
 
         if(selected != null){
-            System.out.println(selected.getName());
-            System.out.println(selected.getPath());
-            selected.getName().substring(0,selected.getName().indexOf('.'));
+            String name = selected.getName().substring(0,selected.getName().indexOf('.'));
 
             //we don't set rating or last time viewed since you can't get that from just the file alone.
-            BLL.createMovie(selected.getName(), null, selected.getPath(), null);
-
+            bllMovie.createMovie(name, null, selected.getPath(), null);
+            displayMovies();
         }
     }
 
@@ -99,7 +98,7 @@ public class AppController implements Initializable {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("FXML/DeleteMovieScene.fxml"));
             Parent root = loader.load();
             DeleteMovieController controller = loader.getController();
-            controller.setData(selected.getId(), selected.getName());
+            controller.setData(selected.getId(), selected.getName(), this);
             openNewWindow(root);
         }
     }
@@ -111,7 +110,7 @@ public class AppController implements Initializable {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("FXML/EditMovieScene.fxml"));
             Parent root = loader.load();
             EditMovieController controller = loader.getController();
-            controller.setData(selected.getId(),selected.getName(),String.valueOf(selected.getRating()),selected.getFilePath(), selected.getLastView());
+            controller.setData(selected.getId(),selected.getName(),String.valueOf(selected.getRating()),selected.getFilePath(), selected.getLastView(), this);
             openNewWindow(root);
         }
     }
