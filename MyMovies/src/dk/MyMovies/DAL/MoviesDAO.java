@@ -1,7 +1,7 @@
 package dk.MyMovies.DAL;
 
 import com.microsoft.sqlserver.jdbc.SQLServerException;
-import dk.MyMovies.BE.Movies;
+import dk.MyMovies.BE.Movie;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -9,8 +9,8 @@ import java.util.List;
 
 public class MoviesDAO implements IMoviesDAO {
     ConnectionManager cm = new ConnectionManager();
-    public List<Movies> getAllMovies() throws SQLServerException {
-        List<Movies> movies = new ArrayList<>();
+    public List<Movie> getAllMovies() throws SQLServerException {
+        List<Movie> movies = new ArrayList<>();
         try(Connection con = cm.getConnection()){
             String sql = "SELECT * FROM Movie";
             Statement stmt = con.createStatement();
@@ -24,7 +24,7 @@ public class MoviesDAO implements IMoviesDAO {
                 if(rs.getDate("LastView") != null){
                     date = rs.getDate("LastView").toString();
                 }
-                Movies mov = new Movies(id,name,rating,filePath,date);
+                Movie mov = new Movie(id,name,rating,filePath,date);
                 movies.add(mov);
             }
         } catch (SQLException e) {
@@ -49,7 +49,6 @@ public class MoviesDAO implements IMoviesDAO {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
     }
 
     public void createMovie(String name, String filePath){
@@ -65,7 +64,34 @@ public class MoviesDAO implements IMoviesDAO {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
 
+    public void deleteMovie(int ID){
+        try(Connection con = cm.getConnection()){
+            String sql = "DELETE FROM Movie WHERE MovID = ?";
+            PreparedStatement pstmt = con.prepareStatement(sql);
+            pstmt.setString(1, String.valueOf(ID));
+
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void editMovie(int ID, String Name, Double Rating, String FilePath, String LastView){
+        try(Connection con = cm.getConnection()){
+            String sql = "UPDATE Movie SET Name=?, Rating=?, FilePath=?, LastView=? WHERE MovID=?";
+            PreparedStatement pstmt = con.prepareStatement(sql);
+            pstmt.setString(1, Name);
+            pstmt.setString(2, String.valueOf(Rating));
+            pstmt.setString(3, FilePath);
+            pstmt.setString(4, LastView);
+            pstmt.setString(5, String.valueOf(ID));
+
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }
