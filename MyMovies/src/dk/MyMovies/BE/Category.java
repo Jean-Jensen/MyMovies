@@ -2,22 +2,22 @@ package dk.MyMovies.BE;
 
 
 public class Category {
-    private int id;
-    private String name;
+    private int catId;
+    private String catName;
     public Category(int id, String name){
-        this.id = id;
-        this.name = name;
+        this.catId = id;
+        this.catName = name;
     }
     public Category(String name){
-        this.name = name;
+        this.catName = name;
     }
     public int getId() {
-        return id;
+        return catId;
     }
     public String getName() {
-        return name;
+        return catName;
     }
     public void setName(String name) {
-        this.name = name;
+        this.catName = name;
     }
 }

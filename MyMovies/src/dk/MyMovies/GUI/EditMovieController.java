@@ -1,6 +1,6 @@
 package dk.MyMovies.GUI;
 
-import dk.MyMovies.BLL.BLLManager;
+import dk.MyMovies.BLL.BLLMovie;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.DatePicker;
@@ -10,7 +10,7 @@ import java.sql.Date;
 
 public class EditMovieController {
 
-    BLLManager BLL = new BLLManager();
+    BLLMovie BLL = new BLLMovie();
 
     @FXML
     private TextField txtName;
@@ -37,6 +37,10 @@ public class EditMovieController {
     }
 
     public void EditMovie(ActionEvent actionEvent) {
-        BLL.editMovie(ID, txtName.getText(),Double.valueOf(txtRating.getText()),txtFile.getText(), PckLast.getValue().toString());
+<<<<<<< Updated upstream
+      //  BLL.editMovie(ID, txtName.getText(),Double.valueOf(txtRating.getText()),txtFile.getText(), PckLast.getValue().toString());
+=======
+       // BLL.editMovie(ID, txtName.getText(),Double.valueOf(txtRating.getText()),txtFile.getText(), PckLast.getValue().toString());
+>>>>>>> Stashed changes
     }
 }
