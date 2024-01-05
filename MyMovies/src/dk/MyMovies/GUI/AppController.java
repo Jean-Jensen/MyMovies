@@ -18,7 +18,6 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -63,10 +62,10 @@ public class AppController implements Initializable {
     }
 
     private void displayMovies(){
-        colId.setCellValueFactory(new PropertyValueFactory<Movie, Integer>("id"));
+        //colId.setCellValueFactory(new PropertyValueFactory<Movie, Integer>("id"));
         colName.setCellValueFactory(new PropertyValueFactory<Movie, String>("Name"));
         colRating.setCellValueFactory(new PropertyValueFactory<Movie, Double>("Rating"));
-        colFile.setCellValueFactory(new PropertyValueFactory<Movie, String>("FilePath"));
+        //colFile.setCellValueFactory(new PropertyValueFactory<Movie, String>("FilePath"));
         colLast.setCellValueFactory(new PropertyValueFactory<Movie, String>("LastView"));
 
         ObservableList<Movie> value = FXCollections.observableArrayList();

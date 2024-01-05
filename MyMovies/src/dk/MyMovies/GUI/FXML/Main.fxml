@@ -43,7 +43,7 @@
                         <TableColumn fx:id="colLast" prefWidth="52.0" text="Last view" />
                     </columns>
                 </TableView>
-                <Button fx:id="btnAdd" mnemonicParsing="false" text="Add" />
+                <Button fx:id="btnAdd" onAction="#addMovie" mnemonicParsing="false" text="Add" />
             </children>
         </VBox>
     </left>
