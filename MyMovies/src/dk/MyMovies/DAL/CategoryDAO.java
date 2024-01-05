@@ -1,4 +1,3 @@
-
 package dk.MyMovies.DAL;
 
 import com.microsoft.sqlserver.jdbc.SQLServerException;
@@ -32,7 +31,7 @@ public class CategoryDAO implements ICategoryDAO {
         try(Connection con = cm.getConnection()){
             String sql = "INSERT INTO Category(Name) VALUES(?)";
             PreparedStatement pstmt = con.prepareStatement(sql);
-            pstmt.setString(1,c.getName());
+            pstmt.setString(1,c.getCatName());
             pstmt.executeUpdate();
         } catch (SQLServerException e) {
             throw new RuntimeException(e);
@@ -41,4 +40,29 @@ public class CategoryDAO implements ICategoryDAO {
         }
 
     }
+
+    public void deleteCategory(int ID){
+        try(Connection con = cm.getConnection()){
+            String sql = "DELETE FROM Category WHERE CatID = ?";
+            PreparedStatement pstmt = con.prepareStatement(sql);
+            pstmt.setString(1, String.valueOf(ID));
+
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void editCategory(int CatID, String Name){
+        try(Connection con = cm.getConnection()){
+            String sql = "UPDATE Category SET CatID=?, Name=? WHERE CatID=?";
+            PreparedStatement pstmt = con.prepareStatement(sql);
+            pstmt.setInt(1, CatID);
+            pstmt.setString(1, Name);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
+
