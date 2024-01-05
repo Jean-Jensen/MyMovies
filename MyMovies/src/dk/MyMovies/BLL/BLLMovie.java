@@ -2,12 +2,12 @@ package dk.MyMovies.BLL;
 
 import com.microsoft.sqlserver.jdbc.SQLServerException;
 import dk.MyMovies.BE.Movie;
-import dk.MyMovies.DAL.MoviesDAO;
+import dk.MyMovies.DAL.MovieDAO;
 import java.util.List;
 
 public class BLLMovie {
 
-    MoviesDAO DAO = new MoviesDAO();
+    MovieDAO DAO = new MovieDAO();
 
     public List<Movie> getAllMovies(){
         try {
