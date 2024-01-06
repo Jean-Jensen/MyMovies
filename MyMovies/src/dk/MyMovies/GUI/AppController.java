@@ -36,10 +36,9 @@ public class AppController implements Initializable {
 
     @FXML
     private TableView<Movie> tblMovie;
+
     @FXML
     private Button btnAdd;
-    @FXML
-    private Label errorLabel;
     @FXML
     private Button btnDelete;
     @FXML
@@ -102,8 +101,8 @@ public class AppController implements Initializable {
     //Error Message Display
     private void showErrorDialog(MyMoviesExceptions e) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Error Dialog");
-        alert.setHeaderText(null);
+        alert.setTitle("This can't be good");
+        alert.setHeaderText("Oh No! We ran into a problem!");
         alert.setContentText(e.getMessage());
         alert.showAndWait();
     }

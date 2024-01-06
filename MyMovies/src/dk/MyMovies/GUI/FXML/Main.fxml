@@ -42,7 +42,6 @@
                         <TableColumn fx:id="colLast" prefWidth="52.0" text="Last view" />
                     </columns>
                 </TableView>
-            <Label fx:id="errorLabel" text="Label" />
                 <Button fx:id="btnAdd" mnemonicParsing="false" onAction="#addMovie" text="Add" />
             </children>
         </VBox>
