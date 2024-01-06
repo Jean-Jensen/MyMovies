@@ -14,8 +14,8 @@ public class BLLCatMov {
     public void addMovieToCategory(int catID, int movID) throws MyMoviesExceptions {
         try {
             catMovDAO.addMovieToCategory(catID, movID);
-        } catch (SQLException e) {
-            throw new MyMoviesExceptions("Error adding movie to category: BLL Error", e);
+        } catch (MyMoviesExceptions e) {
+            throw new MyMoviesExceptions("Error adding movie to category: BLL Error - "+ e.getMessage(), e);
         }
     }
 
@@ -23,7 +23,7 @@ public class BLLCatMov {
         try {
             catMovDAO.removeMovieFromCategory(catMovID);
         } catch (SQLException e) {
-            throw new MyMoviesExceptions("Error removing movie from category: BLL Error", e);
+            throw new MyMoviesExceptions("Error removing movie from category: BLL Error - "+ e.getMessage(), e);
         }
     }
 
@@ -31,12 +31,28 @@ public class BLLCatMov {
         ResultSet rs = catMovDAO.getCategoriesForMovie(movID);
         List<Integer> categories = new ArrayList<>();
         try {
+            //rs.next moves the cursor to next row to get int from each row on the selected column
             while (rs.next()) {
                 categories.add(rs.getInt("CatID"));
             }
         } catch (SQLException e) {
-            throw new MyMoviesExceptions("Error retrieving categories for movies: BLL Error");
+            throw new MyMoviesExceptions("Error retrieving categories for movies: BLL Error - "+ e.getMessage(), e);
         }
         return categories;
     }
+
+    public List<Integer> getMoviesForCategories(List<Integer> catIDs) throws MyMoviesExceptions {
+        List<Integer> movies = new ArrayList<>();
+        try {
+            ResultSet rs = catMovDAO.getMoviesForCategories(catIDs);
+            //rs.next moves the cursor to next row to get int from each row on the selected column
+            while (rs.next()) {
+                movies.add(rs.getInt("MovID"));
+            }
+        } catch (SQLException e) {
+            throw new MyMoviesExceptions("Error retrieving Movies for Categories: BLL Error - "+ e.getMessage(), e);
+        }
+        return movies;
+    }
+
 }
