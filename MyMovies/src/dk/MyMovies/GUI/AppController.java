@@ -2,6 +2,7 @@ package dk.MyMovies.GUI;
 
 import com.microsoft.sqlserver.jdbc.SQLServerException;
 import dk.MyMovies.BE.Movie;
+import dk.MyMovies.BLL.BLLCatMov;
 import dk.MyMovies.BLL.BLLMovie;
 import dk.MyMovies.DAL.ConnectionManager;
 import dk.MyMovies.Exceptions.MyMoviesExceptions;
@@ -13,25 +14,29 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class AppController implements Initializable {
 
     ConnectionManager con = new ConnectionManager();
-    BLLMovie bllMovie = new BLLMovie();
+    BLLMovie BLL = new BLLMovie();
+    BLLCatMov bllCatMov = new BLLCatMov();
+    private ContextMenu rightClickMenu;
+    private static final Logger logger = Logger.getLogger(AppController.class.getName());
 
     @FXML
     private TableView<Movie> tblMovie;
+
     @FXML
     private Button btnAdd;
     @FXML
@@ -61,13 +66,16 @@ public class AppController implements Initializable {
             throw new RuntimeException(e);
         }
         displayMovies();
+        rightClickMenu();
     }
-
-    public void displayMovies(){
-        colId.setCellValueFactory(new PropertyValueFactory<Movie, Integer>("id"));
+    //////////////////////////////////////////////////////////
+    ////////////////////GUI Stuff/////////////////////////////
+    /////////////////////////////////////////////////////////
+    private void displayMovies(){
+        //colId.setCellValueFactory(new PropertyValueFactory<Movie, Integer>("id"));
         colName.setCellValueFactory(new PropertyValueFactory<Movie, String>("Name"));
         colRating.setCellValueFactory(new PropertyValueFactory<Movie, Double>("Rating"));
-        colFile.setCellValueFactory(new PropertyValueFactory<Movie, String>("FilePath"));
+        //colFile.setCellValueFactory(new PropertyValueFactory<Movie, String>("FilePath"));
         colLast.setCellValueFactory(new PropertyValueFactory<Movie, String>("LastView"));
 
         ObservableList<Movie> value = FXCollections.observableArrayList();
@@ -75,6 +83,33 @@ public class AppController implements Initializable {
         tblMovie.setItems(value);
     }
 
+    //Adds a right click menu to delete a movie
+    private void rightClickMenu(){
+        rightClickMenu = new ContextMenu();
+        MenuItem deleteMovie = new MenuItem("Remove Movie");
+        deleteMovie.setOnAction(mouseClick -> {
+            try {
+                deleteMovie(mouseClick);
+            } catch (IOException e) {
+                throw new RuntimeException("Error with right click menu", e);
+            }
+        });
+        rightClickMenu.getItems().add(deleteMovie);
+        tblMovie.setContextMenu(rightClickMenu); // Setting the context menu to work on the tableview
+    }
+
+    //Error Message Display
+    private void showErrorDialog(MyMoviesExceptions e) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("This can't be good");
+        alert.setHeaderText("Oh No! We ran into a problem!");
+        alert.setContentText(e.getMessage());
+        alert.showAndWait();
+    }
+
+    //////////////////////////////////////////////////////////
+    ////////////////////Movie Stuff///////////////////////////
+    /////////////////////////////////////////////////////////
     @FXML
     private void addMovie(ActionEvent actionEvent) throws MyMoviesExceptions {
         FileChooser chooser = new FileChooser();
@@ -121,5 +156,49 @@ public class AppController implements Initializable {
         stag.setScene(scene);
         stag.show();
     }
+    //////////////////////////////////////////////////////////
+    ///////////Categories and Movies Connectors///////////////
+    /////////////////////////////////////////////////////////
 
+    // Adds a movie to a specific category using the method in BLLCatMov which talks to DAL
+    public void addMovieToCategory(int catID, int movID) throws MyMoviesExceptions {
+        try {
+            bllCatMov.addMovieToCategory(catID, movID);
+        } catch (MyMoviesExceptions e) {
+            logger.log(Level.SEVERE, "Error adding movie to category: AppController", e);
+            showErrorDialog(new MyMoviesExceptions("Error adding movie to category: AppController - " + e.getMessage(), e));
+        }
+    }
+
+    // Removes a movie from a specific category using the method in BLLCatMov which talks to DAL
+    public void removeMovieFromCategory(int catMovID) throws MyMoviesExceptions {
+        try {
+            bllCatMov.removeMovieFromCategory(catMovID);
+        } catch (MyMoviesExceptions e) {
+            logger.log(Level.SEVERE,"Error removing movie from category: AppController");
+            showErrorDialog(new MyMoviesExceptions("Error removing movie from category: AppController - " + e.getMessage(), e));
+        }
+    }
+
+    // Retrieves a list of categories for a specific movie using the method in BLLCatMov which talks to DAL
+    public List<Integer> getCategoriesForMovie(int movID) throws MyMoviesExceptions {
+        try {
+            return bllCatMov.getCategoriesForMovie(movID);
+        } catch (MyMoviesExceptions e) {
+            logger.log(Level.SEVERE,"Error retrieving categories for movie: AppController", e);
+            showErrorDialog(new MyMoviesExceptions("Error retrieving categories for movie: AppController - " + e.getMessage(), e));
+        }
+        return null;
+    }
+
+    // Retrieves a list of movies for specific categories using the method in BLLCatMov which talks to DAL
+    public List<Integer> getMoviesForCategories(List<Integer> catIDs) throws MyMoviesExceptions {
+        try {
+            return bllCatMov.getMoviesForCategories(catIDs);
+        } catch (MyMoviesExceptions e) {
+            logger.log(Level.SEVERE,"Error retrieving movies for categories: AppController",e);
+            showErrorDialog(new MyMoviesExceptions("Error retrieving movies for categories: AppController - " + e.getMessage(), e));
+        }
+        return null;
+    }
 }
