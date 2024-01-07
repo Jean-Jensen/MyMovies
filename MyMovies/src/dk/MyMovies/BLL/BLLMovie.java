@@ -3,22 +3,21 @@ package dk.MyMovies.BLL;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
 import dk.MyMovies.BE.Movie;
 import dk.MyMovies.DAL.MovieDAO;
+import dk.MyMovies.Exceptions.MyMoviesExceptions;
+
 import java.util.List;
 
 public class BLLMovie {
 
     MovieDAO DAO = new MovieDAO();
 
-    public List<Movie> getAllMovies(){
-        try {
-            return DAO.getAllMovies();
-        } catch (SQLServerException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        }
+    public List<Movie> getAllMovies() throws MyMoviesExceptions {
+
+        return DAO.getAllMovies();
+
     }
 
-    public void createMovie(String name, Double Rating, String filePath, String LastView){
+    public void createMovie(String name, Double Rating, String filePath, String LastView) throws MyMoviesExceptions {
         if(filePath == null || LastView == null){
             DAO.createMovie(name,filePath);
         } else{
