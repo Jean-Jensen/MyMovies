@@ -71,7 +71,9 @@ public class AppController implements Initializable {
     //////////////////////////////////////////////////////////
     ////////////////////GUI Stuff/////////////////////////////
     /////////////////////////////////////////////////////////
-    private void displayMovies(){
+
+    //display movie data on table
+    public void displayMovies(){
         //colId.setCellValueFactory(new PropertyValueFactory<Movie, Integer>("id"));
         colName.setCellValueFactory(new PropertyValueFactory<Movie, String>("Name"));
         colRating.setCellValueFactory(new PropertyValueFactory<Movie, Double>("Rating"));
@@ -79,7 +81,12 @@ public class AppController implements Initializable {
         colLast.setCellValueFactory(new PropertyValueFactory<Movie, String>("LastView"));
 
         ObservableList<Movie> value = FXCollections.observableArrayList();
-        value.setAll(bllMovie.getAllMovies());
+        try {
+            value.setAll(BLL.getAllMovies());
+        } catch (MyMoviesExceptions e) {
+            logger.log(Level.SEVERE, "Error retrieving all movies: AppController", e);
+            showErrorDialog(new MyMoviesExceptions("error retrieving all movies" + e.getMessage(), e));
+        }
         tblMovie.setItems(value);
     }
 
@@ -110,6 +117,8 @@ public class AppController implements Initializable {
     //////////////////////////////////////////////////////////
     ////////////////////Movie Stuff///////////////////////////
     /////////////////////////////////////////////////////////
+
+    //add new movie
     @FXML
     private void addMovie(ActionEvent actionEvent) throws MyMoviesExceptions {
         FileChooser chooser = new FileChooser();
@@ -121,11 +130,12 @@ public class AppController implements Initializable {
             String name = selected.getName().substring(0,selected.getName().indexOf('.'));
 
             //we don't set rating or last time viewed since you can't get that from just the file alone.
-            bllMovie.createMovie(name, null, selected.getPath(), null);
+            BLL.createMovie(name, null, selected.getPath(), null);
             displayMovies();
         }
     }
 
+    //delete selected movie (if a movie was selected)
     @FXML
     private void deleteMovie(ActionEvent actionEvent) throws IOException {
         Movie selected = tblMovie.getSelectionModel().getSelectedItem();
@@ -138,6 +148,7 @@ public class AppController implements Initializable {
         }
     }
 
+    //edit selected movie (if a movie was selected)
     @FXML
     private void editMovie(ActionEvent actionEvent) throws IOException {
         Movie selected = tblMovie.getSelectionModel().getSelectedItem();
@@ -150,6 +161,7 @@ public class AppController implements Initializable {
         }
     }
 
+    //open a new window (just to avoid repeating code)
     private void openNewWindow(Parent root){
         Scene scene = new Scene(root);
         Stage stag = new Stage();

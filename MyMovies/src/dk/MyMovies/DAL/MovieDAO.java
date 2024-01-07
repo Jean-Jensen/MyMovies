@@ -58,10 +58,8 @@ public class MovieDAO implements IMovieDAO {
             pstmt.setString(2,filePath);
 
             pstmt.executeUpdate();
-        } catch (SQLServerException e) {
-            throw new RuntimeException(e);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Error creating movie with name: " + name + "\nand filepath " + filePath + "\n" + e.getMessage(), e);
         }
     }
 
@@ -73,7 +71,7 @@ public class MovieDAO implements IMovieDAO {
 
             pstmt.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Error deleting movie with ID " + ID + "\n" + e.getMessage(), e);
         }
     }
 
@@ -89,7 +87,7 @@ public class MovieDAO implements IMovieDAO {
 
             pstmt.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Error editing movie\n" + e.getMessage(), e);
         }
     }
 

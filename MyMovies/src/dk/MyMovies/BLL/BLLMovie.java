@@ -11,24 +11,17 @@ public class BLLMovie {
 
     MovieDAO DAO = new MovieDAO();
 
-    public List<Movie> getAllMovies(){
-        try {
-            return DAO.getAllMovies();
-        } catch (MyMoviesExceptions e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        }
+    public List<Movie> getAllMovies() throws MyMoviesExceptions {
+
+        return DAO.getAllMovies();
+
     }
 
     public void createMovie(String name, Double Rating, String filePath, String LastView) throws MyMoviesExceptions {
         if(filePath == null || LastView == null){
             DAO.createMovie(name,filePath);
         } else{
-            try {
-                DAO.createMovie(name,Rating,filePath,LastView);
-            } catch (MyMoviesExceptions e) {
-                throw new MyMoviesExceptions(e);
-            }
+            DAO.createMovie(name,Rating,filePath,LastView);
         }
     }
 
