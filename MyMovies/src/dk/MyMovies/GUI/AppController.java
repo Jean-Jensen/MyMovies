@@ -87,6 +87,11 @@ public class AppController implements Initializable {
     private void rightClickMenu(){
         rightClickMenu = new ContextMenu();
         MenuItem deleteMovie = new MenuItem("Remove Movie");
+        //the next part is a lambda expression by writing it like this it automatically uses EventHandler<ActionEvent>
+        //its a short form of this >
+        //        deleteMovie.setOnAction(new EventHandler<ActionEvent>() {
+        //        @Override
+        //        public void handle(ActionEvent mouseClick) {
         deleteMovie.setOnAction(mouseClick -> {
             try {
                 deleteMovie(mouseClick);
