@@ -11,7 +11,6 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="513.0" prefWidth="802.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dk.MyMovies.GUI.AppController">
     <left>
         <VBox BorderPane.alignment="CENTER">
@@ -43,7 +42,7 @@
                         <TableColumn fx:id="colLast" prefWidth="52.0" text="Last view" />
                     </columns>
                 </TableView>
-                <Button fx:id="btnAdd" onAction="#addMovie" mnemonicParsing="false" text="Add" />
+                <Button fx:id="btnAdd" mnemonicParsing="false" onAction="#addMovie" text="Add" />
             </children>
         </VBox>
     </left>
