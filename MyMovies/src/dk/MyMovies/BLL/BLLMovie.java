@@ -12,9 +12,15 @@ public class BLLMovie {
     MovieDAO DAO = new MovieDAO();
 
     public List<Movie> getAllMovies() throws MyMoviesExceptions {
-
         return DAO.getAllMovies();
+    }
 
+    public List<Movie> getUselessMovies() throws MyMoviesExceptions {
+        return DAO.getUselessMovies();
+    }
+
+    public void deleteAllUselessMovies() throws MyMoviesExceptions {
+        DAO.deleteAllUselessMovies();
     }
 
     public void createMovie(String name, Double Rating, String filePath, String LastView) throws MyMoviesExceptions {

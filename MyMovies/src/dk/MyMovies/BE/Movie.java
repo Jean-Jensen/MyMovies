@@ -9,6 +9,8 @@ public class Movie {
     private String filePath;
     private String lastView;
 
+
+
     public Movie(int id, String name, double rating, String filePath, String lastView){
         MovID = id;
         this.name = name;
