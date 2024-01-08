@@ -18,7 +18,7 @@ public class BLLCategory {
             throw new MyMoviesExceptions("Error getting all the categories", e);
         }
     }
-    public void createCategory(Category name){
+    public void createCategory(String name){
         DAO.createCategory(name);
     }
 

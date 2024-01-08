@@ -1,14 +1,17 @@
 package dk.MyMovies.GUI;
 
 import com.microsoft.sqlserver.jdbc.SQLServerException;
+import dk.MyMovies.BE.Category;
 import dk.MyMovies.BE.Movie;
 import dk.MyMovies.BLL.BLLCatMov;
+import dk.MyMovies.BLL.BLLCategory;
 import dk.MyMovies.BLL.BLLMovie;
 import dk.MyMovies.DAL.ConnectionManager;
 import dk.MyMovies.Exceptions.MyMoviesExceptions;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -28,14 +31,19 @@ import java.util.logging.Logger;
 
 public class AppController implements Initializable {
 
-    ConnectionManager con = new ConnectionManager();
-    BLLMovie BLL = new BLLMovie();
-    BLLCatMov bllCatMov = new BLLCatMov();
+    public Button btnAddCat;
+    public Button btnEditCat;
+    private ConnectionManager con = new ConnectionManager();
+    private BLLMovie BLL = new BLLMovie();
+    private BLLCategory BLLCat = new BLLCategory();
+    private BLLCatMov bllCatMov = new BLLCatMov();
     private ContextMenu rightClickMenu;
     private static final Logger logger = Logger.getLogger(AppController.class.getName());
 
     @FXML
     private TableView<Movie> tblMovie;
+    @FXML
+    private TableView<Category> tblCategory;
 
     @FXML
     private Button btnAdd;
@@ -47,6 +55,8 @@ public class AppController implements Initializable {
     private TableColumn<Movie, Integer> colId;
     @FXML
     private TableColumn<Movie, String> colName;
+    @FXML
+    private TableColumn<Category, String> catColName;
     @FXML
     private TableColumn<Movie, Double> colRating;
     @FXML
@@ -66,6 +76,7 @@ public class AppController implements Initializable {
             throw new RuntimeException(e);
         }
         displayMovies();
+        displayCategory();
         rightClickMenu();
     }
     //////////////////////////////////////////////////////////
@@ -212,5 +223,41 @@ public class AppController implements Initializable {
             showErrorDialog(new MyMoviesExceptions("Error retrieving movies for categories: AppController - " + e.getMessage(), e));
         }
         return null;
+    }
+
+    //////////////////////////////////////////////////////////
+    ////////////////////Category Stuff////////////////////////
+    //////////////////////////////////////////////////////////
+
+    //display cat data on table
+    public void addCategory(ActionEvent actionEvent) {
+        btnAddCat.setOnMouseClicked(event -> {
+         try {
+             FXMLLoader editCatScene = new FXMLLoader(getClass().getResource("FXML/EditCatScene.fxml"));
+             Parent root = editCatScene.load();
+             Scene scene = new Scene(root);
+             Stage stage = new Stage();
+             stage.setTitle("Add category");
+             stage.setScene(scene);
+             stage.show();
+         } catch (IOException e) {
+             throw new RuntimeException(e);
+         }
+        });
+    }
+
+    public void displayCategory(){
+        catColName.setCellValueFactory(new PropertyValueFactory<Category, String>("Name"));
+        ObservableList<Category> list = FXCollections.observableArrayList();
+        try {
+            list.setAll(BLLCat.getAllCategory());
+        } catch (MyMoviesExceptions e) {
+            logger.log(Level.SEVERE, "Error retrieving all categories: AppController", e);
+            showErrorDialog(new MyMoviesExceptions("error retrieving all categoris" + e.getMessage(), e));
+        }
+        tblCategory.setItems(list);
+    }
+
+    public void editCategory(ActionEvent actionEvent) {
     }
 }
