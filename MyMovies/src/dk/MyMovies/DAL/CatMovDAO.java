@@ -69,4 +69,22 @@ public class CatMovDAO implements ICatMovDAO{
             throw new MyMoviesExceptions("Error retrieving movies for categories: DAO Error" + e.getMessage(), e);
         }
     }
+
+    public ResultSet getMoviesByNameAndCategories(String movName, List<Integer> catIDs) throws MyMoviesExceptions {
+        try(Connection con = cm.getConnection()){
+            String placeholders = String.join(",", Collections.nCopies(catIDs.size(), "?"));
+            String sql = "SELECT Movie.* FROM Movie " +
+                    "JOIN CatMovie ON Movie.MovID = CatMovie.MovID " +
+                    "WHERE Movie.Name LIKE ? AND CatMovie.CatID IN (" + placeholders + ")";
+            PreparedStatement pstmt = con.prepareStatement(sql);
+            pstmt.setString(1, "%" + movName + "%");
+            for (int i = 0; i < catIDs.size(); i++) {
+                pstmt.setInt(i + 2, catIDs.get(i));
+            }
+            ResultSet rs = pstmt.executeQuery();
+            return rs;
+        } catch (SQLException e) {
+            throw new MyMoviesExceptions("Error retrieving movies by name and categories: DAO Error" + e.getMessage(), e);
+        }
+    }
 }
