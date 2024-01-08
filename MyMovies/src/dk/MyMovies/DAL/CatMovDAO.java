@@ -1,11 +1,13 @@
 package dk.MyMovies.DAL;
 
+import dk.MyMovies.BE.Movie;
 import dk.MyMovies.Exceptions.MyMoviesExceptions;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -51,6 +53,7 @@ public class CatMovDAO implements ICatMovDAO{
         }
     }
 
+
     public ResultSet getMoviesForCategories(List<Integer> catIDs) throws MyMoviesExceptions {
         try(Connection con = cm.getConnection()){
             //This next line is a bit confusing so to break it down.. String.join connects the list in the parameters as a string
@@ -70,12 +73,13 @@ public class CatMovDAO implements ICatMovDAO{
         }
     }
 
+
     public ResultSet getMoviesByNameAndCategories(String movName, List<Integer> catIDs) throws MyMoviesExceptions {
         try(Connection con = cm.getConnection()){
             String placeholders = String.join(",", Collections.nCopies(catIDs.size(), "?"));
             String sql = "SELECT Movie.* FROM Movie " +
-                    "JOIN CatMovie ON Movie.MovID = CatMovie.MovID " +
-                    "WHERE Movie.Name LIKE ? AND CatMovie.CatID IN (" + placeholders + ")";
+                         "JOIN CatMovie ON Movie.MovID = CatMovie.MovID " +
+                         "WHERE Movie.Name LIKE ? AND CatMovie.CatID IN (" + placeholders + ")";
             PreparedStatement pstmt = con.prepareStatement(sql);
             pstmt.setString(1, "%" + movName + "%");
             for (int i = 0; i < catIDs.size(); i++) {
@@ -87,4 +91,74 @@ public class CatMovDAO implements ICatMovDAO{
             throw new MyMoviesExceptions("Error retrieving movies by name and categories: DAO Error" + e.getMessage(), e);
         }
     }
+
+
+   /* public List<Integer> getCategoriesForMovie(int movID) throws MyMoviesExceptions {
+        List<Integer> categories = new ArrayList<>();
+        try(Connection con = cm.getConnection()){
+            String sql = "SELECT CatID FROM CatMovie WHERE MovID = ?";
+            PreparedStatement pstmt = con.prepareStatement(sql);
+            pstmt.setInt(1, movID);
+            try(ResultSet rs = pstmt.executeQuery()){
+                while(rs.next()){
+                    categories.add(rs.getInt("CatID"));
+                }
+            }
+        } catch (SQLException e) {
+            throw new MyMoviesExceptions("Error listing movies categories: DAO Error - " + e.getMessage(), e);
+        }
+        return categories;
+    }
+
+
+    public List<Integer> getMoviesForCategories(List<Integer> catIDs) throws MyMoviesExceptions {
+        List<Integer> movieIds = new ArrayList<>();
+        try(Connection con = cm.getConnection()){
+            String placeholders = String.join(",", Collections.nCopies(catIDs.size(), "?"));
+            String sql = "SELECT MovID FROM CatMovie WHERE CatID IN (" + placeholders + ")";
+            PreparedStatement pstmt = con.prepareStatement(sql);
+            for (int i = 0; i < catIDs.size(); i++) {
+                pstmt.setInt(i + 1, catIDs.get(i));
+            }
+            try(ResultSet rs = pstmt.executeQuery()){
+                while(rs.next()){
+                    movieIds.add(rs.getInt("MovID"));
+                }
+            }
+        } catch (SQLException e) {
+            throw new MyMoviesExceptions("Error retrieving movies for categories: DAO Error" + e.getMessage(), e);
+        }
+        return movieIds;
+    }
+
+
+    public List<Movie> getMoviesByNameAndCategories(String movName, List<Integer> catIDs) throws MyMoviesExceptions {
+        List<Movie> movies = new ArrayList<>();
+        try(Connection con = cm.getConnection()){
+            String placeholders = String.join(",", Collections.nCopies(catIDs.size(), "?"));
+            String sql = "SELECT Movie.* FROM Movie " +
+                    "JOIN CatMovie ON Movie.MovID = CatMovie.MovID " +
+                    "WHERE Movie.Name LIKE ? AND CatMovie.CatID IN (" + placeholders + ")";
+            PreparedStatement pstmt = con.prepareStatement(sql);
+            pstmt.setString(1, "%" + movName + "%");
+            for (int i = 0; i < catIDs.size(); i++) {
+                pstmt.setInt(i + 2, catIDs.get(i));
+            }
+            try(ResultSet rs = pstmt.executeQuery()){
+                while(rs.next()){
+                    Movie movie = new Movie(
+                            rs.getInt("MovID"),
+                            rs.getString("Name"),
+                            rs.getDouble("Rating"),
+                            rs.getString("FilePath"),
+                            rs.getString("LastView")
+                    );
+                    movies.add(movie);
+                }
+            }
+        } catch (SQLException e) {
+            throw new MyMoviesExceptions("Error retrieving movies by name and categories: DAO Error" + e.getMessage(), e);
+        }
+        return movies;
+    }*/
 }
