@@ -4,6 +4,7 @@ import dk.MyMovies.BLL.BLLCategory;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 
 public class EditCatSceneController {
     public Button btnAddCategory;
@@ -12,13 +13,26 @@ public class EditCatSceneController {
     private AppController appController;
     private BLLCategory BLLCategory;
 
-    public void getAppController(AppController appCtrl){
+    // Makes sure BLLCategory is not null
+    public EditCatSceneController() {
+        BLLCategory = new BLLCategory();
+    }
+
+    // Makes sure appController is not null
+    public void setAppController(AppController appCtrl){
         appController = appCtrl;
     }
-    public void addCategory(ActionEvent actionEvent){
+
+    // Adds text input into the category list
+    public void btnAddCategory(ActionEvent actionEvent){
         String text = catTextField.getText();
         BLLCategory.createCategory(text);
         appController.displayCategory();
+    }
+
+    public void btnCancelCategory(ActionEvent actionEvent){
+        Stage stage = (Stage) btnCancelCategory.getScene().getWindow();
+        stage.close();
     }
 }
 

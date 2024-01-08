@@ -11,7 +11,6 @@ import dk.MyMovies.Exceptions.MyMoviesExceptions;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -78,6 +77,7 @@ public class AppController implements Initializable {
         displayMovies();
         displayCategory();
         rightClickMenu();
+        rightClickMenuCategory();
     }
     //////////////////////////////////////////////////////////
     ////////////////////GUI Stuff/////////////////////////////
@@ -235,6 +235,8 @@ public class AppController implements Initializable {
          try {
              FXMLLoader editCatScene = new FXMLLoader(getClass().getResource("FXML/EditCatScene.fxml"));
              Parent root = editCatScene.load();
+             EditCatSceneController controller = editCatScene.getController();
+             controller.setAppController(this);
              Scene scene = new Scene(root);
              Stage stage = new Stage();
              stage.setTitle("Add category");
@@ -244,10 +246,11 @@ public class AppController implements Initializable {
              throw new RuntimeException(e);
          }
         });
+
     }
 
     public void displayCategory(){
-        catColName.setCellValueFactory(new PropertyValueFactory<Category, String>("Name"));
+        catColName.setCellValueFactory(new PropertyValueFactory<Category, String>("catName"));
         ObservableList<Category> list = FXCollections.observableArrayList();
         try {
             list.setAll(BLLCat.getAllCategory());
@@ -258,6 +261,20 @@ public class AppController implements Initializable {
         tblCategory.setItems(list);
     }
 
+    public void deleteCategory(ActionEvent mouseClick){
+        Category selected = tblCategory.getSelectionModel().getSelectedItem();
+        BLLCat.deleteCategory(selected.getCatId());
+        displayCategory();
+    }
+    private void rightClickMenuCategory(){
+        rightClickMenu = new ContextMenu();
+        MenuItem deleteCategory = new MenuItem("Remove Category");
+        deleteCategory.setOnAction(mouseClick -> {
+            deleteCategory(mouseClick);
+        });
+        rightClickMenu.getItems().add(deleteCategory);
+        tblCategory.setContextMenu(rightClickMenu); // Setting the context menu to work on the tableview
+    }
     public void editCategory(ActionEvent actionEvent) {
     }
 }

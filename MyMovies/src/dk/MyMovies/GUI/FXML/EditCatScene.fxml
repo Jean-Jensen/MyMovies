@@ -6,7 +6,6 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-
 <AnchorPane prefHeight="240.0" prefWidth="378.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dk.MyMovies.GUI.EditCatSceneController">
    <children>
       <Text layoutX="21.0" layoutY="53.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Name your category" wrappingWidth="330.13671875">
@@ -15,7 +14,7 @@
          </font>
       </Text>
       <TextField fx:id="catTextField" layoutX="21.0" layoutY="95.0" prefHeight="25.0" prefWidth="330.0" promptText="Action, Drama, Comedy..." />
-      <Button fx:id="btnAddCategory" layoutX="21.0" layoutY="175.0" mnemonicParsing="false" text="Add category" />
-      <Button fx:id="btnCancelCategory" layoutX="299.0" layoutY="175.0" mnemonicParsing="false" text="Cancel" />
+      <Button fx:id="btnAddCategory" layoutX="21.0" layoutY="175.0" mnemonicParsing="false" onAction="#btnAddCategory" text="Add category" />
+      <Button fx:id="btnCancelCategory" layoutX="299.0" layoutY="175.0" mnemonicParsing="false" onAction="#btnCancelCategory" text="Cancel" />
    </children>
 </AnchorPane>
