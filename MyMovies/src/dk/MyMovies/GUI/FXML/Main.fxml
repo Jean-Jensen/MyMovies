@@ -44,10 +44,21 @@
                     </columns>
                 </TableView>
                 <Button fx:id="btnAdd" mnemonicParsing="false" onAction="#addMovie" text="Add" />
-
-                <Button fx:id="btnEdit" layoutX="10.0" layoutY="440.0" mnemonicParsing="false" onAction="#editMovie" text="Edit" />
-
+            <Button fx:id="btnEdit" layoutX="10.0" layoutY="440.0" mnemonicParsing="false" onAction="#editMovie" text="Edit" />
+            <Button fx:id="btnAddCat" mnemonicParsing="false" onAction="#addCategory" text="Add Category" />
+            <Button fx:id="btnEditCat" mnemonicParsing="false" onAction="#editCategory" text="Edit Category" />
             </children>
         </VBox>
     </left>
+   <top>
+      <VBox prefHeight="196.0" prefWidth="784.0" BorderPane.alignment="CENTER">
+         <children>
+            <TableView fx:id="tblCategory" prefHeight="200.0" prefWidth="200.0">
+              <columns>
+                <TableColumn fx:id="catColName" prefWidth="75.0" text="Category Test Column" />
+              </columns>
+            </TableView>
+         </children>
+      </VBox>
+   </top>
 </BorderPane>

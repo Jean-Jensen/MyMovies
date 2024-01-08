@@ -1,8 +1,10 @@
 package dk.MyMovies.GUI;
 
 import com.microsoft.sqlserver.jdbc.SQLServerException;
+import dk.MyMovies.BE.Category;
 import dk.MyMovies.BE.Movie;
 import dk.MyMovies.BLL.BLLCatMov;
+import dk.MyMovies.BLL.BLLCategory;
 import dk.MyMovies.BLL.BLLMovie;
 import dk.MyMovies.DAL.ConnectionManager;
 import dk.MyMovies.Exceptions.MyMoviesExceptions;
@@ -28,14 +30,19 @@ import java.util.logging.Logger;
 
 public class AppController implements Initializable {
 
-    ConnectionManager con = new ConnectionManager();
-    BLLMovie BLL = new BLLMovie();
-    BLLCatMov bllCatMov = new BLLCatMov();
+    public Button btnAddCat;
+    public Button btnEditCat;
+    private ConnectionManager con = new ConnectionManager();
+    private BLLCategory BLLCat = new BLLCategory();
+    private BLLMovie bllMov = new BLLMovie();
+    private BLLCatMov bllCatMov = new BLLCatMov();
     private ContextMenu rightClickMenu;
     private static final Logger logger = Logger.getLogger(AppController.class.getName());
 
     @FXML
     private TableView<Movie> tblMovie;
+    @FXML
+    private TableView<Category> tblCategory;
 
     @FXML
     private Button btnAdd;
@@ -47,6 +54,8 @@ public class AppController implements Initializable {
     private TableColumn<Movie, Integer> colId;
     @FXML
     private TableColumn<Movie, String> colName;
+    @FXML
+    private TableColumn<Category, String> catColName;
     @FXML
     private TableColumn<Movie, Double> colRating;
     @FXML
@@ -72,8 +81,17 @@ public class AppController implements Initializable {
             throw new RuntimeException(e);
         }
         displayMovies();
+        displayCategory();
         rightClickMenu();
+        rightClickMenuCategory();
         checkBoxCat();
+
+        try {
+            checkForUselessMovies();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
     }
     //////////////////////////////////////////////////////////
     ////////////////////GUI Stuff/////////////////////////////
@@ -89,7 +107,7 @@ public class AppController implements Initializable {
 
         ObservableList<Movie> value = FXCollections.observableArrayList();
         try {
-            value.setAll(BLL.getAllMovies());
+            value.setAll(bllMov.getAllMovies());
         } catch (MyMoviesExceptions e) {
             logger.log(Level.SEVERE, "Error retrieving all movies: AppController", e);
             showErrorDialog(new MyMoviesExceptions("error retrieving all movies" + e.getMessage(), e));
@@ -117,7 +135,20 @@ public class AppController implements Initializable {
         tblMovie.setContextMenu(rightClickMenu); // Setting the context menu to work on the tableview
     }
 
+    private void checkForUselessMovies() throws IOException {
+        try {
+            List<Movie> useless = bllMov.getUselessMovies();
+            if(!useless.isEmpty()){
 
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("FXML/DeleteWarningScene.fxml"));
+                Parent root = loader.load();
+                openNewWindow(root);
+            }
+        } catch (MyMoviesExceptions e) {
+            logger.log(Level.SEVERE, "Error retrieving all movies with a rating below 6 that were last opened 2 years ago");
+            throw new RuntimeException(e);
+        }
+    }
 
     //Error Message Display
     private void showErrorDialog(MyMoviesExceptions e) {
@@ -160,7 +191,7 @@ public class AppController implements Initializable {
             String name = selected.getName().substring(0,selected.getName().indexOf('.'));
 
             //we don't set rating or last time viewed since you can't get that from just the file alone.
-            BLL.createMovie(name, null, selected.getPath(), null);
+            bllMov.createMovie(name, null, selected.getPath(), null);
             displayMovies();
         }
     }
@@ -253,4 +284,56 @@ public class AppController implements Initializable {
         }
         return null;
     }
+
+    //////////////////////////////////////////////////////////
+    ////////////////////Category Stuff////////////////////////
+    //////////////////////////////////////////////////////////
+
+    //display cat data on table
+    public void addCategory(ActionEvent actionEvent) {
+        btnAddCat.setOnMouseClicked(event -> {
+         try {
+             FXMLLoader editCatScene = new FXMLLoader(getClass().getResource("FXML/EditCatScene.fxml"));
+             Parent root = editCatScene.load();
+             EditCatSceneController controller = editCatScene.getController();
+             controller.setAppController(this);
+             Scene scene = new Scene(root);
+             Stage stage = new Stage();
+             stage.setTitle("Add category");
+             stage.setScene(scene);
+             stage.show();
+         } catch (IOException e) {
+             throw new RuntimeException(e);
+         }
+        });
+    }
+
+    public void displayCategory(){
+        catColName.setCellValueFactory(new PropertyValueFactory<Category, String>("catName"));
+        ObservableList<Category> list = FXCollections.observableArrayList();
+        try {
+            list.setAll(BLLCat.getAllCategory());
+        } catch (MyMoviesExceptions e) {
+            logger.log(Level.SEVERE, "Error retrieving all categories: AppController", e);
+            showErrorDialog(new MyMoviesExceptions("error retrieving all categoris" + e.getMessage(), e));
+        }
+        tblCategory.setItems(list);
+    }
+
+    public void deleteCategory(ActionEvent mouseClick){
+        Category selected = tblCategory.getSelectionModel().getSelectedItem();
+        BLLCat.deleteCategory(selected.getCatId());
+        displayCategory();
+    }
+    private void rightClickMenuCategory(){
+        rightClickMenu = new ContextMenu();
+        MenuItem deleteCategory = new MenuItem("Remove Category");
+        deleteCategory.setOnAction(mouseClick -> {
+            deleteCategory(mouseClick);
+        });
+        rightClickMenu.getItems().add(deleteCategory);
+        tblCategory.setContextMenu(rightClickMenu); // Setting the context menu to work on the tableview
+    }
+    public void editCategory(ActionEvent actionEvent) {}
+    
 }
