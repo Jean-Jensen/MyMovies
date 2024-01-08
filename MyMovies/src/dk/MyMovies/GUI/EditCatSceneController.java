@@ -28,6 +28,8 @@ public class EditCatSceneController {
         String text = catTextField.getText();
         BLLCategory.createCategory(text);
         appController.displayCategory();
+        Stage stage = (Stage) btnCancelCategory.getScene().getWindow();
+        stage.close();
     }
 
     public void btnCancelCategory(ActionEvent actionEvent){

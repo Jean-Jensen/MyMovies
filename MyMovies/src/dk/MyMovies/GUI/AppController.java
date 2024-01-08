@@ -306,7 +306,6 @@ public class AppController implements Initializable {
              throw new RuntimeException(e);
          }
         });
-
     }
 
     public void displayCategory(){
