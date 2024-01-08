@@ -57,7 +57,10 @@ public class DeleteWarningSceneController implements Initializable {
     }
 
     public void deleteSelected(ActionEvent actionEvent) {
-
+        Movie selected = tblMov.getSelectionModel().getSelectedItem();
+        if(selected != null){
+            bllMov.deleteMovie(selected.getId());
+        }
     }
 
     public void closeWindow(ActionEvent actionEvent) {
