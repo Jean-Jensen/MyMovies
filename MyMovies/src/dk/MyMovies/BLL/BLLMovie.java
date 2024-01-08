@@ -14,7 +14,9 @@ public class BLLMovie {
     public List<Movie> getAllMovies() throws MyMoviesExceptions {
         return DAO.getAllMovies();
     }
-
+    public List<Movie> getMoviesByIds(List<Integer> ids) throws MyMoviesExceptions{
+        return DAO.getMoviesByIds(ids);
+    }
     public List<Movie> getUselessMovies() throws MyMoviesExceptions {
         return DAO.getUselessMovies();
     }
