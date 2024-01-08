@@ -29,7 +29,7 @@ import java.util.logging.Logger;
 public class AppController implements Initializable {
 
     ConnectionManager con = new ConnectionManager();
-    BLLMovie BLL = new BLLMovie();
+    BLLMovie bllMov = new BLLMovie();
     BLLCatMov bllCatMov = new BLLCatMov();
     private ContextMenu rightClickMenu;
     private static final Logger logger = Logger.getLogger(AppController.class.getName());
@@ -82,7 +82,7 @@ public class AppController implements Initializable {
 
         ObservableList<Movie> value = FXCollections.observableArrayList();
         try {
-            value.setAll(BLL.getAllMovies());
+            value.setAll(bllMov.getAllMovies());
         } catch (MyMoviesExceptions e) {
             logger.log(Level.SEVERE, "Error retrieving all movies: AppController", e);
             showErrorDialog(new MyMoviesExceptions("error retrieving all movies" + e.getMessage(), e));
@@ -130,7 +130,7 @@ public class AppController implements Initializable {
             String name = selected.getName().substring(0,selected.getName().indexOf('.'));
 
             //we don't set rating or last time viewed since you can't get that from just the file alone.
-            BLL.createMovie(name, null, selected.getPath(), null);
+            bllMov.createMovie(name, null, selected.getPath(), null);
             displayMovies();
         }
     }
