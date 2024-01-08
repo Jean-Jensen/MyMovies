@@ -101,6 +101,11 @@ public class AppController implements Initializable {
     private void rightClickMenu(){
         rightClickMenu = new ContextMenu();
         MenuItem deleteMovie = new MenuItem("Remove Movie");
+        //the next part is a lambda expression by writing it like this it automatically uses EventHandler<ActionEvent>
+        //its a short form of this >
+        //        deleteMovie.setOnAction(new EventHandler<ActionEvent>() {
+        //        @Override
+        //        public void handle(ActionEvent mouseClick) {
         deleteMovie.setOnAction(mouseClick -> {
             try {
                 deleteMovie(mouseClick);
@@ -235,6 +240,16 @@ public class AppController implements Initializable {
         } catch (MyMoviesExceptions e) {
             logger.log(Level.SEVERE,"Error retrieving movies for categories: AppController",e);
             showErrorDialog(new MyMoviesExceptions("Error retrieving movies for categories: AppController - " + e.getMessage(), e));
+        }
+        return null;
+    }
+
+    public List<Movie> getMoviesByNameAndCategories(String movName, List<Integer> catIDs) throws MyMoviesExceptions {
+        try {
+            return bllCatMov.getMoviesByNameAndCategories(movName, catIDs);
+        }catch (MyMoviesExceptions e) {
+            logger.log(Level.SEVERE,"Error retrieving movies by name and categories: DAO Error", e);
+            showErrorDialog(new MyMoviesExceptions("Error retrieving movies by name and categories: AppController - " + e.getMessage(), e));
         }
         return null;
     }
