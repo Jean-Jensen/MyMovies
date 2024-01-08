@@ -62,6 +62,9 @@ public class CatMovDAO implements ICatMovDAO{
 
     // This method is used to get the movies for specific categories from the database.
     public List<Integer> getMoviesForCategories(List<Integer> catIDs) throws MyMoviesExceptions {
+        if (catIDs.isEmpty()) {
+            return new ArrayList<>();
+        }
         List<Integer> movieIds = new ArrayList<>();
         try(Connection con = cm.getConnection()){
             //This next line is a bit confusing so to break it down.. String.join connects the list in the parameters as a string
