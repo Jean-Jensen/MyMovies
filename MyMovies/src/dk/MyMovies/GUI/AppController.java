@@ -53,6 +53,12 @@ public class AppController implements Initializable {
     private TableColumn<Movie, String> colFile;
     @FXML
     private TableColumn<Movie, String> colLast;
+    @FXML
+    private ListView<CheckBox> lvCategories;
+    @FXML
+    private Slider ratingSlider;
+    @FXML
+    private Label lblSliderValue;
 
     private FileChooser.ExtensionFilter filter1 = new FileChooser.ExtensionFilter(".mp4 files", "*.mp4");
     private FileChooser.ExtensionFilter filter2 = new FileChooser.ExtensionFilter(".mpeg4 files", "*.mpeg4");
@@ -67,6 +73,7 @@ public class AppController implements Initializable {
         }
         displayMovies();
         rightClickMenu();
+        checkBoxCat();
     }
     //////////////////////////////////////////////////////////
     ////////////////////GUI Stuff/////////////////////////////
@@ -105,6 +112,8 @@ public class AppController implements Initializable {
         tblMovie.setContextMenu(rightClickMenu); // Setting the context menu to work on the tableview
     }
 
+
+
     //Error Message Display
     private void showErrorDialog(MyMoviesExceptions e) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -112,6 +121,22 @@ public class AppController implements Initializable {
         alert.setHeaderText("Oh No! We ran into a problem!");
         alert.setContentText(e.getMessage());
         alert.showAndWait();
+    }
+
+    private void checkBoxCat(){
+        ObservableList<CheckBox> categoryCheckBoxes = FXCollections.observableArrayList();
+
+        String[] categories = {"Action", "Adventure", "Comedy", "Drama", "Fantasy", "Sci-Fi"};
+
+        for (String category : categories) {
+            CheckBox checkBox = new CheckBox(category);
+            categoryCheckBoxes.add(checkBox);
+        }
+
+        lvCategories.getItems().addAll(categoryCheckBoxes);
+
+        ratingSlider.valueProperty().addListener((observable, oldValue, newValue) ->
+                lblSliderValue.setText("Rating: " + String.format("%.0f", newValue)));
     }
 
     //////////////////////////////////////////////////////////
