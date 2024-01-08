@@ -218,4 +218,14 @@ public class AppController implements Initializable {
         }
         return null;
     }
+
+    public List<Movie> getMoviesByNameAndCategories(String movName, List<Integer> catIDs) throws MyMoviesExceptions {
+        try {
+            return bllCatMov.getMoviesByNameAndCategories(movName, catIDs);
+        }catch (MyMoviesExceptions e) {
+            logger.log(Level.SEVERE,"Error retrieving movies by name and categories: DAO Error", e);
+            showErrorDialog(new MyMoviesExceptions("Error retrieving movies by name and categories: AppController - " + e.getMessage(), e));
+        }
+        return null;
+    }
 }
