@@ -29,8 +29,8 @@ import java.util.logging.Logger;
 public class AppController implements Initializable {
 
     ConnectionManager con = new ConnectionManager();
-    BLLMovie BLL = new BLLMovie();
-    BLLCatMov bllCatMov = new BLLCatMov();
+    private BLLMovie bllMov = new BLLMovie();
+    private BLLCatMov bllCatMov = new BLLCatMov();
     private ContextMenu rightClickMenu;
     private static final Logger logger = Logger.getLogger(AppController.class.getName());
 
@@ -74,6 +74,13 @@ public class AppController implements Initializable {
         displayMovies();
         rightClickMenu();
         checkBoxCat();
+
+        try {
+            checkForUselessMovies();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
     }
     //////////////////////////////////////////////////////////
     ////////////////////GUI Stuff/////////////////////////////
@@ -89,7 +96,7 @@ public class AppController implements Initializable {
 
         ObservableList<Movie> value = FXCollections.observableArrayList();
         try {
-            value.setAll(BLL.getAllMovies());
+            value.setAll(bllMov.getAllMovies());
         } catch (MyMoviesExceptions e) {
             logger.log(Level.SEVERE, "Error retrieving all movies: AppController", e);
             showErrorDialog(new MyMoviesExceptions("error retrieving all movies" + e.getMessage(), e));
@@ -117,7 +124,20 @@ public class AppController implements Initializable {
         tblMovie.setContextMenu(rightClickMenu); // Setting the context menu to work on the tableview
     }
 
+    private void checkForUselessMovies() throws IOException {
+        try {
+            List<Movie> useless = bllMov.getUselessMovies();
+            if(!useless.isEmpty()){
 
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("FXML/DeleteWarningScene.fxml"));
+                Parent root = loader.load();
+                openNewWindow(root);
+            }
+        } catch (MyMoviesExceptions e) {
+            logger.log(Level.SEVERE, "Error retrieving all movies with a rating below 6 that were last opened 2 years ago");
+            throw new RuntimeException(e);
+        }
+    }
 
     //Error Message Display
     private void showErrorDialog(MyMoviesExceptions e) {
@@ -160,7 +180,7 @@ public class AppController implements Initializable {
             String name = selected.getName().substring(0,selected.getName().indexOf('.'));
 
             //we don't set rating or last time viewed since you can't get that from just the file alone.
-            BLL.createMovie(name, null, selected.getPath(), null);
+            bllMov.createMovie(name, null, selected.getPath(), null);
             displayMovies();
         }
     }
