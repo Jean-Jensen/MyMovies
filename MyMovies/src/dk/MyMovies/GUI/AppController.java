@@ -26,11 +26,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 public class AppController implements Initializable {
 
@@ -85,13 +83,10 @@ public class AppController implements Initializable {
             throw new RuntimeException(e);
         }
         displayMovies();
-       // displayCategory();
         rightClickMenu();
         rightClickMenuRemoveCategory();
-      //  categoryCheckboxes();
         RatingSlider();
         checkBoxCat();
-      //  rightClickDeleteCategory();
 
         try {
             checkForUselessMovies();
@@ -174,7 +169,7 @@ public class AppController implements Initializable {
     }
 
 
-    private Menu rightClickMenuRemoveCategory(){
+    private void rightClickMenuRemoveCategory(){
         // Delete Category submenu
         Menu deleteCategoryMenu = new Menu("Delete Category");
         rightClickMenu.getItems().add(deleteCategoryMenu);
@@ -205,7 +200,6 @@ public class AppController implements Initializable {
                 }
             }
         });
-        return deleteCategoryMenu;
     }
 
 
