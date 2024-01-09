@@ -1,8 +1,10 @@
 package dk.MyMovies.GUI;
 
 import com.microsoft.sqlserver.jdbc.SQLServerException;
+import dk.MyMovies.BE.Category;
 import dk.MyMovies.BE.Movie;
 import dk.MyMovies.BLL.BLLCatMov;
+import dk.MyMovies.BLL.BLLCategory;
 import dk.MyMovies.BLL.BLLMovie;
 import dk.MyMovies.DAL.ConnectionManager;
 import dk.MyMovies.Exceptions.MyMoviesExceptions;
@@ -21,21 +23,29 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 public class AppController implements Initializable {
 
-    ConnectionManager con = new ConnectionManager();
-    BLLMovie BLL = new BLLMovie();
-    BLLCatMov bllCatMov = new BLLCatMov();
+    public Button btnAddCat;
+    public Button btnEditCat;
+    private ConnectionManager con = new ConnectionManager();
+    private BLLCategory BLLCat = new BLLCategory();
+    private BLLMovie bllMov = new BLLMovie();
+    private BLLCatMov bllCatMov = new BLLCatMov();
     private ContextMenu rightClickMenu;
     private static final Logger logger = Logger.getLogger(AppController.class.getName());
 
     @FXML
     private TableView<Movie> tblMovie;
+    @FXML
+    private TableView<Category> tblCategory;
 
     @FXML
     private Button btnAdd;
@@ -47,6 +57,8 @@ public class AppController implements Initializable {
     private TableColumn<Movie, Integer> colId;
     @FXML
     private TableColumn<Movie, String> colName;
+    @FXML
+    private TableColumn<Category, String> catColName;
     @FXML
     private TableColumn<Movie, Double> colRating;
     @FXML
@@ -72,8 +84,19 @@ public class AppController implements Initializable {
             throw new RuntimeException(e);
         }
         displayMovies();
+       // displayCategory();
         rightClickMenu();
+        rightClickMenuCategory();
+      //  categoryCheckboxes();
+        RatingSlider();
         checkBoxCat();
+
+        try {
+            checkForUselessMovies();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
     }
     //////////////////////////////////////////////////////////
     ////////////////////GUI Stuff/////////////////////////////
@@ -89,7 +112,7 @@ public class AppController implements Initializable {
 
         /*ObservableList<Movie> value = FXCollections.observableArrayList();
         try {
-            value.setAll(BLL.getAllMovies());
+            value.setAll(bllMov.getAllMovies());
         } catch (MyMoviesExceptions e) {
             logger.log(Level.SEVERE, "Error retrieving all movies: AppController", e);
             showErrorDialog(new MyMoviesExceptions("error retrieving all movies" + e.getMessage(), e));
@@ -101,6 +124,11 @@ public class AppController implements Initializable {
     private void rightClickMenu(){
         rightClickMenu = new ContextMenu();
         MenuItem deleteMovie = new MenuItem("Remove Movie");
+        //the next part is a lambda expression by writing it like this it automatically uses EventHandler<ActionEvent>
+        //its a short form of this >
+        //        deleteMovie.setOnAction(new EventHandler<ActionEvent>() {
+        //        @Override
+        //        public void handle(ActionEvent mouseClick) {
         deleteMovie.setOnAction(mouseClick -> {
             try {
                 deleteMovie(mouseClick);
@@ -112,7 +140,37 @@ public class AppController implements Initializable {
         tblMovie.setContextMenu(rightClickMenu); // Setting the context menu to work on the tableview
     }
 
+    private void rightClickMenuCategory(){
+        ContextMenu rightClickMenuCategory = new ContextMenu();
+        MenuItem deleteCategory = new MenuItem("Remove Category");
+        deleteCategory.setOnAction(mouseClick -> {
+            //Cascading Checkbox here and assuming CheckBox items and the user data is the Category ID
+            CheckBox selectedCheckBox = (CheckBox) lvCategories.getSelectionModel().getSelectedItem();
+            if (selectedCheckBox != null) {
+                int categoryId = (int) selectedCheckBox.getUserData();
+                BLLCat.deleteCategory(categoryId);
+                //need to update lvCategories to reflect the changes
+                lvCategories.getItems().remove(selectedCheckBox);
+            }
+        });
+        rightClickMenuCategory.getItems().add(deleteCategory);
+        lvCategories.setContextMenu(rightClickMenuCategory); // Setting the context menu to work on the ListView
+    }
 
+    private void checkForUselessMovies() throws IOException {
+        try {
+            List<Movie> useless = bllMov.getUselessMovies();
+            if(!useless.isEmpty()){
+
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("FXML/DeleteWarningScene.fxml"));
+                Parent root = loader.load();
+                openNewWindow(root);
+            }
+        } catch (MyMoviesExceptions e) {
+            logger.log(Level.SEVERE, "Error retrieving all movies with a rating below 6 that were last opened 2 years ago");
+            throw new RuntimeException(e);
+        }
+    }
 
     //Error Message Display
     private void showErrorDialog(MyMoviesExceptions e) {
@@ -123,20 +181,58 @@ public class AppController implements Initializable {
         alert.showAndWait();
     }
 
-    private void checkBoxCat(){
-        ObservableList<CheckBox> categoryCheckBoxes = FXCollections.observableArrayList();
 
-        String[] categories = {"Action", "Adventure", "Comedy", "Drama", "Fantasy", "Sci-Fi"};
-
-        for (String category : categories) {
-            CheckBox checkBox = new CheckBox(category);
-            categoryCheckBoxes.add(checkBox);
-        }
-
-        lvCategories.getItems().addAll(categoryCheckBoxes);
-
+    public void RatingSlider() {
         ratingSlider.valueProperty().addListener((observable, oldValue, newValue) ->
                 lblSliderValue.setText("Rating: " + String.format("%.0f", newValue)));
+    }
+
+    private void checkBoxCat() {
+        try {
+            BLLCategory bllCategory = new BLLCategory();
+            List<Category> categories = bllCategory.getAllCategory();
+            for (Category category : categories) {
+                CheckBox checkBox = new CheckBox(category.getCatName());
+                checkBox.setUserData(category.getCatId()); // Store the category ID in the CheckBox
+                // Add listener to know if the checkbox is checked or not and calls the updateMovieTable method to update the table accordingly
+                checkBox.selectedProperty().addListener((observable, oldValue, newValue) -> updateMovieTable());
+                lvCategories.getItems().add(checkBox); // Adds the checkbox to the listview
+            }
+        } catch (MyMoviesExceptions e) {
+            logger.log(Level.SEVERE, "Error retrieving all categories: AppController", e);
+            showErrorDialog(new MyMoviesExceptions("error retrieving all categories" + e.getMessage(), e));
+        }
+    }
+
+    private void updateMovieTable() {
+        try {
+            List<Integer> selectedCategoryIds = new ArrayList<>();
+            for (Object item : lvCategories.getItems()) {             // loops lvCategories for each item
+                //checks to see if its a Checkbox && Checkbox is selected
+                //we use instanceof to make sure that our new Object is a Checkbox
+                if (item instanceof CheckBox && ((CheckBox) item).isSelected()) {
+                    //if yes it uses .getUserData to collect the ID
+                    selectedCategoryIds.add((Integer) ((CheckBox) item).getUserData());
+                }
+            }
+            List<Movie> movies;
+            //If nothing is selected, get all movies
+            if (selectedCategoryIds.isEmpty()) {
+                movies = bllMov.getAllMovies();
+                //else get movies for each category selected
+            } else {
+                List<Integer> movieIds = bllCatMov.getMoviesForCategories(selectedCategoryIds);
+                //gets the actual movie object
+                movies = bllMov.getMoviesByIds(movieIds);
+            }
+            //Turns our movie list into an Observable list to observe for changes
+            ObservableList<Movie> observableMovies = FXCollections.observableArrayList(movies);
+            //populates the tblMovie with the list
+            tblMovie.setItems(observableMovies);
+        } catch (MyMoviesExceptions e) {
+            logger.log(Level.SEVERE, "Error retrieving movies for categories: AppController", e);
+            showErrorDialog(new MyMoviesExceptions("error retrieving movies for categories" + e.getMessage(), e));
+        }
     }
 
     //////////////////////////////////////////////////////////
@@ -155,7 +251,7 @@ public class AppController implements Initializable {
             String name = selected.getName().substring(0,selected.getName().indexOf('.'));
 
             //we don't set rating or last time viewed since you can't get that from just the file alone.
-            BLL.createMovie(name, null, selected.getPath(), null);
+            bllMov.createMovie(name, null, selected.getPath(), null);
             displayMovies();
         }
     }
@@ -228,14 +324,65 @@ public class AppController implements Initializable {
         return null;
     }
 
-    // Retrieves a list of movies for specific categories using the method in BLLCatMov which talks to DAL
-    public List<Integer> getMoviesForCategories(List<Integer> catIDs) throws MyMoviesExceptions {
+    public List<Movie> getMoviesByNameAndCategories(String movName, List<Integer> catIDs) throws MyMoviesExceptions {
         try {
-            return bllCatMov.getMoviesForCategories(catIDs);
-        } catch (MyMoviesExceptions e) {
-            logger.log(Level.SEVERE,"Error retrieving movies for categories: AppController",e);
-            showErrorDialog(new MyMoviesExceptions("Error retrieving movies for categories: AppController - " + e.getMessage(), e));
+            return bllCatMov.getMoviesByNameAndCategories(movName, catIDs);
+        }catch (MyMoviesExceptions e) {
+            logger.log(Level.SEVERE,"Error retrieving movies by name and categories: DAO Error", e);
+            showErrorDialog(new MyMoviesExceptions("Error retrieving movies by name and categories: AppController - " + e.getMessage(), e));
         }
         return null;
     }
+
+    //////////////////////////////////////////////////////////
+    ////////////////////Category Stuff////////////////////////
+    //////////////////////////////////////////////////////////
+
+    //display cat data on table
+    public void addCategory(ActionEvent actionEvent) {
+        btnAddCat.setOnMouseClicked(event -> {
+         try {
+             FXMLLoader editCatScene = new FXMLLoader(getClass().getResource("FXML/EditCatScene.fxml"));
+             Parent root = editCatScene.load();
+             EditCatSceneController controller = editCatScene.getController();
+             controller.setAppController(this);
+             Scene scene = new Scene(root);
+             Stage stage = new Stage();
+             stage.setTitle("Add category");
+             stage.setScene(scene);
+             stage.show();
+         } catch (IOException e) {
+             throw new RuntimeException(e);
+         }
+        });
+    }
+
+   /* public void displayCategory(){
+        catColName.setCellValueFactory(new PropertyValueFactory<Category, String>("catName"));
+        ObservableList<Category> list = FXCollections.observableArrayList();
+        try {
+            list.setAll(BLLCat.getAllCategory());
+        } catch (MyMoviesExceptions e) {
+            logger.log(Level.SEVERE, "Error retrieving all categories: AppController", e);
+            showErrorDialog(new MyMoviesExceptions("error retrieving all categoris" + e.getMessage(), e));
+        }
+        tblCategory.setItems(list);
+    }*/
+
+ /*   public void deleteCategory(ActionEvent mouseClick){
+        Category selected = tblCategory.getSelectionModel().getSelectedItem();
+        BLLCat.deleteCategory(selected.getCatId());
+        displayCategory();
+    }
+    private void rightClickMenuCategory(){
+        rightClickMenu = new ContextMenu();
+        MenuItem deleteCategory = new MenuItem("Remove Category");
+        deleteCategory.setOnAction(mouseClick -> {
+            deleteCategory(mouseClick);
+        });
+        rightClickMenu.getItems().add(deleteCategory);
+        tblCategory.setContextMenu(rightClickMenu); // Setting the context menu to work on the tableview
+    }*/
+    public void editCategory(ActionEvent actionEvent) {}
+    
 }

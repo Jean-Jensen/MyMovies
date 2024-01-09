@@ -1,5 +1,6 @@
 package dk.MyMovies.BLL;
 
+import dk.MyMovies.BE.Movie;
 import dk.MyMovies.DAL.CatMovDAO;
 import dk.MyMovies.DAL.ICatMovDAO;
 import dk.MyMovies.Exceptions.MyMoviesExceptions;
@@ -28,31 +29,26 @@ public class BLLCatMov {
     }
 
     public List<Integer> getCategoriesForMovie(int movID) throws MyMoviesExceptions {
-        ResultSet rs = catMovDAO.getCategoriesForMovie(movID);
-        List<Integer> categories = new ArrayList<>();
         try {
-            //rs.next moves the cursor to next row to get int from each row on the selected column
-            while (rs.next()) {
-                categories.add(rs.getInt("CatID"));
-            }
-        } catch (SQLException e) {
+            return catMovDAO.getCategoriesForMovie(movID);
+        } catch (MyMoviesExceptions e) {
             throw new MyMoviesExceptions("Error retrieving categories for movies: BLL Error - "+ e.getMessage(), e);
         }
-        return categories;
     }
 
     public List<Integer> getMoviesForCategories(List<Integer> catIDs) throws MyMoviesExceptions {
-        List<Integer> movies = new ArrayList<>();
         try {
-            ResultSet rs = catMovDAO.getMoviesForCategories(catIDs);
-            //rs.next moves the cursor to next row to get int from each row on the selected column
-            while (rs.next()) {
-                movies.add(rs.getInt("MovID"));
-            }
-        } catch (SQLException e) {
+            return catMovDAO.getMoviesForCategories(catIDs);
+        } catch (MyMoviesExceptions e) {
             throw new MyMoviesExceptions("Error retrieving Movies for Categories: BLL Error - "+ e.getMessage(), e);
         }
-        return movies;
     }
 
+    public List<Movie> getMoviesByNameAndCategories(String movName, List<Integer> catIDs) throws MyMoviesExceptions {
+        try {
+            return catMovDAO.getMoviesByNameAndCategories(movName, catIDs);
+        } catch (MyMoviesExceptions e) {
+            throw new MyMoviesExceptions("Error retrieving movies by name and categories: BLL Error - "+ e.getMessage(), e);
+        }
+    }
 }

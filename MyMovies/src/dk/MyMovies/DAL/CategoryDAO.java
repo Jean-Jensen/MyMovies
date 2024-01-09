@@ -27,11 +27,11 @@ public class CategoryDAO implements ICategoryDAO {
         return category;
     }
 
-    public void createCategory(Category c){
+    public void createCategory(String c){
         try(Connection con = cm.getConnection()){
             String sql = "INSERT INTO Category(Name) VALUES(?)";
             PreparedStatement pstmt = con.prepareStatement(sql);
-            pstmt.setString(1,c.getCatName());
+            pstmt.setString(1,c);
             pstmt.executeUpdate();
         } catch (SQLServerException e) {
             throw new RuntimeException(e);
