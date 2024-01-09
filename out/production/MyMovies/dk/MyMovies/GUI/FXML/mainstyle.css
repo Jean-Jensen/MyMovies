@@ -1,0 +1,72 @@
+
+#appContainer {
+    -fx-background-color: #f4ebfe;
+}
+
+/* labels */
+Label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #4a4a4a;
+}
+
+/* text fields */
+TextField {
+    -fx-font-size: 14px;
+    -fx-pref-width: 85px;
+    -fx-background-color: #e8e8e8;
+}
+
+/* list view */
+#lvCategories {
+    -fx-font-size: 14px;
+    -fx-pref-width: 263px;
+    -fx-background-color: #e8e8e8;
+}
+
+/* HBox labels */
+HBox {
+    -fx-spacing: 10px;
+}
+
+/* sliders and slider labels */
+Slider {
+    -fx-pref-width: 143px;
+    -fx-background-color: #e8e8e8;
+}
+
+#lblSliderValue {
+    -fx-font-size: 14px;
+    -fx-text-fill: #4a4a4a;
+}
+
+/* table view */
+TableView {
+    -fx-pref-width: 212px;
+    -fx-background-color: #e8e8e8;
+}
+
+/* table columns */
+TableColumn {
+    -fx-font-size: 14px;
+    -fx-text-fill: #4a4a4a;
+}
+
+/* buttons */
+Button {
+    -fx-font-size: 14px;
+    -fx-pref-width: 70px;
+    -fx-background-color: #7b68ee;
+    -fx-text-fill: #fff;
+}
+
+/* Hover effect for buttons */
+Button:hover {
+    -fx-background-color: #6a5acd;
+}
+
+/* selected items in list view and table view */
+.list-cell:filled:selected,
+.table-row-cell:filled:selected {
+    -fx-background-color: #7b68ee;
+    -fx-text-fill: #fff;
+}

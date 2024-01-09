@@ -107,14 +107,14 @@ public class AppController implements Initializable {
         //colFile.setCellValueFactory(new PropertyValueFactory<Movie, String>("FilePath"));
         colLast.setCellValueFactory(new PropertyValueFactory<Movie, String>("LastView"));
 
-        ObservableList<Movie> value = FXCollections.observableArrayList();
+        /*ObservableList<Movie> value = FXCollections.observableArrayList();
         try {
             value.setAll(bllMov.getAllMovies());
         } catch (MyMoviesExceptions e) {
             logger.log(Level.SEVERE, "Error retrieving all movies: AppController", e);
             showErrorDialog(new MyMoviesExceptions("error retrieving all movies" + e.getMessage(), e));
         }
-        tblMovie.setItems(value);
+        tblMovie.setItems(value);*/
     }
 
     //Adds a right click menu to delete a movie
