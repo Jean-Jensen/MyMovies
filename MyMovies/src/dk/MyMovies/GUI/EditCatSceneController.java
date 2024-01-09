@@ -11,11 +11,11 @@ public class EditCatSceneController {
     public Button btnCancelCategory;
     public TextField catTextField;
     private AppController appController;
-    private BLLCategory BLLCategory;
+    private BLLCategory bllCategory;
 
     // Makes sure BLLCategory is not null
     public EditCatSceneController() {
-        BLLCategory = new BLLCategory();
+        bllCategory = new BLLCategory();
     }
 
     // Makes sure appController is not null

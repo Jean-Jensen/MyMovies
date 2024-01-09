@@ -35,7 +35,7 @@ public class AppController implements Initializable {
     public Button btnAddCat;
     public Button btnEditCat;
     private ConnectionManager con = new ConnectionManager();
-    private BLLCategory BLLCat = new BLLCategory();
+    private BLLCategory bllCat = new BLLCategory();
     private BLLMovie bllMov = new BLLMovie();
     private BLLCatMov bllCatMov = new BLLCatMov();
     private ContextMenu rightClickMenu;
@@ -139,27 +139,17 @@ public class AppController implements Initializable {
         return removeMovie;
     }
 
-        private Menu rightClickMenuAddCategory(){
-            Menu addCategoryMenu = new Menu("Add Category");
-        try {
-            List<Category> categories = BLLCat.getAllCategory();
-            for (Category category : categories) {
-                // Add Category submenu
-                MenuItem categoryItem = new MenuItem(category.getCatName());
-                categoryItem.setOnAction(actionEvent -> {
-                    Movie selectedMovie = tblMovie.getSelectionModel().getSelectedItem();
-                    if (selectedMovie != null) {
-                        try {
-                            bllCatMov.addMovieToCategory(category.getCatId(), selectedMovie.getId());
-                            // Refresh the movie table to reflect the changes
-                            displayMovies();
-                        } catch (MyMoviesExceptions e) {
-                            logger.log(Level.SEVERE, "Error adding movie to category: AppController", e);
-                            showErrorDialog(new MyMoviesExceptions("error adding movie to category" + e.getMessage(), e));
-                        }
-                    }
-                });
-                addCategoryMenu.getItems().add(categoryItem);
+    private void rightClickMenuCategory(){
+        ContextMenu rightClickMenuCategory = new ContextMenu();
+        MenuItem deleteCategory = new MenuItem("Remove Category");
+        deleteCategory.setOnAction(mouseClick -> {
+            //Cascading Checkbox here and assuming CheckBox items and the user data is the Category ID
+            CheckBox selectedCheckBox = (CheckBox) lvCategories.getSelectionModel().getSelectedItem();
+            if (selectedCheckBox != null) {
+                int categoryId = (int) selectedCheckBox.getUserData();
+                bllCat.deleteCategory(categoryId);
+                //need to update lvCategories to reflect the changes
+                lvCategories.getItems().remove(selectedCheckBox);
             }
         } catch (MyMoviesExceptions e) {
             logger.log(Level.SEVERE, "Error retrieving all categories: AppController", e);
