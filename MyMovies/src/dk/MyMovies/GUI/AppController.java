@@ -25,18 +25,16 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 public class AppController implements Initializable {
 
     public Button btnAddCat;
     public Button btnEditCat;
     private ConnectionManager con = new ConnectionManager();
-    private BLLCategory BLLCat = new BLLCategory();
+    private BLLCategory bllCat = new BLLCategory();
     private BLLMovie bllMov = new BLLMovie();
     private BLLCatMov bllCatMov = new BLLCatMov();
     private ContextMenu rightClickMenu;
@@ -148,7 +146,7 @@ public class AppController implements Initializable {
             CheckBox selectedCheckBox = (CheckBox) lvCategories.getSelectionModel().getSelectedItem();
             if (selectedCheckBox != null) {
                 int categoryId = (int) selectedCheckBox.getUserData();
-                BLLCat.deleteCategory(categoryId);
+                bllCat.deleteCategory(categoryId);
                 //need to update lvCategories to reflect the changes
                 lvCategories.getItems().remove(selectedCheckBox);
             }
