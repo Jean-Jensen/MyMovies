@@ -12,14 +12,14 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="513.0" prefWidth="802.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dk.MyMovies.GUI.AppController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="513.0" prefWidth="802.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dk.MyMovies.GUI.AppController" stylesheets="@mainstyle.css">
     <left>
         <VBox BorderPane.alignment="CENTER">
             <children>
                 <Label text="Title" />
                 <TextField prefHeight="8.0" prefWidth="85.0" />
                 <Label text="Categories" />
-                <ListView fx:id="lvCategories" prefHeight="81.0" prefWidth="263.0" />
+                <ListView fx:id="lvCategories" styleClass="categories" prefHeight="81.0" prefWidth="263.0" />
                 <HBox>
                     <VBox.margin>
                         <Insets />
