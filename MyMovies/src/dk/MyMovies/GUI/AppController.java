@@ -35,7 +35,7 @@ public class AppController implements Initializable {
     public Button btnAddCat;
     public Button btnEditCat;
     private ConnectionManager con = new ConnectionManager();
-    private BLLCategory bllCat = new BLLCategory();
+    private BLLCategory BLLCat = new BLLCategory();
     private BLLMovie bllMov = new BLLMovie();
     private BLLCatMov bllCatMov = new BLLCatMov();
     private ContextMenu rightClickMenu;
