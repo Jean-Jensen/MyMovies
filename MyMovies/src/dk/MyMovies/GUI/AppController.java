@@ -1,6 +1,7 @@
 package dk.MyMovies.GUI;
 
 import com.microsoft.sqlserver.jdbc.SQLServerException;
+import dk.MyMovies.BE.CatMovConnection;
 import dk.MyMovies.BE.Category;
 import dk.MyMovies.BE.Movie;
 import dk.MyMovies.BLL.BLLCatMov;
@@ -86,10 +87,11 @@ public class AppController implements Initializable {
         displayMovies();
        // displayCategory();
         rightClickMenu();
-        rightClickMenuCategory();
+        rightClickMenuRemoveCategory();
       //  categoryCheckboxes();
         RatingSlider();
         checkBoxCat();
+      //  rightClickDeleteCategory();
 
         try {
             checkForUselessMovies();
@@ -121,41 +123,91 @@ public class AppController implements Initializable {
     }
 
     //Adds a right click menu to delete a movie
+
     private void rightClickMenu(){
         rightClickMenu = new ContextMenu();
-        MenuItem deleteMovie = new MenuItem("Remove Movie");
-        //the next part is a lambda expression by writing it like this it automatically uses EventHandler<ActionEvent>
-        //its a short form of this >
-        //        deleteMovie.setOnAction(new EventHandler<ActionEvent>() {
-        //        @Override
-        //        public void handle(ActionEvent mouseClick) {
-        deleteMovie.setOnAction(mouseClick -> {
+        rightClickMenu.getItems().add(rightClickMenuRemoveMovie());
+        rightClickMenu.getItems().add(rightClickMenuAddCategory());
+      //  rightClickMenu.getItems().add(rightClickMenuRemoveCategory());
+        tblMovie.setContextMenu(rightClickMenu);
+    }
+
+    private MenuItem rightClickMenuRemoveMovie() {
+        MenuItem removeMovie = new MenuItem("Remove Movie");
+        removeMovie.setOnAction(mouseClick -> {
             try {
                 deleteMovie(mouseClick);
             } catch (IOException e) {
                 throw new RuntimeException("Error with right click menu", e);
             }
         });
-        rightClickMenu.getItems().add(deleteMovie);
-        tblMovie.setContextMenu(rightClickMenu); // Setting the context menu to work on the tableview
+        return removeMovie;
     }
 
-    private void rightClickMenuCategory(){
-        ContextMenu rightClickMenuCategory = new ContextMenu();
-        MenuItem deleteCategory = new MenuItem("Remove Category");
-        deleteCategory.setOnAction(mouseClick -> {
-            //Cascading Checkbox here and assuming CheckBox items and the user data is the Category ID
-            CheckBox selectedCheckBox = (CheckBox) lvCategories.getSelectionModel().getSelectedItem();
-            if (selectedCheckBox != null) {
-                int categoryId = (int) selectedCheckBox.getUserData();
-                BLLCat.deleteCategory(categoryId);
-                //need to update lvCategories to reflect the changes
-                lvCategories.getItems().remove(selectedCheckBox);
+        private Menu rightClickMenuAddCategory(){
+            Menu addCategoryMenu = new Menu("Add Category");
+        try {
+            List<Category> categories = BLLCat.getAllCategory();
+            for (Category category : categories) {
+                // Add Category submenu
+                MenuItem categoryItem = new MenuItem(category.getCatName());
+                categoryItem.setOnAction(actionEvent -> {
+                    Movie selectedMovie = tblMovie.getSelectionModel().getSelectedItem();
+                    if (selectedMovie != null) {
+                        try {
+                            bllCatMov.addMovieToCategory(category.getCatId(), selectedMovie.getId());
+                            // Refresh the movie table to reflect the changes
+                            displayMovies();
+                        } catch (MyMoviesExceptions e) {
+                            logger.log(Level.SEVERE, "Error adding movie to category: AppController", e);
+                            showErrorDialog(new MyMoviesExceptions("error adding movie to category" + e.getMessage(), e));
+                        }
+                    }
+                });
+                addCategoryMenu.getItems().add(categoryItem);
+            }
+        } catch (MyMoviesExceptions e) {
+            logger.log(Level.SEVERE, "Error retrieving all categories: AppController", e);
+            showErrorDialog(new MyMoviesExceptions("error retrieving all categories" + e.getMessage(), e));
+        }
+        return addCategoryMenu;
+    }
+
+
+    private Menu rightClickMenuRemoveCategory(){
+        // Delete Category submenu
+        Menu deleteCategoryMenu = new Menu("Delete Category");
+        rightClickMenu.getItems().add(deleteCategoryMenu);
+
+        rightClickMenu.setOnShowing(event -> {
+            Movie selectedMovie = tblMovie.getSelectionModel().getSelectedItem();
+            if (selectedMovie != null) {
+                deleteCategoryMenu.getItems().clear(); // Clear the old categories
+                try {
+                    List<CatMovConnection> catMovConnections = bllCatMov.getCategoriesForMovie(selectedMovie.getId());
+                    for (CatMovConnection catMovConnection : catMovConnections) {
+                        MenuItem categoryItem = new MenuItem(catMovConnection.getName());
+                        categoryItem.setOnAction(actionEvent -> {
+                            try {
+                                bllCatMov.removeMovieFromCategory(catMovConnection.getCatMovID());
+                                // Refresh the movie table to reflect the changes
+                                displayMovies();
+                            } catch (MyMoviesExceptions e) {
+                                logger.log(Level.SEVERE, "Error removing movie from category: AppController", e);
+                                showErrorDialog(new MyMoviesExceptions("error removing movie from category" + e.getMessage(), e));
+                            }
+                        });
+                        deleteCategoryMenu.getItems().add(categoryItem);
+                    }
+                } catch (MyMoviesExceptions e) {
+                    logger.log(Level.SEVERE, "Error retrieving categories for movie: AppController", e);
+                    showErrorDialog(new MyMoviesExceptions("error retrieving categories for movie" + e.getMessage(), e));
+                }
             }
         });
-        rightClickMenuCategory.getItems().add(deleteCategory);
-        lvCategories.setContextMenu(rightClickMenuCategory); // Setting the context menu to work on the ListView
+        return deleteCategoryMenu;
     }
+
 
     private void checkForUselessMovies() throws IOException {
         try {
@@ -314,7 +366,7 @@ public class AppController implements Initializable {
     }
 
     // Retrieves a list of categories for a specific movie using the method in BLLCatMov which talks to DAL
-    public List<Integer> getCategoriesForMovie(int movID) throws MyMoviesExceptions {
+   /* public List<Integer> getCategoriesForMovie(int movID) throws MyMoviesExceptions {
         try {
             return bllCatMov.getCategoriesForMovie(movID);
         } catch (MyMoviesExceptions e) {
@@ -322,7 +374,7 @@ public class AppController implements Initializable {
             showErrorDialog(new MyMoviesExceptions("Error retrieving categories for movie: AppController - " + e.getMessage(), e));
         }
         return null;
-    }
+    }*/
 
     public List<Movie> getMoviesByNameAndCategories(String movName, List<Integer> catIDs) throws MyMoviesExceptions {
         try {
