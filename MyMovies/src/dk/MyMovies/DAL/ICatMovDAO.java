@@ -14,15 +14,11 @@ public interface ICatMovDAO {
 
     void removeMovieFromCategory(int catMovID) throws MyMoviesExceptions;
 
-    //public List<Integer> getCategoriesForMovie(int movID) throws MyMoviesExceptions;
-
-   //public List<Category> getCategoriesForMovie(int movID) throws MyMoviesExceptions;
-
     public List<CatMovConnection> getCategoriesForMovie(int movID) throws MyMoviesExceptions;
-
 
     public List<Integer> getMoviesForCategories(List<Integer> catIDs) throws MyMoviesExceptions;
 
-    public List<Movie> getMoviesByNameAndCategories(String movName, List<Integer> catIDs) throws MyMoviesExceptions;
+    public List<CatMovConnection> getAllCatMovConnections() throws MyMoviesExceptions;
 
+    public List<CatMovConnection> getCatMovConnectionsByIds(List<Integer> movIDs) throws MyMoviesExceptions;
 }

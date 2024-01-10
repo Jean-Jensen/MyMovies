@@ -1,6 +1,7 @@
 package dk.MyMovies.GUI;
 
 import dk.MyMovies.BLL.BLLMovie;
+import dk.MyMovies.Exceptions.MyMoviesExceptions;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -18,7 +19,7 @@ public class DeleteMovieController implements Initializable {
     BLLMovie BLL = new BLLMovie();
     AppController control;
 
-    public void deleteMovie(ActionEvent actionEvent) {
+    public void deleteMovie(ActionEvent actionEvent) throws MyMoviesExceptions {
         BLL.deleteMovie(ID);
         control.displayMovies();
         closeWindow();
