@@ -19,8 +19,14 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.Duration;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -34,6 +40,9 @@ public class AppController implements Initializable {
 
     public Button btnAddCat;
     public Button btnEditCat;
+    @FXML
+    private MediaView mediaView;
+    private MediaPlayer player;
     private ConnectionManager con = new ConnectionManager();
     private BLLCategory BLLCat = new BLLCategory();
     private BLLMovie bllMov = new BLLMovie();
@@ -71,6 +80,8 @@ public class AppController implements Initializable {
     @FXML
     private Label lblSliderValue;
 
+    String filePath = "C:\\Users\\Jean\\Downloads\\3B Lair Games.mp4";
+
     private FileChooser.ExtensionFilter filter1 = new FileChooser.ExtensionFilter(".mp4 files", "*.mp4");
     private FileChooser.ExtensionFilter filter2 = new FileChooser.ExtensionFilter(".mpeg4 files", "*.mpeg4");
 
@@ -93,6 +104,8 @@ public class AppController implements Initializable {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
+
 
     }
     //////////////////////////////////////////////////////////
@@ -430,4 +443,28 @@ public class AppController implements Initializable {
        }*/
     public void editCategory(ActionEvent actionEvent) {}
 
+    public void Play(ActionEvent actionEvent) {
+        player.play();
+    }
+
+    public void Pause(ActionEvent actionEvent) {
+        player.pause();
+    }
+
+    public void Reset(ActionEvent actionEvent) {
+        if(player.getStatus() != MediaPlayer.Status.READY){
+            player.seek(Duration.ZERO);
+        }
+    }
+
+    public void setMediaPlayer(MouseEvent mouseEvent) {
+        Movie selected = tblMovie.getSelectionModel().getSelectedItem();
+        if(selected !=null){
+            File file = new File(selected.getFilePath());
+            Media media = new Media(file.toURI().toString());
+            player = new MediaPlayer(media);
+            mediaView.setMediaPlayer(player);
+
+        }
+    }
 }
