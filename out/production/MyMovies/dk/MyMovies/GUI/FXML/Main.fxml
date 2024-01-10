@@ -63,7 +63,9 @@
         <buttons>
           <Button mnemonicParsing="false" onAction="#Play" text="Play" />
             <Button layoutX="627.0" layoutY="15.0" mnemonicParsing="false" onAction="#Pause" text="Pause" />
-            <Button layoutX="627.0" layoutY="15.0" mnemonicParsing="false" onAction="#Reset" text="Reset" />
+            <Button layoutX="627.0" layoutY="15.0" minWidth="0.0" mnemonicParsing="false" onAction="#Reset" prefHeight="30.0" text="Reset" />
+            <Slider fx:id="progressSlider" onMousePressed="#setMovieTime" prefHeight="14.0" prefWidth="716.0" />
+            <Label fx:id="lblTimeVal" text="e" />
         </buttons>
          <BorderPane.margin>
             <Insets left="320.0" />

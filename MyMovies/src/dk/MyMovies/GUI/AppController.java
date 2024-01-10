@@ -9,6 +9,8 @@ import dk.MyMovies.BLL.BLLCategory;
 import dk.MyMovies.BLL.BLLMovie;
 import dk.MyMovies.DAL.ConnectionManager;
 import dk.MyMovies.Exceptions.MyMoviesExceptions;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -40,6 +42,11 @@ public class AppController implements Initializable {
 
     public Button btnAddCat;
     public Button btnEditCat;
+    @FXML
+    private Label lblTimeVal;
+    @FXML
+    private Slider progressSlider;
+
     @FXML
     private MediaView mediaView;
     private MediaPlayer player;
@@ -222,7 +229,11 @@ public class AppController implements Initializable {
 
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("FXML/DeleteWarningScene.fxml"));
                 Parent root = loader.load();
-                openNewWindow(root);
+                Scene scene = new Scene(root);
+                Stage stag = new Stage();
+                stag.setScene(scene);
+                stag.setAlwaysOnTop(true);
+                stag.show();
             }
         } catch (MyMoviesExceptions e) {
             logger.log(Level.SEVERE, "Error retrieving all movies with a rating below 6 that were last opened 2 years ago");
@@ -454,6 +465,7 @@ public class AppController implements Initializable {
     public void Reset(ActionEvent actionEvent) {
         if(player.getStatus() != MediaPlayer.Status.READY){
             player.seek(Duration.ZERO);
+            progressSlider.setValue(0);
         }
     }
 
@@ -464,7 +476,33 @@ public class AppController implements Initializable {
             Media media = new Media(file.toURI().toString());
             player = new MediaPlayer(media);
             mediaView.setMediaPlayer(player);
+            setProgressSlider();
 
+        }
+    }
+
+    public void setProgressSlider(){
+        if(player != null){
+            player.setOnReady(new Runnable() {
+                @Override
+                public void run() {
+                    progressSlider.setMax(player.getTotalDuration().toSeconds()); //setting the max value of the slider to the duration in seconds
+                    //duration in mediaplayer is only accessible when status = ready. which is why it needs to be in here
+                }
+            });
+
+            player.currentTimeProperty().addListener(new ChangeListener<Duration>() {
+                @Override
+                public void changed(ObservableValue<? extends Duration> observable, Duration oldValue, Duration newValue) {
+                    progressSlider.setValue(newValue.toSeconds()); //setting the progressbars value to be the new time value
+                }
+            });
+        }
+    }
+
+    public void setMovieTime(MouseEvent mouseEvent) {
+        if(player != null){
+            player.seek(Duration.seconds(progressSlider.getValue())); //mediaplayer changes to the slider value (which is in seconds)
         }
     }
 }
