@@ -447,7 +447,6 @@ public class AppController implements Initializable {
                 setProgressSlider();
             } else {
                 System.out.println("File not found: " + selected.getFilePath());
-                // Handle the case where the file does not exist
             }
         }
     }
