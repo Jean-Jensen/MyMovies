@@ -62,14 +62,14 @@
    <center>
       <AnchorPane prefHeight="557.0" prefWidth="699.0" BorderPane.alignment="CENTER">
          <children>
-            <ImageView fitHeight="513.0" fitWidth="622.0" layoutX="10.0" layoutY="14.0">
+            <ImageView fitHeight="513.0" fitWidth="649.0" layoutX="3.0" layoutY="7.0">
                <image>
-                  <Image url="@../Images/mediashell3.png" />
+                  <Image url="@../Images/mediashell4.png" />
                </image>
             </ImageView>
-            <MediaView fx:id="mediaView" fitHeight="396.0" fitWidth="590.0" layoutX="26.0" layoutY="31.0" />
-            <Button layoutX="295.0" layoutY="476.0" mnemonicParsing="false" onAction="#Play" style="-fx-background-color: transparent;" />
-            <ImageView fitHeight="76.0" fitWidth="134.0" layoutX="254.0" layoutY="438.0">
+            <MediaView fx:id="mediaView" fitHeight="347.0" fitWidth="615.0" layoutX="19.0" layoutY="74.0" />
+            <Button layoutX="275.0" layoutY="465.0" mnemonicParsing="false" onAction="#Play" prefHeight="38.0" prefWidth="111.0" style="-fx-background-color: transparent;" />
+            <ImageView fitHeight="76.0" fitWidth="134.0" layoutX="241.0" layoutY="444.0">
                <image>
                   <Image url="@../Images/playbtn.png" />
                </image>
