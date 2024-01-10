@@ -82,8 +82,6 @@ public class AppController implements Initializable {
     @FXML
     private Label lblSliderValue;
 
-    String filePath = "C:\\Users\\Jean\\Downloads\\3B Lair Games.mp4";
-
     private FileChooser.ExtensionFilter filter1 = new FileChooser.ExtensionFilter(".mp4 files", "*.mp4");
     private FileChooser.ExtensionFilter filter2 = new FileChooser.ExtensionFilter(".mpeg4 files", "*.mpeg4");
 
