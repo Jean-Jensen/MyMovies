@@ -454,6 +454,8 @@ public class AppController implements Initializable {
     }
 
     public void Reset(ActionEvent actionEvent) {
-        player.seek(Duration.ZERO);
+        if(player.getStatus() != MediaPlayer.Status.READY){
+            player.seek(Duration.ZERO);
+        }
     }
 }
