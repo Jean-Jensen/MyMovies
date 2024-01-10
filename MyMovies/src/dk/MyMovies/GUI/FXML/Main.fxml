@@ -9,6 +9,8 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
@@ -56,13 +58,6 @@
             </children>
         </VBox>
     </left>
-   <right>
-      <MediaView fitHeight="500.0" fitWidth="695.0" BorderPane.alignment="CENTER">
-         <BorderPane.margin>
-            <Insets bottom="50.0" top="50.0" />
-         </BorderPane.margin>
-      </MediaView>
-   </right>
    <bottom>
       <ButtonBar maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="40.0" prefWidth="750.0" BorderPane.alignment="CENTER">
         <buttons>
@@ -73,4 +68,21 @@
          </BorderPane.margin>
       </ButtonBar>
    </bottom>
+   <center>
+      <ImageView fitHeight="501.0" fitWidth="706.0" BorderPane.alignment="CENTER">
+         <image>
+            <Image url="@../Images/mediaviewplayer.png" />
+         </image>
+         <BorderPane.margin>
+            <Insets left="800.0" right="50.0" />
+         </BorderPane.margin>
+      </ImageView>
+   </center>
+   <right>
+      <MediaView fitHeight="415.0" fitWidth="656.0" BorderPane.alignment="CENTER">
+         <BorderPane.margin>
+            <Insets bottom="50.0" left="100.0" />
+         </BorderPane.margin>
+      </MediaView>
+   </right>
 </BorderPane>
