@@ -19,6 +19,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
@@ -104,10 +105,7 @@ public class AppController implements Initializable {
             throw new RuntimeException(e);
         }
 
-        File file = new File(filePath);
-        Media media = new Media(file.toURI().toString());
-        player = new MediaPlayer(media);
-        mediaView.setMediaPlayer(player);
+
 
     }
     //////////////////////////////////////////////////////////
@@ -456,6 +454,17 @@ public class AppController implements Initializable {
     public void Reset(ActionEvent actionEvent) {
         if(player.getStatus() != MediaPlayer.Status.READY){
             player.seek(Duration.ZERO);
+        }
+    }
+
+    public void setMediaPlayer(MouseEvent mouseEvent) {
+        Movie selected = tblMovie.getSelectionModel().getSelectedItem();
+        if(selected !=null){
+            File file = new File(selected.getFilePath());
+            Media media = new Media(file.toURI().toString());
+            player = new MediaPlayer(media);
+            mediaView.setMediaPlayer(player);
+
         }
     }
 }

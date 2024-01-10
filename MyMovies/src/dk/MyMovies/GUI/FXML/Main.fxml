@@ -38,7 +38,7 @@
                     </children>
                 </HBox>
                 <Slider fx:id="ratingSlider" max="10" prefHeight="14.0" prefWidth="143.0" />
-                <TableView fx:id="tblMovie" prefHeight="312.0" prefWidth="212.0">
+                <TableView fx:id="tblMovie" onMousePressed="#setMediaPlayer" prefHeight="312.0" prefWidth="212.0">
                     <columns>
                         <TableColumn fx:id="colName" prefWidth="50.0" text="Title" />
                         <TableColumn fx:id="colCat" prefWidth="67.0" text="Category" />
