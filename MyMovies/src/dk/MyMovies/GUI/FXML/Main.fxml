@@ -2,19 +2,22 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ButtonBar?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.media.MediaView?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="543.0" prefWidth="1012.0" stylesheets="@mainstyle.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dk.MyMovies.GUI.AppController">
+<?import javafx.scene.control.ButtonBar?>
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="1012.0" stylesheets="@mainstyle.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dk.MyMovies.GUI.AppController">
     <left>
         <VBox BorderPane.alignment="CENTER">
             <children>
@@ -36,9 +39,9 @@
                     </children>
                 </HBox>
                 <Slider fx:id="ratingSlider" max="10" prefHeight="14.0" prefWidth="143.0" />
-                <TableView fx:id="tblMovie" prefHeight="312.0" prefWidth="212.0">
+                <TableView fx:id="tblMovie" editable="true" onMousePressed="#setMediaPlayer" prefHeight="312.0" prefWidth="212.0" style="-fx-text-fill: black;">
                     <columns>
-                        <TableColumn fx:id="colName" prefWidth="50.0" text="Title" />
+                        <TableColumn fx:id="colName" prefWidth="50.0" style="-fx-border-color: black; -fx-border-width: 5;" text="Title" />
                         <TableColumn fx:id="colCat" prefWidth="67.0" text="Category" />
                         <TableColumn fx:id="colImdb" prefWidth="50.39996337890625" text="IMDB" />
                         <TableColumn fx:id="colRating" prefWidth="59.20001220703125" text="Rating" />
@@ -56,21 +59,36 @@
             </children>
         </VBox>
     </left>
-   <right>
-      <MediaView fitHeight="500.0" fitWidth="695.0" BorderPane.alignment="CENTER">
-         <BorderPane.margin>
-            <Insets bottom="50.0" top="50.0" />
-         </BorderPane.margin>
-      </MediaView>
-   </right>
    <bottom>
       <ButtonBar maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="40.0" prefWidth="750.0" BorderPane.alignment="CENTER">
         <buttons>
-          <Button mnemonicParsing="false" text="Button" />
+          <Button mnemonicParsing="false" onAction="#Play" text="Play" />
+            <Button layoutX="627.0" layoutY="15.0" mnemonicParsing="false" onAction="#Pause" text="Pause" />
+            <Button layoutX="627.0" layoutY="15.0" minWidth="0.0" mnemonicParsing="false" onAction="#Reset" prefHeight="30.0" text="Reset" />
+            <Slider fx:id="progressSlider" onMousePressed="#setMovieTime" prefHeight="14.0" prefWidth="716.0" />
+            <Label fx:id="lblTimeVal" text="e" />
         </buttons>
          <BorderPane.margin>
             <Insets left="320.0" />
          </BorderPane.margin>
       </ButtonBar>
    </bottom>
+   <center>
+      <AnchorPane prefHeight="557.0" prefWidth="699.0" BorderPane.alignment="CENTER">
+         <children>
+            <ImageView fitHeight="513.0" fitWidth="649.0" layoutX="3.0" layoutY="7.0">
+               <image>
+                  <Image url="@../Images/mediashell4.png" />
+               </image>
+            </ImageView>
+            <MediaView fx:id="mediaView" fitHeight="347.0" fitWidth="615.0" layoutX="19.0" layoutY="74.0" />
+            <Button layoutX="275.0" layoutY="465.0" mnemonicParsing="false" onAction="#Play" prefHeight="38.0" prefWidth="111.0" style="-fx-background-color: transparent;" />
+            <ImageView fitHeight="76.0" fitWidth="134.0" layoutX="241.0" layoutY="444.0">
+               <image>
+                  <Image url="@../Images/playbtn.png" />
+               </image>
+            </ImageView>
+         </children>
+      </AnchorPane>
+   </center>
 </BorderPane>

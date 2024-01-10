@@ -9,6 +9,8 @@ import dk.MyMovies.BLL.BLLCategory;
 import dk.MyMovies.BLL.BLLMovie;
 import dk.MyMovies.DAL.ConnectionManager;
 import dk.MyMovies.Exceptions.MyMoviesExceptions;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -19,8 +21,14 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.Duration;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -32,6 +40,14 @@ public class AppController implements Initializable {
 
     public Button btnAddCat;
     public Button btnEditCat;
+    @FXML
+    private Label lblTimeVal;
+    @FXML
+    private Slider progressSlider;
+
+    @FXML
+    private MediaView mediaView;
+    private MediaPlayer player;
     private ConnectionManager con = new ConnectionManager();
     private BLLCategory BLLCat = new BLLCategory();
     private BLLMovie bllMov = new BLLMovie();
@@ -92,6 +108,8 @@ public class AppController implements Initializable {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
+
 
     }
     //////////////////////////////////////////////////////////
@@ -403,4 +421,59 @@ public class AppController implements Initializable {
        }*/
     public void editCategory(ActionEvent actionEvent) {}
 
+    public void Play(ActionEvent actionEvent) {
+        player.play();
+    }
+
+    public void Pause(ActionEvent actionEvent) {
+        player.pause();
+    }
+
+    public void Reset(ActionEvent actionEvent) {
+        if(player.getStatus() != MediaPlayer.Status.READY){
+            player.seek(Duration.ZERO);
+            progressSlider.setValue(0);
+        }
+    }
+
+    public void setMediaPlayer(MouseEvent mouseEvent) {
+        Movie selected = tblMovie.getSelectionModel().getSelectedItem();
+        if(selected !=null){
+            File file = new File(selected.getFilePath());
+            if(file.exists()) {
+                Media media = new Media(file.toURI().toString());
+                player = new MediaPlayer(media);
+                mediaView.setMediaPlayer(player);
+                setProgressSlider();
+            } else {
+                System.out.println("File not found: " + selected.getFilePath());
+                // Handle the case where the file does not exist
+            }
+        }
+    }
+
+    public void setProgressSlider(){
+        if(player != null){
+            player.setOnReady(new Runnable() {
+                @Override
+                public void run() {
+                    progressSlider.setMax(player.getTotalDuration().toSeconds()); //setting the max value of the slider to the duration in seconds
+                    //duration in mediaplayer is only accessible when status = ready. which is why it needs to be in here
+                }
+            });
+
+            player.currentTimeProperty().addListener(new ChangeListener<Duration>() {
+                @Override
+                public void changed(ObservableValue<? extends Duration> observable, Duration oldValue, Duration newValue) {
+                    progressSlider.setValue(newValue.toSeconds()); //setting the progressbars value to be the new time value
+                }
+            });
+        }
+    }
+
+    public void setMovieTime(MouseEvent mouseEvent) {
+        if(player != null){
+            player.seek(Duration.seconds(progressSlider.getValue())); //mediaplayer changes to the slider value (which is in seconds)
+        }
+    }
 }
