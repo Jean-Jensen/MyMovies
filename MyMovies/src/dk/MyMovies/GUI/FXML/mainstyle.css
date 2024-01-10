@@ -43,8 +43,8 @@ Slider {
 TableView {
     -fx-background-color: transparent;
     -fx-base: transparent;
-    -fx-control-inner-background: transparent;
-    -fx-control-inner-background-alt: transparent;
+    -fx-text-fill: #5fbab8;
+    -fx-font-family: "Arial";
 }
 
 /* table columns */
