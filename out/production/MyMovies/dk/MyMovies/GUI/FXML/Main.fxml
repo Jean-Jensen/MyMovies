@@ -16,6 +16,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.media.MediaView?>
 
+<?import javafx.scene.control.ButtonBar?>
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="1012.0" stylesheets="@mainstyle.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dk.MyMovies.GUI.AppController">
     <left>
         <VBox BorderPane.alignment="CENTER">
@@ -58,6 +59,20 @@
             </children>
         </VBox>
     </left>
+   <bottom>
+      <ButtonBar maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="40.0" prefWidth="750.0" BorderPane.alignment="CENTER">
+        <buttons>
+          <Button mnemonicParsing="false" onAction="#Play" text="Play" />
+            <Button layoutX="627.0" layoutY="15.0" mnemonicParsing="false" onAction="#Pause" text="Pause" />
+            <Button layoutX="627.0" layoutY="15.0" minWidth="0.0" mnemonicParsing="false" onAction="#Reset" prefHeight="30.0" text="Reset" />
+            <Slider fx:id="progressSlider" onMousePressed="#setMovieTime" prefHeight="14.0" prefWidth="716.0" />
+            <Label fx:id="lblTimeVal" text="e" />
+        </buttons>
+         <BorderPane.margin>
+            <Insets left="320.0" />
+         </BorderPane.margin>
+      </ButtonBar>
+   </bottom>
    <center>
       <AnchorPane prefHeight="557.0" prefWidth="699.0" BorderPane.alignment="CENTER">
          <children>
