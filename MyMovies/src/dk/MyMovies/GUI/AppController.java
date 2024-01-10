@@ -440,11 +440,15 @@ public class AppController implements Initializable {
         Movie selected = tblMovie.getSelectionModel().getSelectedItem();
         if(selected !=null){
             File file = new File(selected.getFilePath());
-            Media media = new Media(file.toURI().toString());
-            player = new MediaPlayer(media);
-            mediaView.setMediaPlayer(player);
-            setProgressSlider();
-
+            if(file.exists()) {
+                Media media = new Media(file.toURI().toString());
+                player = new MediaPlayer(media);
+                mediaView.setMediaPlayer(player);
+                setProgressSlider();
+            } else {
+                System.out.println("File not found: " + selected.getFilePath());
+                // Handle the case where the file does not exist
+            }
         }
     }
 
