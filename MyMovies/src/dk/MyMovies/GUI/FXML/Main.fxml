@@ -61,7 +61,9 @@
    <bottom>
       <ButtonBar maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="40.0" prefWidth="750.0" BorderPane.alignment="CENTER">
         <buttons>
-          <Button mnemonicParsing="false" text="Button" />
+          <Button mnemonicParsing="false" onAction="#Play" text="Play" />
+            <Button layoutX="627.0" layoutY="15.0" mnemonicParsing="false" onAction="#Pause" text="Pause" />
+            <Button layoutX="627.0" layoutY="15.0" mnemonicParsing="false" onAction="#Reset" text="Reset" />
         </buttons>
          <BorderPane.margin>
             <Insets left="320.0" />
@@ -79,7 +81,7 @@
       </ImageView>
    </center>
    <right>
-      <MediaView fitHeight="415.0" fitWidth="656.0" BorderPane.alignment="CENTER">
+      <MediaView fx:id="mediaView" fitHeight="415.0" fitWidth="656.0" BorderPane.alignment="CENTER">
          <BorderPane.margin>
             <Insets bottom="50.0" left="100.0" />
          </BorderPane.margin>
