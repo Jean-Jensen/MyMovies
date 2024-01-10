@@ -41,14 +41,16 @@ Slider {
 
 /* table view */
 TableView {
-    -fx-pref-width: 212px;
-    -fx-background-color: #e8e8e8;
+    -fx-background-color: transparent;
+    -fx-base: transparent;
+    -fx-control-inner-background: transparent;
+    -fx-control-inner-background-alt: transparent;
 }
 
 /* table columns */
 TableColumn {
     -fx-font-size: 14px;
-    -fx-text-fill: #4a4a4a;
+    -fx-text-fill: #f4ebfe;
 }
 
 /* buttons */
