@@ -89,28 +89,18 @@ public class AppController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         try {
-            con.getConnection();
-        } catch (SQLServerException e) {
-            throw new RuntimeException(e);
-        }
-        try {
+            //con.getConnection();
             displayMovies();
-        } catch (MyMoviesExceptions e) {
+            checkForUselessMovies();
+        } catch (MyMoviesExceptions | IOException e) {
+            logger.log(Level.SEVERE, "Error initializing AppController", e);
+            showErrorDialog(new MyMoviesExceptions("Error initializing AppController: " + e.getMessage(), e));
             throw new RuntimeException(e);
         }
         rightClickMenu();
         rightClickMenuRemoveCategory();
         RatingSlider();
         checkBoxCat();
-
-        try {
-            checkForUselessMovies();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-
-
     }
     //////////////////////////////////////////////////////////
     ////////////////////GUI Stuff/////////////////////////////
@@ -119,13 +109,27 @@ public class AppController implements Initializable {
     //display movie data on table
     public void displayMovies() throws MyMoviesExceptions {
         List<CatMovConnection> catMovConnections = bllCatMov.getAllCatMovConnections();
+        List<Movie> allMovies = bllMov.getAllMovies();
 
-        //Using getCatMovMap method to avoid duplicate code
+        // Using getCatMovMap method to avoid duplicate code
         Map<Integer, CatMovConnection> catMovMap = getCatMovMap(catMovConnections);
 
-        if (!catMovMap.isEmpty()) {
+        // Create a new list to hold all movies
+        List<CatMovConnection> allCatMovConnections = new ArrayList<>();
+
+        for (Movie movie : allMovies) {
+            if (catMovMap.containsKey(movie.getId())) {
+                // If the movie has a category, add the CatMovConnection to the list
+                allCatMovConnections.add(catMovMap.get(movie.getId()));
+            } else {
+                // If the movie doesn't have a category, create a new CatMovConnection without a category and add it to the list
+                allCatMovConnections.add(new CatMovConnection(movie.getId(), movie.getName(), movie.getRating(), movie.getFilePath(), movie.getLastView(), -1));
+            }
+        }
+
+        if (!allCatMovConnections.isEmpty()) {
             tblMovie.getItems().clear();
-            tblMovie.getItems().addAll(catMovMap.values());
+            tblMovie.getItems().addAll(allCatMovConnections);
 
             colName.setCellValueFactory(new PropertyValueFactory<>("name"));
             colRating.setCellValueFactory(new PropertyValueFactory<>("rating"));
@@ -186,35 +190,27 @@ public class AppController implements Initializable {
     }
 
 
-    private void rightClickMenuRemoveCategory(){
+    private void rightClickMenuRemoveCategory() {
         // Delete Category submenu
         Menu deleteCategoryMenu = new Menu("Delete Category");
         rightClickMenu.getItems().add(deleteCategoryMenu);
 
         rightClickMenu.setOnShowing(event -> {
-            Movie selectedMovie = tblMovie.getSelectionModel().getSelectedItem();
-            if (selectedMovie != null) {
+            CatMovConnection selectedCatMov = tblMovie.getSelectionModel().getSelectedItem();
+            if (selectedCatMov != null) {
                 deleteCategoryMenu.getItems().clear(); // Clear the old categories
-                try {
-                    List<CatMovConnection> catMovConnections = bllCatMov.getCategoriesForMovie(selectedMovie.getId());
-                    for (CatMovConnection catMovConnection : catMovConnections) {
-                        MenuItem categoryItem = new MenuItem(catMovConnection.getName());
-                        categoryItem.setOnAction(actionEvent -> {
-                            try {
-                                bllCatMov.removeMovieFromCategory(catMovConnection.getCatMovID());
-                                // Refresh the movie table to reflect the changes
-                                displayMovies();
-                            } catch (MyMoviesExceptions e) {
-                                logger.log(Level.SEVERE, "Error removing movie from category: AppController", e);
-                                showErrorDialog(new MyMoviesExceptions("error removing movie from category" + e.getMessage(), e));
-                            }
-                        });
-                        deleteCategoryMenu.getItems().add(categoryItem);
+                MenuItem categoryItem = new MenuItem(selectedCatMov.getCategoryName());
+                categoryItem.setOnAction(actionEvent -> {
+                    try {
+                        bllCatMov.removeMovieFromCategory(selectedCatMov.getCatMovID());
+                        // Refresh the movie table to reflect the changes
+                        displayMovies();
+                    } catch (MyMoviesExceptions e) {
+                        logger.log(Level.SEVERE, "Error removing movie from category: AppController", e);
+                        showErrorDialog(new MyMoviesExceptions("error removing movie from category" + e.getMessage(), e));
                     }
-                } catch (MyMoviesExceptions e) {
-                    logger.log(Level.SEVERE, "Error retrieving categories for movie: AppController", e);
-                    showErrorDialog(new MyMoviesExceptions("error retrieving categories for movie" + e.getMessage(), e));
-                }
+                });
+                deleteCategoryMenu.getItems().add(categoryItem);
             }
         });
     }
@@ -234,6 +230,7 @@ public class AppController implements Initializable {
             }
         } catch (MyMoviesExceptions e) {
             logger.log(Level.SEVERE, "Error retrieving all movies with a rating below 6 that were last opened 2 years ago");
+            showErrorDialog((new MyMoviesExceptions("Error retrieving all movies with a rating below 6 that were last opened 2 years ago" + e.getMessage(), e)));
             throw new RuntimeException(e);
         }
     }
@@ -298,6 +295,7 @@ public class AppController implements Initializable {
     }
 
     private Map<Integer, CatMovConnection> getCatMovMap(List<CatMovConnection> catMovConnections) {
+        //making a map which is similar(can store Objects) to the primary key on a database but its local/faster but wont save when program is closed which is ok in this case
         Map<Integer, CatMovConnection> catMovMap = new HashMap<>();
         for (CatMovConnection catMovConnection : catMovConnections) {
             //I am checking to see if my catMovConnection has a key in the map
@@ -447,7 +445,6 @@ public class AppController implements Initializable {
                 setProgressSlider();
             } else {
                 System.out.println("File not found: " + selected.getFilePath());
-                // Handle the case where the file does not exist
             }
         }
     }
