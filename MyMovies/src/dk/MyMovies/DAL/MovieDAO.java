@@ -183,16 +183,30 @@ public class MovieDAO implements IMovieDAO {
         }
     }
 
-    public void searchMovie(String search){
+    public List<Movie> searchMovie(String name){
+        List<Movie> searchMovies = new ArrayList<>();
         try(Connection con = cm.getConnection()){
             String sql = "SELECT * FROM Movie WHERE Name LIKE ?";
             PreparedStatement pstmt = con.prepareStatement(sql);
-            pstmt.setString(1, search);
+            pstmt.setString(1, name);
 
-            pstmt.executeUpdate();
+            ResultSet rs = pstmt.executeQuery();
+            while(rs.next()){
+                int id = rs.getInt("MovID");
+                String n = rs.getString("Name");
+                double rating = rs.getDouble("Rating");
+                String filePath = rs.getString("FilePath");
+                String date = "";
+                if(rs.getDate("LastView") != null){
+                    date = rs.getDate("LastView").toString();
+                }
+                Movie mov = new Movie(id,n,rating,filePath,date);
+                searchMovies.add(mov);
+            }
         } catch (SQLException e) {
-            throw new RuntimeException("Error searching for movie " + search + "\n" + e.getMessage(), e);
+            throw new RuntimeException("Error searching for movie " + name + "\n" + e.getMessage(), e);
         }
+        return searchMovies;
     }
 
     public void searchMovie(String search, double rating){
@@ -265,4 +279,15 @@ public class MovieDAO implements IMovieDAO {
         return movies;
     }
 
+    public void getAllMovieNames(String search){
+        try(Connection con = cm.getConnection()){
+            String sql = "SELECT * FROM Movie WHERE Name = ?";
+            PreparedStatement pstmt = con.prepareStatement(sql);
+            pstmt.setString(1, search);
+
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("Error searching for movie " + search + "\n" + e.getMessage(), e);
+        }
+    }
 }

@@ -1,6 +1,5 @@
 package dk.MyMovies.GUI;
 
-import com.microsoft.sqlserver.jdbc.SQLServerException;
 import dk.MyMovies.BE.CatMovConnection;
 import dk.MyMovies.BE.Category;
 import dk.MyMovies.BE.Movie;
@@ -40,6 +39,7 @@ public class AppController implements Initializable {
 
     public Button btnAddCat;
     public Button btnEditCat;
+    public TextField search;
     @FXML
     private Label lblTimeVal;
     @FXML
@@ -49,7 +49,7 @@ public class AppController implements Initializable {
     private MediaView mediaView;
     private MediaPlayer player;
     private ConnectionManager con = new ConnectionManager();
-    private BLLCategory BLLCat = new BLLCategory();
+    private BLLCategory bllCat = new BLLCategory();
     private BLLMovie bllMov = new BLLMovie();
     private BLLCatMov bllCatMov = new BLLCatMov();
     private ContextMenu rightClickMenu;
@@ -137,6 +137,17 @@ public class AppController implements Initializable {
         }
     }
 
+    public void displaySearchedMovies() throws MyMoviesExceptions {
+        List<Movie> searchedMovies = bllMov.getAllMovies();
+
+        // Create a new list to hold all movies
+        List<CatMovConnection> allCatMovConnections = new ArrayList<>();
+
+        for (Movie movie : searchedMovies) {
+            
+        }
+    }
+
 
     //Adds a right click menu to delete a movie
 
@@ -162,7 +173,7 @@ public class AppController implements Initializable {
     private Menu rightClickMenuAddCategory(){
         Menu addCategoryMenu = new Menu("Add Category");
         try {
-            List<Category> categories = BLLCat.getAllCategory();
+            List<Category> categories = bllCat.getAllCategory();
             for (Category category : categories) {
                 // Add Category submenu
                 MenuItem categoryItem = new MenuItem(category.getCatName());
@@ -245,6 +256,7 @@ public class AppController implements Initializable {
     public void RatingSlider() {
         ratingSlider.valueProperty().addListener((observable, oldValue, newValue) ->
                 lblSliderValue.setText("Rating: " + String.format("%.0f", newValue)));
+
     }
 
     private void checkBoxCat() {
@@ -363,6 +375,20 @@ public class AppController implements Initializable {
         Stage stag = new Stage();
         stag.setScene(scene);
         stag.show();
+    }
+
+    @FXML
+    private void searchMovie(){
+        String input = search.getText();
+        if(input.isEmpty()){
+            try {
+                displayMovies();
+            } catch (MyMoviesExceptions e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+        bllMov.searchMovie(input);
+        }
     }
 
 

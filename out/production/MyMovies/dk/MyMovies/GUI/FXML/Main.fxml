@@ -13,12 +13,13 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.media.MediaView?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="1012.0" style="-fx-background-color: #312744;" stylesheets="@mainstyle.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dk.MyMovies.GUI.AppController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="1012.0" style="-fx-background-color: #312744;" stylesheets="@mainstyle.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dk.MyMovies.GUI.AppController">
     <left>
         <VBox BorderPane.alignment="CENTER">
             <children>
                 <Label text="Title" />
-                <TextField prefHeight="8.0" prefWidth="85.0">
+            <Button fx:id="searchBar" mnemonicParsing="false" onAction="#searchMovie" text="Search" />
+                <TextField fx:id="search" maxWidth="170.0" minWidth="-Infinity" prefHeight="30.0" prefWidth="130.0">
                <VBox.margin>
                   <Insets left="5.0" />
                </VBox.margin></TextField>
@@ -58,10 +59,16 @@
                 </TableView>
             <HBox>
                <children>
-                      <Button fx:id="btnAdd" mnemonicParsing="false" onAction="#addMovie" text="Add" />
+                      <Button fx:id="btnAdd" mnemonicParsing="false" onAction="#addMovie" text="Add">
+                     <HBox.margin>
+                        <Insets left="5.0" />
+                     </HBox.margin></Button>
                   <Button fx:id="btnEdit" mnemonicParsing="false" onAction="#editMovie" text="Edit" />
                   <Button fx:id="btnAddCat" mnemonicParsing="false" onAction="#addCategory" text="Add Category" />
-                  <Button fx:id="btnEditCat" mnemonicParsing="false" onAction="#editCategory" text="Edit Category" />
+                  <Button fx:id="btnEditCat" mnemonicParsing="false" onAction="#editCategory" text="Edit Category">
+                     <HBox.margin>
+                        <Insets right="1.0" />
+                     </HBox.margin></Button>
                </children>
             </HBox>
             </children>
@@ -78,7 +85,10 @@
             </Slider>
             <HBox prefHeight="76.0" prefWidth="724.0">
                <children>
-                  <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="26.0" text="Volume" />
+                  <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="26.0" text="Volume">
+                     <HBox.margin>
+                        <Insets left="5.0" />
+                     </HBox.margin></Button>
                   <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="29.0" text="Stop">
                      <HBox.margin>
                         <Insets left="150.0" />

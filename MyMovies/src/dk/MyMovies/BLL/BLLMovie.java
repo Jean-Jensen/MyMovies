@@ -41,4 +41,7 @@ public class BLLMovie {
         DAO.editMovie(ID,Name,Rating,FilePath,LastView);
     }
 
+    public List<Movie> searchMovie(String name) {
+        return DAO.searchMovie(name);
+    }
 }
