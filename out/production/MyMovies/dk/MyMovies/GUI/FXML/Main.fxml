@@ -8,23 +8,25 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.media.MediaView?>
 
-<?import javafx.scene.control.ButtonBar?>
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="1012.0" stylesheets="@mainstyle.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dk.MyMovies.GUI.AppController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="1012.0" style="-fx-background-color: #312744;" stylesheets="@mainstyle.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dk.MyMovies.GUI.AppController">
     <left>
         <VBox BorderPane.alignment="CENTER">
             <children>
                 <Label text="Title" />
-                <TextField prefHeight="8.0" prefWidth="85.0" />
+                <TextField prefHeight="8.0" prefWidth="85.0">
+               <VBox.margin>
+                  <Insets left="5.0" />
+               </VBox.margin></TextField>
                 <Label text="Categories" />
-                <ListView fx:id="lvCategories" prefHeight="81.0" prefWidth="263.0" styleClass="categories" />
+                <ListView fx:id="lvCategories" prefHeight="80.0" prefWidth="288.0" styleClass="categories">
+               <VBox.margin>
+                  <Insets left="5.0" />
+               </VBox.margin></ListView>
                 <HBox>
                     <VBox.margin>
                         <Insets />
@@ -38,7 +40,10 @@
                         </Label>
                     </children>
                 </HBox>
-                <Slider fx:id="ratingSlider" max="10" prefHeight="14.0" prefWidth="143.0" />
+                <Slider fx:id="ratingSlider" max="10" prefHeight="14.0" prefWidth="143.0">
+               <VBox.margin>
+                  <Insets left="5.0" right="5.0" />
+               </VBox.margin></Slider>
                 <TableView fx:id="tblMovie" editable="true" onMousePressed="#setMediaPlayer" prefHeight="312.0" prefWidth="212.0" style="-fx-text-fill: black;">
                     <columns>
                         <TableColumn fx:id="colName" prefWidth="50.0" style="-fx-border-color: black; -fx-border-width: 5;" text="Title" />
@@ -47,6 +52,9 @@
                         <TableColumn fx:id="colRating" prefWidth="59.20001220703125" text="Rating" />
                         <TableColumn fx:id="colLast" prefWidth="85.59999084472656" text="Last view" />
                     </columns>
+               <VBox.margin>
+                  <Insets left="1.0" right="1.0" />
+               </VBox.margin>
                 </TableView>
             <HBox>
                <children>
@@ -59,36 +67,42 @@
             </children>
         </VBox>
     </left>
-   <bottom>
-      <ButtonBar maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="40.0" prefWidth="750.0" BorderPane.alignment="CENTER">
-        <buttons>
-          <Button mnemonicParsing="false" onAction="#Play" text="Play" />
-            <Button layoutX="627.0" layoutY="15.0" mnemonicParsing="false" onAction="#Pause" text="Pause" />
-            <Button layoutX="627.0" layoutY="15.0" minWidth="0.0" mnemonicParsing="false" onAction="#Reset" prefHeight="30.0" text="Reset" />
-            <Slider fx:id="progressSlider" onMousePressed="#setMovieTime" prefHeight="14.0" prefWidth="716.0" />
-            <Label fx:id="lblTimeVal" text="e" />
-        </buttons>
-         <BorderPane.margin>
-            <Insets left="320.0" />
-         </BorderPane.margin>
-      </ButtonBar>
-   </bottom>
    <center>
-      <AnchorPane prefHeight="557.0" prefWidth="699.0" BorderPane.alignment="CENTER">
+      <VBox BorderPane.alignment="CENTER">
          <children>
-            <ImageView fitHeight="513.0" fitWidth="649.0" layoutX="3.0" layoutY="7.0">
-               <image>
-                  <Image url="@../Images/mediashell4.png" />
-               </image>
-            </ImageView>
-            <MediaView fx:id="mediaView" fitHeight="347.0" fitWidth="615.0" layoutX="19.0" layoutY="74.0" />
-            <Button layoutX="275.0" layoutY="465.0" mnemonicParsing="false" onAction="#Play" prefHeight="38.0" prefWidth="111.0" style="-fx-background-color: transparent;" />
-            <ImageView fitHeight="76.0" fitWidth="134.0" layoutX="241.0" layoutY="444.0">
-               <image>
-                  <Image url="@../Images/playbtn.png" />
-               </image>
-            </ImageView>
+            <MediaView fx:id="mediaView" fitHeight="396.0" fitWidth="590.0" />
+            <Slider style="-fx-background-color: transparent;">
+               <VBox.margin>
+                  <Insets top="70.0" />
+               </VBox.margin>
+            </Slider>
+            <HBox prefHeight="76.0" prefWidth="724.0">
+               <children>
+                  <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="26.0" text="Volume" />
+                  <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="29.0" text="Stop">
+                     <HBox.margin>
+                        <Insets left="150.0" />
+                     </HBox.margin>
+                  </Button>
+                  <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="Prev" />
+                  <Button fx:id="playbtn" mnemonicParsing="false" prefHeight="25.0" prefWidth="26.0" text="Play" />
+                  <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="40.0" text="Next" />
+                  <Button mnemonicParsing="false" text="FullScreen" />
+                  <Button mnemonicParsing="false" text="Star1">
+                     <HBox.margin>
+                        <Insets left="200.0" />
+                     </HBox.margin>
+                  </Button>
+                  <Button mnemonicParsing="false" text="Star2" />
+                  <Button mnemonicParsing="false" text="Star3" />
+                  <Button mnemonicParsing="false" text="Star4" />
+                  <Button mnemonicParsing="false" text="Star5" />
+               </children>
+               <VBox.margin>
+                  <Insets top="15.0" />
+               </VBox.margin>
+            </HBox>
          </children>
-      </AnchorPane>
+      </VBox>
    </center>
 </BorderPane>
