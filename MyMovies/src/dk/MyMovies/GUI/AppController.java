@@ -89,7 +89,6 @@ public class AppController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         try {
-            //con.getConnection();
             displayMovies();
             checkForUselessMovies();
         } catch (MyMoviesExceptions | IOException e) {
@@ -220,7 +219,6 @@ public class AppController implements Initializable {
         try {
             List<Movie> useless = bllMov.getUselessMovies();
             if(!useless.isEmpty()){
-
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("FXML/DeleteWarningScene.fxml"));
                 Parent root = loader.load();
                 Stage stage = new Stage();
