@@ -1,5 +1,7 @@
 package dk.MyMovies.BLL;
 
+import dk.MyMovies.BE.CatMovConnection;
+import dk.MyMovies.BE.Category;
 import dk.MyMovies.BE.Movie;
 import dk.MyMovies.DAL.CatMovDAO;
 import dk.MyMovies.DAL.ICatMovDAO;
@@ -28,7 +30,7 @@ public class BLLCatMov {
         }
     }
 
-    public List<Integer> getCategoriesForMovie(int movID) throws MyMoviesExceptions {
+    public List<CatMovConnection> getCategoriesForMovie(int movID) throws MyMoviesExceptions {
         try {
             return catMovDAO.getCategoriesForMovie(movID);
         } catch (MyMoviesExceptions e) {
@@ -44,11 +46,20 @@ public class BLLCatMov {
         }
     }
 
-    public List<Movie> getMoviesByNameAndCategories(String movName, List<Integer> catIDs) throws MyMoviesExceptions {
+
+    public List<CatMovConnection> getAllCatMovConnections() throws MyMoviesExceptions {
         try {
-            return catMovDAO.getMoviesByNameAndCategories(movName, catIDs);
+            return catMovDAO.getAllCatMovConnections();
         } catch (MyMoviesExceptions e) {
-            throw new MyMoviesExceptions("Error retrieving movies by name and categories: BLL Error - "+ e.getMessage(), e);
+            throw new MyMoviesExceptions("Error retrieving all movie category connections: BLL Error - " + e.getMessage(), e);
+        }
+    }
+
+    public List<CatMovConnection> getCatMovConnectionsByIds(List<Integer> movIDs) throws MyMoviesExceptions {
+        try {
+            return catMovDAO.getCatMovConnectionsByIds(movIDs);
+        } catch (MyMoviesExceptions e) {
+            throw new MyMoviesExceptions("Error retrieving movie category connections for given movie IDs: BLL Error - " + e.getMessage(), e);
         }
     }
 }

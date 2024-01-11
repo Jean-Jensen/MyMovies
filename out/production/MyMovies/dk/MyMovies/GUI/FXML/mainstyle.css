@@ -41,20 +41,20 @@ Slider {
 
 /* table view */
 TableView {
-    -fx-pref-width: 212px;
-    -fx-background-color: #e8e8e8;
+    -fx-background-color: transparent;
+    -fx-base: transparent;
+    -fx-text-fill: #5fbab8;
+    -fx-font-family: "Arial";
 }
 
 /* table columns */
 TableColumn {
     -fx-font-size: 14px;
-    -fx-text-fill: #4a4a4a;
+    -fx-text-fill: #160a23;
 }
 
 /* buttons */
 Button {
-    -fx-font-size: 14px;
-    -fx-pref-width: 70px;
     -fx-background-color: #7b68ee;
     -fx-text-fill: #fff;
 }
@@ -69,4 +69,16 @@ Button:hover {
 .table-row-cell:filled:selected {
     -fx-background-color: #7b68ee;
     -fx-text-fill: #fff;
+}
+
+.stopButton {
+    -fx-background-image: url('dk/MyMovies/GUI/Images/stop.png');
+    -fx-background-size: contain;
+    -fx-background-color: transparent;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-min-width: 20px;
+    -fx-min-height: 20px;
+    -fx-max-width: 20px;
+    -fx-max-height: 20px;
 }

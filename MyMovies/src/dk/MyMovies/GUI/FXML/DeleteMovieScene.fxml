@@ -5,11 +5,11 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="322.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dk.MyMovies.GUI.DeleteMovieController">
+<AnchorPane prefHeight="322.0" prefWidth="600.0" style="-fx-border-color: grey; -fx-border-width: 5;" stylesheets="@mainstyle.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dk.MyMovies.GUI.DeleteMovieController">
    <children>
-      <Label layoutX="54.0" layoutY="98.0" text="Are you sure you want to delete this movie?">
+      <Label layoutX="148.0" layoutY="99.0" text="Are you sure you want to delete this movie?">
          <font>
-            <Font name="Comic Sans MS" size="24.0" />
+            <Font name="Arial" size="24.0" />
          </font>
       </Label>
       <Label fx:id="lblMovName" layoutX="202.0" layoutY="137.0" text="- insert movie name here -">
@@ -22,7 +22,7 @@
             <Font size="16.0" />
          </font>
       </Button>
-      <Button layoutX="150.0" layoutY="228.0" mnemonicParsing="false" text="No">
+      <Button layoutX="131.0" layoutY="228.0" mnemonicParsing="false" text="No">
          <font>
             <Font size="16.0" />
          </font>

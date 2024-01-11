@@ -1,6 +1,7 @@
 package dk.MyMovies.GUI;
 
 import dk.MyMovies.BLL.BLLMovie;
+import dk.MyMovies.Exceptions.MyMoviesExceptions;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.DatePicker;
@@ -38,7 +39,7 @@ public class EditMovieController {
         this.control = control;
     }
 
-    public void EditMovie(ActionEvent actionEvent) {
+    public void EditMovie(ActionEvent actionEvent) throws MyMoviesExceptions {
         BLL.editMovie(ID, txtName.getText(),Double.valueOf(txtRating.getText()),txtFile.getText(), PckLast.getValue().toString());
         control.displayMovies();
         closeWindow();
