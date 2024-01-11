@@ -58,10 +58,16 @@
                 </TableView>
             <HBox>
                <children>
-                      <Button fx:id="btnAdd" mnemonicParsing="false" onAction="#addMovie" text="Add" />
+                      <Button fx:id="btnAdd" mnemonicParsing="false" onAction="#addMovie" text="Add">
+                     <HBox.margin>
+                        <Insets left="5.0" />
+                     </HBox.margin></Button>
                   <Button fx:id="btnEdit" mnemonicParsing="false" onAction="#editMovie" text="Edit" />
                   <Button fx:id="btnAddCat" mnemonicParsing="false" onAction="#addCategory" text="Add Category" />
-                  <Button fx:id="btnEditCat" mnemonicParsing="false" onAction="#editCategory" text="Edit Category" />
+                  <Button fx:id="btnEditCat" mnemonicParsing="false" onAction="#editCategory" text="Edit Category">
+                     <HBox.margin>
+                        <Insets right="1.0" />
+                     </HBox.margin></Button>
                </children>
             </HBox>
             </children>
@@ -78,7 +84,10 @@
             </Slider>
             <HBox prefHeight="76.0" prefWidth="724.0">
                <children>
-                  <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="26.0" text="Volume" />
+                  <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="26.0" text="Volume">
+                     <HBox.margin>
+                        <Insets left="5.0" />
+                     </HBox.margin></Button>
                   <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="29.0" text="Stop">
                      <HBox.margin>
                         <Insets left="150.0" />
