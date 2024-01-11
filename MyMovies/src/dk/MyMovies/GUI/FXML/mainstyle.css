@@ -55,8 +55,6 @@ TableColumn {
 
 /* buttons */
 Button {
-    -fx-font-size: 14px;
-    -fx-pref-width: 70px;
     -fx-background-color: #7b68ee;
     -fx-text-fill: #fff;
 }
