@@ -398,27 +398,6 @@ public class AppController implements Initializable {
         stag.show();
     }
 
-    public void searchName(KeyEvent keyEvent) {
-        TextField source = (TextField) keyEvent.getSource();
-        String searchText = source.getText().toLowerCase();
-
-        if (searchText.isEmpty()) {
-            // If the search text is empty, repopulate the table with the original items
-            tblMovie.getItems().setAll(originalItems);
-        } else {
-            // Create a new list for the filtered items
-            List<CatMovConnection> filteredItems = new ArrayList<>();
-
-            // Filter the original items based on the search text
-            for (CatMovConnection item : originalItems) {
-                if (item.getName().toLowerCase().contains(searchText)) {
-                    filteredItems.add(item);
-                }
-            }
-            // Update the table items
-            tblMovie.getItems().setAll(filteredItems);
-        }
-    }
 
 
     //////////////////////////////////////////////////////////
