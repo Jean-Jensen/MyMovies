@@ -24,13 +24,14 @@ public class EditCatSceneController {
     }
 
     // Adds text input into the category list
-  /*  public void btnAddCategory(ActionEvent actionEvent){
+    public void btnAddCategory(ActionEvent actionEvent){
         String text = catTextField.getText();
-        BLLCategory.createCategory(text);
-        appController.displayCategory();
+        bllCategory.createCategory(text);
+        appController.checkBoxCat();
+        appController.refreshRightClickMenu();
         Stage stage = (Stage) btnCancelCategory.getScene().getWindow();
         stage.close();
-    }*/
+    }
 
     public void btnCancelCategory(ActionEvent actionEvent){
         Stage stage = (Stage) btnCancelCategory.getScene().getWindow();
