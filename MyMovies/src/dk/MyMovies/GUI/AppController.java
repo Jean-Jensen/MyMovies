@@ -119,18 +119,8 @@ public class AppController implements Initializable {
 
         // Create a new list to hold all movies
         List<CatMovConnection> allCatMovConnections = new ArrayList<>();
-
-        for (Movie movie : allMovies) {
-            if (catMovMap.containsKey(movie.getId())) {
-                // If the movie has a category, add the CatMovConnection to the list
-                allCatMovConnections.add(catMovMap.get(movie.getId()));
-            } else {
-                // If the movie doesn't have a category, create a new CatMovConnection without a category and add it to the list
-                allCatMovConnections.add(new CatMovConnection(movie.getId(), movie.getName(), movie.getRating(), movie.getFilePath(), movie.getLastView(), -1));
-            }
-            originalItems = FXCollections.observableArrayList(allCatMovConnections);
-        }
         listAll(allCatMovConnections, allMovies, catMovMap);
+        originalItems = FXCollections.observableArrayList(allCatMovConnections);
 
         if (!allCatMovConnections.isEmpty()) {
             tblMovie.getItems().clear();
@@ -408,27 +398,6 @@ public class AppController implements Initializable {
         stag.show();
     }
 
-    public void searchName(KeyEvent keyEvent) {
-        TextField source = (TextField) keyEvent.getSource();
-        String searchText = source.getText().toLowerCase();
-
-        if (searchText.isEmpty()) {
-            // If the search text is empty, repopulate the table with the original items
-            tblMovie.getItems().setAll(originalItems);
-        } else {
-            // Create a new list for the filtered items
-            List<CatMovConnection> filteredItems = new ArrayList<>();
-
-            // Filter the original items based on the search text
-            for (CatMovConnection item : originalItems) {
-                if (item.getName().toLowerCase().contains(searchText)) {
-                    filteredItems.add(item);
-                }
-            }
-            // Update the table items
-            tblMovie.getItems().setAll(filteredItems);
-        }
-    }
 
 
     //////////////////////////////////////////////////////////
@@ -540,5 +509,27 @@ public class AppController implements Initializable {
 
         // Set the context menu on the ListView
         lvCategories.setContextMenu(contextMenu);
+    }
+
+    public void searchName(KeyEvent keyEvent) {
+        TextField source = (TextField) keyEvent.getSource();
+        String searchText = source.getText().toLowerCase();
+
+        if (searchText.isEmpty()) {
+            // If the search text is empty, repopulate the table with the original items
+            tblMovie.getItems().setAll(originalItems);
+        } else {
+            // Create a new list for the filtered items
+            List<CatMovConnection> filteredItems = new ArrayList<>();
+
+            // Filter the original items based on the search text
+            for (CatMovConnection item : originalItems) {
+                if (item.getName().toLowerCase().contains(searchText)) {
+                    filteredItems.add(item);
+                }
+            }
+            // Update the table items
+            tblMovie.getItems().setAll(filteredItems);
+        }
     }
 }
