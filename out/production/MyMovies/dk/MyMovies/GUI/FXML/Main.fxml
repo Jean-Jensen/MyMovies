@@ -19,8 +19,7 @@
         <VBox BorderPane.alignment="CENTER">
             <children>
                 <Label text="Title" />
-            <Button fx:id="searchBar" mnemonicParsing="false" text="Search" />
-                <TextField fx:id="search" maxWidth="170.0" minWidth="-Infinity" onKeyReleased="#searchName" prefHeight="30.0" prefWidth="130.0">
+                <TextField fx:id="search" minWidth="-Infinity" onKeyReleased="#searchName" prefHeight="30.0" prefWidth="130.0">
                <VBox.margin>
                   <Insets left="5.0" />
                </VBox.margin></TextField>
