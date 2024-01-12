@@ -20,6 +20,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -81,6 +82,8 @@ public class AppController implements Initializable {
     private Slider ratingSlider;
     @FXML
     private Label lblSliderValue;
+    private ObservableList<CatMovConnection> originalItems;
+
 
     private FileChooser.ExtensionFilter filter1 = new FileChooser.ExtensionFilter(".mp4 files", "*.mp4");
     private FileChooser.ExtensionFilter filter2 = new FileChooser.ExtensionFilter(".mpeg4 files", "*.mpeg4");
@@ -124,6 +127,7 @@ public class AppController implements Initializable {
                 // If the movie doesn't have a category, create a new CatMovConnection without a category and add it to the list
                 allCatMovConnections.add(new CatMovConnection(movie.getId(), movie.getName(), movie.getRating(), movie.getFilePath(), movie.getLastView(), -1));
             }
+            originalItems = FXCollections.observableArrayList(allCatMovConnections);
         }
 
         if (!allCatMovConnections.isEmpty()) {
@@ -377,17 +381,25 @@ public class AppController implements Initializable {
         stag.show();
     }
 
-    @FXML
-    private void searchMovie(){
-        String input = search.getText();
-        if(input.isEmpty()){
-            try {
-                displayMovies();
-            } catch (MyMoviesExceptions e) {
-                throw new RuntimeException(e);
-            }
+    public void searchName(KeyEvent keyEvent) {
+        TextField source = (TextField) keyEvent.getSource();
+        String searchText = source.getText().toLowerCase();
+
+        if (searchText.isEmpty()) {
+            // If the search text is empty, repopulate the table with the original items
+            tblMovie.getItems().setAll(originalItems);
         } else {
-        bllMov.searchMovie(input);
+            // Create a new list for the filtered items
+            List<CatMovConnection> filteredItems = new ArrayList<>();
+
+            // Filter the original items based on the search text
+            for (CatMovConnection item : originalItems) {
+                if (item.getName().toLowerCase().contains(searchText)) {
+                    filteredItems.add(item);
+                }
+            }
+            // Update the table items
+            tblMovie.getItems().setAll(filteredItems);
         }
     }
 
