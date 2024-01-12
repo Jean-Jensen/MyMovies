@@ -47,7 +47,7 @@
                </VBox.margin></Slider>
                 <TableView fx:id="tblMovie" editable="true" onMousePressed="#setMediaPlayer" prefHeight="311.0" prefWidth="288.0" style="-fx-text-fill: black;">
                     <columns>
-                        <TableColumn fx:id="colName" prefWidth="50.0" style="-fx-border-color: black; -fx-border-width: 5;" text="Title" />
+                        <TableColumn fx:id="colName" prefWidth="50.0" text="Title" />
                         <TableColumn fx:id="colCat" prefWidth="67.0" text="Category" />
                         <TableColumn fx:id="colImdb" prefWidth="50.39996337890625" text="IMDB" />
                         <TableColumn fx:id="colRating" prefWidth="59.20001220703125" text="Rating" />
@@ -105,13 +105,13 @@
                      <HBox.margin>
                         <Insets left="10.0" />
                      </HBox.margin></Button>
-                  <Button mnemonicParsing="false" prefHeight="30.0" styleClass="stopButton" prefWidth="29.0" text="Stop">
+                  <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="29.0" styleClass="stopButton" text="Stop">
                      <HBox.margin>
                         <Insets left="150.0" />
                      </HBox.margin>
                   </Button>
                   <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="Prev" />
-                  <Button fx:id="playbtn" styleClass="playButton" prefHeight="25.0" prefWidth="26.0" text="Play" />
+                  <Button fx:id="playbtn" prefHeight="25.0" prefWidth="26.0" styleClass="playButton" text="Play" />
                   <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="40.0" text="Next" />
                   <Button mnemonicParsing="false" text="FullScreen">
                      <HBox.margin>
