@@ -414,33 +414,7 @@ public class AppController implements Initializable {
             }
         });
     }
-
-   /* public void displayCategory(){
-        catColName.setCellValueFactory(new PropertyValueFactory<Category, String>("catName"));
-        ObservableList<Category> list = FXCollections.observableArrayList();
-        try {
-            list.setAll(BLLCat.getAllCategory());
-        } catch (MyMoviesExceptions e) {
-            logger.log(Level.SEVERE, "Error retrieving all categories: AppController", e);
-            showErrorDialog(new MyMoviesExceptions("error retrieving all categoris" + e.getMessage(), e));
-        }
-        tblCategory.setItems(list);
-    }*/
-
-    /*   public void deleteCategory(ActionEvent mouseClick){
-           Category selected = tblCategory.getSelectionModel().getSelectedItem();
-           BLLCat.deleteCategory(selected.getCatId());
-           displayCategory();
-       }
-       private void rightClickMenuCategory(){
-           rightClickMenu = new ContextMenu();
-           MenuItem deleteCategory = new MenuItem("Remove Category");
-           deleteCategory.setOnAction(mouseClick -> {
-               deleteCategory(mouseClick);
-           });
-           rightClickMenu.getItems().add(deleteCategory);
-           tblCategory.setContextMenu(rightClickMenu); // Setting the context menu to work on the tableview
-       }*/
+    
     public void editCategory(ActionEvent actionEvent) {}
 
     public void Play(ActionEvent actionEvent) {
