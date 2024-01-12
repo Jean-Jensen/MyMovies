@@ -1,6 +1,5 @@
 package dk.MyMovies.GUI;
 
-import com.microsoft.sqlserver.jdbc.SQLServerException;
 import dk.MyMovies.BE.CatMovConnection;
 import dk.MyMovies.BE.Category;
 import dk.MyMovies.BE.Movie;
@@ -41,6 +40,7 @@ public class AppController implements Initializable {
 
     public Button btnAddCat;
     public Button btnEditCat;
+    public TextField search;
     @FXML
     private TableColumn colImdb;
     @FXML
@@ -52,7 +52,7 @@ public class AppController implements Initializable {
     private MediaView mediaView;
     private MediaPlayer player;
     private ConnectionManager con = new ConnectionManager();
-    private BLLCategory BLLCat = new BLLCategory();
+    private BLLCategory bllCat = new BLLCategory();
     private BLLMovie bllMov = new BLLMovie();
     private BLLCatMov bllCatMov = new BLLCatMov();
     private ContextMenu rightClickMenu;
@@ -84,6 +84,7 @@ public class AppController implements Initializable {
     @FXML
     private Label lblSliderValue;
     private ObservableList<CatMovConnection> originalItems;
+
 
     private FileChooser.ExtensionFilter filter1 = new FileChooser.ExtensionFilter(".mp4 files", "*.mp4");
     private FileChooser.ExtensionFilter filter2 = new FileChooser.ExtensionFilter(".mpeg4 files", "*.mpeg4");
@@ -132,7 +133,19 @@ public class AppController implements Initializable {
         }
     }
 
-    //Adds a right click menu to delete a movie
+    public void displaySearchedMovies() throws MyMoviesExceptions {
+        List<Movie> searchedMovies = bllMov.getAllMovies();
+
+        // Create a new list to hold all movies
+        List<CatMovConnection> allCatMovConnections = new ArrayList<>();
+
+        for (Movie movie : searchedMovies) {
+            
+        }
+    }
+
+
+     //Adds a right click menu to delete a movie
 
     private void rightClickMenu(){
         rightClickMenu = new ContextMenu();
@@ -158,7 +171,7 @@ public class AppController implements Initializable {
     private Menu rightClickMenuAddCategory(){
         Menu addCategoryMenu = new Menu("Add Category");
         try {
-            List<Category> categories = BLLCat.getAllCategory();
+            List<Category> categories = bllCat.getAllCategory();
             for (Category category : categories) {
                 // Add Category submenu
                 MenuItem categoryItem = new MenuItem(category.getCatName());
@@ -244,6 +257,7 @@ public class AppController implements Initializable {
     public void RatingSlider() {
         ratingSlider.valueProperty().addListener((observable, oldValue, newValue) ->
                 lblSliderValue.setText("Rating: " + String.format("%.0f", newValue)));
+
     }
 
     public void checkBoxCat() {
@@ -385,6 +399,7 @@ public class AppController implements Initializable {
     }
 
 
+
     //////////////////////////////////////////////////////////
     ////////////////////Category Stuff////////////////////////
     //////////////////////////////////////////////////////////
@@ -405,33 +420,7 @@ public class AppController implements Initializable {
             throw new RuntimeException(e);
         }
     }
-
-   /* public void displayCategory(){
-        catColName.setCellValueFactory(new PropertyValueFactory<Category, String>("catName"));
-        ObservableList<Category> list = FXCollections.observableArrayList();
-        try {
-            list.setAll(BLLCat.getAllCategory());
-        } catch (MyMoviesExceptions e) {
-            logger.log(Level.SEVERE, "Error retrieving all categories: AppController", e);
-            showErrorDialog(new MyMoviesExceptions("error retrieving all categoris" + e.getMessage(), e));
-        }
-        tblCategory.setItems(list);
-    }*/
-
-    /*   public void deleteCategory(ActionEvent mouseClick){
-           Category selected = tblCategory.getSelectionModel().getSelectedItem();
-           BLLCat.deleteCategory(selected.getCatId());
-           displayCategory();
-       }
-       private void rightClickMenuCategory(){
-           rightClickMenu = new ContextMenu();
-           MenuItem deleteCategory = new MenuItem("Remove Category");
-           deleteCategory.setOnAction(mouseClick -> {
-               deleteCategory(mouseClick);
-           });
-           rightClickMenu.getItems().add(deleteCategory);
-           tblCategory.setContextMenu(rightClickMenu); // Setting the context menu to work on the tableview
-       }*/
+    
     public void editCategory(ActionEvent actionEvent) {}
 
     public void Play(ActionEvent actionEvent) {
