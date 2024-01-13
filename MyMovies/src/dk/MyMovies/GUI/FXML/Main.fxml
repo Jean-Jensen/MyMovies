@@ -107,7 +107,7 @@
                         <Insets left="10.0" />
                      </HBox.margin></Button>
                   <Slider fx:id="sliderVolume" onMousePressed="#setVolume" style="-fx-background-color: transparent;" />
-                  <Button mnemonicParsing="false" onAction="#Pause" prefHeight="30.0" prefWidth="29.0" styleClass="stopButton" text="Stop">
+                  <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="29.0" styleClass="stopButton" text="Stop">
 
                   <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="26.0" styleClass="volumeButton" text="Volume">
                      <HBox.margin>
@@ -119,21 +119,14 @@
                         <Insets left="150.0" />
                      </HBox.margin>
                   </Button>
-
-                  <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="Prev" />
-                  <Button fx:id="playbtn" onAction="#Play" prefHeight="25.0" prefWidth="26.0" styleClass="playButton" text="Play" />
-                  <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="40.0" text="Next" />
-                  <Button mnemonicParsing="false" text="FullScreen">
-
                   <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" styleClass="backwardButton" text="Backward" />
                   <Button fx:id="playbtn" onAction="#Play" prefHeight="25.0" prefWidth="26.0" styleClass="playButton" text="Play" />
                   <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="40.0" styleClass="forwardButton" text="Forward" />
                   <Button mnemonicParsing="false" styleClass="fullscreenButton" text="FullScreen">
-
                      <HBox.margin>
                         <Insets />
                      </HBox.margin></Button>
-                  <Button fx:id="star1" mnemonicParsing="false" onAction="#onStarClicked" onMouseEntered="#onStarHovered" onMouseExited="#onStarExited" styleClass="starButton">
+                  <Button fx:id="star1" mnemonicParsing="false" onAction="#onStarClicked" onMouseEntered="#onStarHovered" onMouseExited="#onStarExited" styleClass="starButton" />
                      <HBox.margin>
                         <Insets left="125.0" />
                      </HBox.margin>

@@ -45,7 +45,7 @@
                <VBox.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" />
                </VBox.margin></Slider>
-                <TableView fx:id="tblMovie" editable="true" onMousePressed="#setMediaPlayer" prefHeight="311.0" prefWidth="288.0" style="-fx-text-fill: black;">
+                <TableView fx:id="tblMovie" editable="true" maxHeight="-Infinity" maxWidth="-Infinity" onMousePressed="#setMediaPlayer" prefHeight="311.0" prefWidth="317.0" style="-fx-text-fill: black;">
                     <columns>
                         <TableColumn fx:id="colName" prefWidth="50.0" text="Title" />
                         <TableColumn fx:id="colCat" prefWidth="67.0" text="Category" />
@@ -57,19 +57,19 @@
                   <Insets left="1.0" right="1.0" />
                </VBox.margin>
                 </TableView>
-            <HBox>
+            <HBox prefHeight="60.0" prefWidth="320.0">
                <children>
                       <Button fx:id="btnAdd" mnemonicParsing="false" onAction="#addMovie" text="Add">
                      <HBox.margin>
-                        <Insets left="5.0" top="25.0" />
+                        <Insets top="25.0" />
                      </HBox.margin></Button>
                   <Button fx:id="btnEdit" mnemonicParsing="false" onAction="#editMovie" text="Edit">
                      <HBox.margin>
                         <Insets top="25.0" />
                      </HBox.margin></Button>
-                  <Button fx:id="btnAddCat" mnemonicParsing="false" onAction="#addCategory" text="Add Category">
+                  <Button fx:id="btnAddCat" mnemonicParsing="false" onAction="#addCategory" prefHeight="26.0" prefWidth="93.0" text="Add Category">
                      <HBox.margin>
-                        <Insets top="25.0" />
+                        <Insets left="32.0" top="25.0" />
                      </HBox.margin></Button>
                   <Button fx:id="btnEditCat" mnemonicParsing="false" onAction="#editCategory" text="Edit Category">
                      <HBox.margin>
@@ -84,58 +84,69 @@
         </VBox>
     </left>
    <center>
-      <VBox BorderPane.alignment="CENTER">
+      <VBox prefHeight="550.0" prefWidth="690.0" BorderPane.alignment="CENTER">
          <children>
             <StackPane prefHeight="481.0" prefWidth="714.0" style="-fx-background-color: black;">
                <children>
-                  <MediaView fx:id="mediaView" fitHeight="450.0" fitWidth="708.0" />
+                  <MediaView fx:id="mediaView" fitHeight="467.0" fitWidth="658.0" />
                </children>
                <VBox.margin>
-                  <Insets left="8.0" right="8.0" top="8.0" />
+                  <Insets left="10.0" right="8.0" top="8.0" />
                </VBox.margin>
             </StackPane>
             <Slider fx:id="progressSlider" minHeight="-Infinity" minWidth="-Infinity" onMousePressed="#setMovieTime" prefHeight="22.0" prefWidth="724.0" style="-fx-background-color: transparent;">
                <VBox.margin>
-                  <Insets top="20.0" />
+                  <Insets top="13.0" />
                </VBox.margin>
             </Slider>
             <HBox prefHeight="44.0" prefWidth="724.0">
                <children>
+
                   <Button mnemonicParsing="false" onAction="#toggleVolumeSlider" prefHeight="30.0" prefWidth="26.0" text="Volume">
                      <HBox.margin>
                         <Insets left="10.0" />
                      </HBox.margin></Button>
                   <Slider fx:id="sliderVolume" onMousePressed="#setVolume" style="-fx-background-color: transparent;" />
-                  <Button mnemonicParsing="false" onAction="#Pause" prefHeight="30.0" prefWidth="29.0" styleClass="stopButton" text="Stop">
+                  <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="29.0" styleClass="stopButton" text="Stop">
+
+                  <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="26.0" styleClass="volumeButton" text="Volume">
+                     <HBox.margin>
+                        <Insets left="10.0" />
+                     </HBox.margin></Button>
+                  <Button mnemonicParsing="false" onAction="#Stop" prefHeight="30.0" prefWidth="29.0" styleClass="stopButton" text="Stop">
+
                      <HBox.margin>
                         <Insets left="150.0" />
                      </HBox.margin>
                   </Button>
-                  <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="Prev" />
+                  <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" styleClass="backwardButton" text="Backward" />
                   <Button fx:id="playbtn" onAction="#Play" prefHeight="25.0" prefWidth="26.0" styleClass="playButton" text="Play" />
-                  <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="40.0" text="Next" />
-                  <Button mnemonicParsing="false" text="FullScreen">
+                  <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="40.0" styleClass="forwardButton" text="Forward" />
+                  <Button mnemonicParsing="false" styleClass="fullscreenButton" text="FullScreen">
                      <HBox.margin>
                         <Insets />
                      </HBox.margin></Button>
-                  <Button mnemonicParsing="false" text="Star1">
+                  <Button fx:id="star1" mnemonicParsing="false" onAction="#onStarClicked" onMouseEntered="#onStarHovered" onMouseExited="#onStarExited" styleClass="starButton" />
                      <HBox.margin>
                         <Insets left="125.0" />
                      </HBox.margin>
                   </Button>
-                  <Button mnemonicParsing="false" text="Star2" />
-                  <Button mnemonicParsing="false" text="Star3" />
-                  <Button mnemonicParsing="false" text="Star4" />
-                  <Button mnemonicParsing="false" text="Star5" />
+                  <Button fx:id="star2" mnemonicParsing="false" onAction="#onStarClicked" onMouseEntered="#onStarHovered" onMouseExited="#onStarExited" styleClass="starButton" text="Star2" />
+                  <Button fx:id="star3" mnemonicParsing="false" onAction="#onStarClicked" onMouseEntered="#onStarHovered" onMouseExited="#onStarExited" styleClass="starButton" text="Star3" />
+                  <Button fx:id="star4" mnemonicParsing="false" onAction="#onStarClicked" onMouseEntered="#onStarHovered" onMouseExited="#onStarExited" styleClass="starButton" text="Star4" />
+                  <Button fx:id="star5" mnemonicParsing="false" onAction="#onStarClicked" onMouseEntered="#onStarHovered" onMouseExited="#onStarExited" styleClass="starButton" text="Star5" />
                </children>
                <VBox.margin>
-                  <Insets top="10.0" />
+                  <Insets left="10.0" top="10.0" />
                </VBox.margin>
             </HBox>
          </children>
          <BorderPane.margin>
-            <Insets right="5.0" />
+            <Insets right="5.0" top="7.0" />
          </BorderPane.margin>
+         <padding>
+            <Insets bottom="5.0" />
+         </padding>
       </VBox>
    </center>
 </BorderPane>
