@@ -85,6 +85,8 @@ public class AppController implements Initializable {
     private Label lblSliderValue;
     private ObservableList<CatMovConnection> originalItems;
 
+    private boolean paused = false;
+
 
     private FileChooser.ExtensionFilter filter1 = new FileChooser.ExtensionFilter(".mp4 files", "*.mp4");
     private FileChooser.ExtensionFilter filter2 = new FileChooser.ExtensionFilter(".mpeg4 files", "*.mpeg4");
@@ -126,8 +128,8 @@ public class AppController implements Initializable {
         if (!allCatMovConnections.isEmpty()) {
             tblMovie.getItems().clear();
             tblMovie.getItems().addAll(allCatMovConnections);
-
             colName.setCellValueFactory(new PropertyValueFactory<>("name"));
+            colImdb.setCellValueFactory(new PropertyValueFactory<>("IMDBRating"));
             colRating.setCellValueFactory(new PropertyValueFactory<>("rating"));
             colLast.setCellValueFactory(new PropertyValueFactory<>("lastView"));
             colCat.setCellValueFactory(new PropertyValueFactory<>("categoryName"));
@@ -227,7 +229,7 @@ public class AppController implements Initializable {
                 catMovConnections.add(catMovMap.get(movie.getId()));
             } else {
                 // If the movie doesn't have a category, create a new CatMovConnection without a category and add it to the list
-                catMovConnections.add(new CatMovConnection(movie.getId(), movie.getName(), movie.getRating(), movie.getFilePath(), movie.getLastView(), -1));
+                catMovConnections.add(new CatMovConnection(movie.getId(), movie.getName(), movie.getRating(), movie.getIMDBRating(), movie.getFilePath(), movie.getLastView(), -1));
             }
         }
     }
@@ -292,7 +294,7 @@ public class AppController implements Initializable {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("FXML/EditMovieScene.fxml"));
             Parent root = loader.load();
             EditMovieController controller = loader.getController();
-            controller.setData(selected.getId(),selected.getName(),String.valueOf(selected.getRating()),selected.getFilePath(), selected.getLastView(), this);
+            controller.setData(selected.getId(),selected.getName(),String.valueOf(selected.getRating()),String.valueOf(selected.getIMDBRating()),selected.getFilePath(), selected.getLastView(), this);
             openNewWindow(root);
         }
     }
@@ -373,7 +375,9 @@ public class AppController implements Initializable {
             player.currentTimeProperty().addListener(new ChangeListener<Duration>() {
                 @Override
                 public void changed(ObservableValue<? extends Duration> observable, Duration oldValue, Duration newValue) {
-                    progressSlider.setValue(newValue.toSeconds()); //setting the progressbars value to be the new time value
+                    if(!paused){
+                        progressSlider.setValue(newValue.toSeconds()); //setting the progressbars value to be the new time value
+                    }
                 }
             });
         }

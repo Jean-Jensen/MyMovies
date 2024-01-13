@@ -15,6 +15,6 @@ public interface IMovieDAO {
 
     void deleteMovie(int ID);
 
-    void editMovie(int ID, String Name, Double Rating, String FilePath, String LastView);
+    void editMovie(int ID, String Name, Double Rating, Double PersonalRating, String FilePath, String LastView);
 
 }

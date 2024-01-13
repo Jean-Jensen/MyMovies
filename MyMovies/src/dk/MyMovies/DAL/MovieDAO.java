@@ -21,13 +21,14 @@ public class MovieDAO implements IMovieDAO {
             while(rs.next()){
                 int id = rs.getInt("MovID");
                 String name = rs.getString("Name");
-                double rating = rs.getDouble("Rating");
+                double rating = rs.getDouble("PersonalRating");
+                double IMDB = rs.getDouble("Rating");
                 String filePath = rs.getString("FilePath");
                 String date = "";
                 if(rs.getDate("LastView") != null){
                     date = rs.getDate("LastView").toString();
                 }
-                Movie mov = new Movie(id,name,rating,filePath,date);
+                Movie mov = new Movie(id,name,rating,IMDB,filePath,date);
                 movies.add(mov);
             }
         } catch (SQLException e) {
@@ -49,13 +50,14 @@ public class MovieDAO implements IMovieDAO {
             while(rs.next()){
                 int id = rs.getInt("MovID");
                 String name = rs.getString("Name");
-                double rating = rs.getDouble("Rating");
+                double rating = rs.getDouble("PersonalRating");
+                double IMDB = rs.getDouble("Rating");
                 String filePath = rs.getString("FilePath");
                 String date = "";
                 if(rs.getDate("LastView") != null){
                     date = rs.getDate("LastView").toString();
                 }
-                Movie mov = new Movie(id,name,rating,filePath,date);
+                Movie mov = new Movie(id,name,rating,IMDB,filePath,date);
                 movies.add(mov);
             }
         } catch (SQLException e) {
@@ -167,15 +169,16 @@ public class MovieDAO implements IMovieDAO {
         }
     }
 
-    public void editMovie(int ID, String Name, Double Rating, String FilePath, String LastView){
+    public void editMovie(int ID, String Name, Double Rating, Double PersonalRating, String FilePath, String LastView){
         try(Connection con = cm.getConnection()){
-            String sql = "UPDATE Movie SET Name=?, Rating=?, FilePath=?, LastView=? WHERE MovID=?";
+            String sql = "UPDATE Movie SET Name=?, Rating=?, PersonalRating =?, FilePath=?, LastView=? WHERE MovID=?";
             PreparedStatement pstmt = con.prepareStatement(sql);
             pstmt.setString(1, Name);
             pstmt.setString(2, String.valueOf(Rating));
-            pstmt.setString(3, FilePath);
-            pstmt.setString(4, LastView);
-            pstmt.setString(5, String.valueOf(ID));
+            pstmt.setString(3, String.valueOf(PersonalRating));
+            pstmt.setString(4, FilePath);
+            pstmt.setString(5, LastView);
+            pstmt.setString(6, String.valueOf(ID));
 
             pstmt.executeUpdate();
         } catch (SQLException e) {
@@ -227,10 +230,11 @@ public class MovieDAO implements IMovieDAO {
             while (rs.next()) {
                 int id = rs.getInt("MovID");
                 String name = rs.getString("Name");
-                double rating = rs.getDouble("Rating");
+                double rating = rs.getDouble("PersonalRating");
+                double IMDB = rs.getDouble("Rating");
                 String filePath = rs.getString("FilePath");
                 String date = rs.getDate("LastView") == null ? "" : rs.getDate("LastView").toString();
-                Movie mov = new Movie(id, name, rating, filePath, date);
+                Movie mov = new Movie(id, name, rating, IMDB, filePath, date);
                 movies.add(mov);
             }
         } catch (SQLException e) {

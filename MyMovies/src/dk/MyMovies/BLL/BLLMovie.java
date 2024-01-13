@@ -37,7 +37,7 @@ public class BLLMovie {
         DAO.deleteMovie(ID);
     }
 
-    public void editMovie(int ID, String Name, Double Rating, String FilePath, String LastView){
-        DAO.editMovie(ID,Name,Rating,FilePath,LastView);
+    public void editMovie(int ID, String Name, Double IMDB, Double Rating, String FilePath, String LastView){
+        DAO.editMovie(ID,Name,IMDB,Rating,FilePath,LastView);
     }
 }

@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.media.MediaView?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="1012.0" style="-fx-background-color: #312744;" stylesheets="@mainstyle.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dk.MyMovies.GUI.AppController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="1012.0" style="-fx-background-color: #312744;" stylesheets="@mainstyle.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dk.MyMovies.GUI.AppController">
     <left>
         <VBox BorderPane.alignment="CENTER">
             <children>
@@ -94,7 +94,7 @@
                   <Insets left="8.0" right="8.0" top="8.0" />
                </VBox.margin>
             </StackPane>
-            <Slider minHeight="-Infinity" minWidth="-Infinity" prefHeight="22.0" prefWidth="660.0" style="-fx-background-color: transparent;">
+            <Slider fx:id="progressSlider" minHeight="-Infinity" minWidth="-Infinity" onMousePressed="#setMovieTime" prefHeight="22.0" prefWidth="724.0" style="-fx-background-color: transparent;">
                <VBox.margin>
                   <Insets top="20.0" />
                </VBox.margin>
@@ -105,13 +105,13 @@
                      <HBox.margin>
                         <Insets left="10.0" />
                      </HBox.margin></Button>
-                  <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="29.0" styleClass="stopButton" text="Stop">
+                  <Button mnemonicParsing="false" onAction="#Pause" prefHeight="30.0" prefWidth="29.0" styleClass="stopButton" text="Stop">
                      <HBox.margin>
                         <Insets left="150.0" />
                      </HBox.margin>
                   </Button>
                   <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="Prev" />
-                  <Button fx:id="playbtn" prefHeight="25.0" prefWidth="26.0" styleClass="playButton" text="Play" />
+                  <Button fx:id="playbtn" onAction="#Play" prefHeight="25.0" prefWidth="26.0" styleClass="playButton" text="Play" />
                   <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="40.0" text="Next" />
                   <Button mnemonicParsing="false" text="FullScreen">
                      <HBox.margin>
