@@ -20,6 +20,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.media.Media;
@@ -29,6 +30,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import javafx.scene.image.ImageView;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -86,7 +88,20 @@ public class AppController implements Initializable {
     private Slider ratingSlider;
     @FXML
     private Label lblSliderValue;
-    private ObservableList<CatMovConnectionBE> originalItems;
+    private ObservableList<CatMovConnection> originalItems;
+    @FXML
+    private Button star1;
+    @FXML
+    private Button star2;
+    @FXML
+    private Button star3;
+    @FXML
+    private Button star4;
+    @FXML
+    private Button star5;
+
+    private final Image emptyStar = new Image("file:/C:/Users/Iulia/Documents/GitHub/MyMovies/MyMovies/src/dk/MyMovies/GUI/Images/starempty.png");
+    private final Image filledStar = new Image("file:/C:/Users/Iulia/Documents/GitHub/MyMovies/MyMovies/src/dk/MyMovies/GUI/Images/starfill.png");
 
     private boolean paused = false;
 
@@ -110,6 +125,8 @@ public class AppController implements Initializable {
         RatingSlider();
         checkBoxCat();
     }
+
+
     //////////////////////////////////////////////////////////
     ////////////////////GUI Stuff/////////////////////////////
     /////////////////////////////////////////////////////////
@@ -377,9 +394,42 @@ public class AppController implements Initializable {
         player.play();
     }
 
-    public void Pause(ActionEvent actionEvent) {
-        player.pause();
+    public void Stop(ActionEvent actionEvent) {
+        player.stop();
     }
+
+    @FXML
+    private void onStarHovered(MouseEvent event) {
+        Button hoveredStar = (Button) event.getSource();
+        // Change style class when hovered
+        hoveredStar.getStyleClass().add("starfilledButton");
+    }
+
+    @FXML
+    private void onStarExited(MouseEvent event) {
+        Button exitedStar = (Button) event.getSource();
+        // Change style class back to default when mouse exits
+        exitedStar.getStyleClass().remove("starfilledButton");
+    }
+
+    @FXML
+    private void onStarClicked(ActionEvent event) {
+        Button clickedStar = (Button) event.getSource();
+
+        // Toggle between filled and empty stars by changing the style class
+        if (clickedStar.getStyleClass().contains("starButton")) {
+            clickedStar.getStyleClass().add("starfilledButton");
+            clickedStar.getStyleClass().remove("starButton");
+        }
+        /*if (clickedStar.getStyleClass().contains("starfilledButton")) {
+            clickedStar.getStyleClass().add("starButton");
+            clickedStar.getStyleClass().remove("starfilledButton");
+        }*/
+
+
+    }
+
+
 
     public void Reset(ActionEvent actionEvent) {
         if(player.getStatus() != MediaPlayer.Status.READY){
