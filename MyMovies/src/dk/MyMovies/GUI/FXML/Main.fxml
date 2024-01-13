@@ -101,10 +101,11 @@
             </Slider>
             <HBox prefHeight="44.0" prefWidth="724.0">
                <children>
-                  <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="26.0" text="Volume">
+                  <Button mnemonicParsing="false" onAction="#toggleVolumeSlider" prefHeight="30.0" prefWidth="26.0" text="Volume">
                      <HBox.margin>
                         <Insets left="10.0" />
                      </HBox.margin></Button>
+                  <Slider fx:id="sliderVolume" onMousePressed="#setVolume" style="-fx-background-color: transparent;" />
                   <Button mnemonicParsing="false" onAction="#Pause" prefHeight="30.0" prefWidth="29.0" styleClass="stopButton" text="Stop">
                      <HBox.margin>
                         <Insets left="150.0" />
