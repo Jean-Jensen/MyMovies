@@ -373,6 +373,7 @@ public class AppController implements Initializable {
 
     public void Play(ActionEvent actionEvent) {
         player.play();
+        setVolumeSlider();
     }
 
     public void Pause(ActionEvent actionEvent) {
@@ -435,9 +436,18 @@ public class AppController implements Initializable {
             sliderVolume.setVisible(true);
         }
     }
-    public void setVolume(MouseEvent mouseEvent) {
+    private void setVolumeSlider() {
         if(player != null){
-            //player.setVolume();
+            sliderVolume.setValue(player.getVolume() * 100 );
+            //mediaplayer volume is usually between 0-1 and our slider is between 0-100, so we're multiplying by 100
+            //setting our slider value to the mediaplayers automatic volume value
+
+            sliderVolume.valueProperty().addListener((observable, oldValue, newValue) -> {
+                //setting the volume of the mediaplayer to be the sliders new value
+                double sliderVal = newValue.doubleValue();
+                player.setVolume(sliderVal/100);
+                //we need to divideby 100 since we multiplied the value by 100 earlier
+            });
         }
     }
 
