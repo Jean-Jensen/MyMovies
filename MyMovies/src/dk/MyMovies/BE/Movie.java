@@ -40,6 +40,11 @@ public class Movie {
         this.lastView = lastView;
     }
 
+    //For right Click menu
+    public Movie() {
+
+    }
+
 
     public int getId() {
         return MovID;

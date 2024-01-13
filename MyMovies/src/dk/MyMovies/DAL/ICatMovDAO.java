@@ -1,11 +1,8 @@
 package dk.MyMovies.DAL;
 
-import dk.MyMovies.BE.CatMovConnection;
-import dk.MyMovies.BE.Category;
-import dk.MyMovies.BE.Movie;
+import dk.MyMovies.BE.CatMovConnectionBE;
 import dk.MyMovies.Exceptions.MyMoviesExceptions;
 
-import java.sql.ResultSet;
 import java.util.List;
 
 public interface ICatMovDAO {
@@ -14,11 +11,11 @@ public interface ICatMovDAO {
 
     void removeMovieFromCategory(int catMovID) throws MyMoviesExceptions;
 
-    public List<CatMovConnection> getCategoriesForMovie(int movID) throws MyMoviesExceptions;
+    List<CatMovConnectionBE> getCategoriesForMovie(int movID) throws MyMoviesExceptions;
 
-    public List<Integer> getMoviesForCategories(List<Integer> catIDs) throws MyMoviesExceptions;
+    List<Integer> getMoviesForCategories(List<Integer> catIDs) throws MyMoviesExceptions;
 
-    public List<CatMovConnection> getAllCatMovConnections() throws MyMoviesExceptions;
+    List<CatMovConnectionBE> getAllCatMovConnections() throws MyMoviesExceptions;
 
-    public List<CatMovConnection> getCatMovConnectionsByIds(List<Integer> movIDs) throws MyMoviesExceptions;
+    List<CatMovConnectionBE> getCatMovConnectionsByIds(List<Integer> movIDs) throws MyMoviesExceptions;
 }
