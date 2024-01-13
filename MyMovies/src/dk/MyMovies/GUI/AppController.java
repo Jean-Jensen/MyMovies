@@ -88,7 +88,7 @@ public class AppController implements Initializable {
     private Slider ratingSlider;
     @FXML
     private Label lblSliderValue;
-    private ObservableList<CatMovConnection> originalItems;
+    private ObservableList<CatMovConnectionBE> originalItems;
     @FXML
     private Button star1;
     @FXML
