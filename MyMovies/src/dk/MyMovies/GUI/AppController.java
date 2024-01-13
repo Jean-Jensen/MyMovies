@@ -168,11 +168,11 @@ public class AppController implements Initializable {
             List<CatMovConnectionBE> catMovConnectionBES;
             if (selectedCategoryIds.isEmpty()) {
                 // Retrieve all movies and their categories
-               // List<CatMovConnection> mapCatMovConnections = bllCatMov.getAllCatMovConnections();
+                List<CatMovConnectionBE> mapCatMovConnections = bllCatMov.getAllCatMovConnections();
                 List<Movie> allMovies = bllMov.getAllMovies();
 
                 // Using getCatMovMap method to avoid duplicate code in displayMovies
-                Map<Integer, CatMovConnectionBE> catMovMap = getCatMovMap(bllCatMov.getAllCatMovConnections());
+                Map<Integer, CatMovConnectionBE> catMovMap = getCatMovMap(mapCatMovConnections);
 
                 // Create a new list to hold all movies
                 catMovConnectionBES = new ArrayList<>();

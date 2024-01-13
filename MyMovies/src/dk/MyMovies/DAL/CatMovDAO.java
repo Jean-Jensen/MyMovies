@@ -46,9 +46,9 @@ public class CatMovDAO implements ICatMovDAO{
         List<CatMovConnectionBE> catMovConnectionBES = new ArrayList<>();
         try (Connection con = cm.getConnection()) {
             String sql = "SELECT Category.Name, ID FROM Category " +
-                    //I join the CatMovie table with Category table if the CatID's match
+                    //I join the CatMovie table with Category via FROM Category
                     "JOIN CatMovie ON Category.CatID = CatMovie.CatID " +
-                    //I join the Movie table with the CatMovie table if the MovID's match
+                    //I join my newly joined CatMovie/Category table to Movie
                     "JOIN Movie ON Movie.MovID = CatMovie.MovID " +
                     //Filter out everything unless it matches my parameter
                     "WHERE CatMovie.MovID = ?";
