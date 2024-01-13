@@ -42,6 +42,8 @@ public class AppController implements Initializable {
     public Button btnEditCat;
     public TextField search;
     @FXML
+    private Slider sliderVolume;
+    @FXML
     private TableColumn colImdb;
     @FXML
     private Label lblTimeVal;
@@ -102,6 +104,7 @@ public class AppController implements Initializable {
             showErrorDialog(new MyMoviesExceptions("Error initializing AppController: " + e.getMessage(), e));
             throw new RuntimeException(e);
         }
+        sliderVolume.setVisible(false);
         rightClickMenu();
         RatingSlider();
         checkBoxCat();
@@ -332,6 +335,42 @@ public class AppController implements Initializable {
 
     public void editCategory(ActionEvent actionEvent) {}
 
+    private void setupCategoryListView() {
+        // Create a context menu
+        ContextMenu contextMenu = new ContextMenu();
+
+        // Create a menu item for removing a category
+        MenuItem removeCategoryItem = new MenuItem("Remove Category");
+        removeCategoryItem.setOnAction(event -> {
+            // Get the selected category
+            CheckBox selectedCategory = lvCategories.getSelectionModel().getSelectedItem();
+            if (selectedCategory != null) {
+                // Get the category ID from the CheckBox's user data
+                int categoryId = (int) selectedCategory.getUserData();
+                try {
+                    // Delete the category
+                    bllCat.deleteCategory(categoryId);
+
+                    // Remove the CheckBox from the ListView
+                    lvCategories.getItems().remove(selectedCategory);
+                    refreshRightClickMenu();
+                } catch (Exception e) {
+                    logger.log(Level.SEVERE, "Error removing category: AppController - ", e);
+                    showErrorDialog(new MyMoviesExceptions("Error removing category - " + e.getMessage(), e));
+                }
+            }
+        });
+        // Add the menu item to the context menu
+        contextMenu.getItems().add(removeCategoryItem);
+
+        // Set the context menu on the ListView
+        lvCategories.setContextMenu(contextMenu);
+    }
+
+    //////////////////////////////////////////////////////////
+    ////////////////////MediaPlayer stuff/////////////////////
+    //////////////////////////////////////////////////////////
+
     public void Play(ActionEvent actionEvent) {
         player.play();
     }
@@ -389,36 +428,17 @@ public class AppController implements Initializable {
         }
     }
 
-    private void setupCategoryListView() {
-        // Create a context menu
-        ContextMenu contextMenu = new ContextMenu();
-
-        // Create a menu item for removing a category
-        MenuItem removeCategoryItem = new MenuItem("Remove Category");
-        removeCategoryItem.setOnAction(event -> {
-            // Get the selected category
-            CheckBox selectedCategory = lvCategories.getSelectionModel().getSelectedItem();
-            if (selectedCategory != null) {
-                // Get the category ID from the CheckBox's user data
-                int categoryId = (int) selectedCategory.getUserData();
-                try {
-                    // Delete the category
-                    bllCat.deleteCategory(categoryId);
-
-                    // Remove the CheckBox from the ListView
-                    lvCategories.getItems().remove(selectedCategory);
-                    refreshRightClickMenu();
-                } catch (Exception e) {
-                    logger.log(Level.SEVERE, "Error removing category: AppController - ", e);
-                    showErrorDialog(new MyMoviesExceptions("Error removing category - " + e.getMessage(), e));
-                }
-            }
-        });
-        // Add the menu item to the context menu
-        contextMenu.getItems().add(removeCategoryItem);
-
-        // Set the context menu on the ListView
-        lvCategories.setContextMenu(contextMenu);
+    public void toggleVolumeSlider(ActionEvent actionEvent) {
+        if(sliderVolume.isVisible()){
+            sliderVolume.setVisible(false);
+        } else {
+            sliderVolume.setVisible(true);
+        }
+    }
+    public void setVolume(MouseEvent mouseEvent) {
+        if(player != null){
+            //player.setVolume();
+        }
     }
 
     public void searchName(KeyEvent keyEvent) {
@@ -532,6 +552,7 @@ public class AppController implements Initializable {
             }
         });
     }
+
 
 
 }
