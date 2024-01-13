@@ -7,40 +7,40 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="432.0" prefWidth="393.0" style="-fx-border-color: grey; -fx-border-width: 5;" stylesheets="@mainstyle.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dk.MyMovies.GUI.EditMovieController">
+<AnchorPane prefHeight="520.0" prefWidth="393.0" style="-fx-border-color: grey; -fx-border-width: 5;" stylesheets="@mainstyle.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dk.MyMovies.GUI.EditMovieController">
    <children>
       <TextField fx:id="txtName" layoutX="31.0" layoutY="93.0" prefHeight="38.0" prefWidth="241.0" AnchorPane.leftAnchor="31.0" AnchorPane.rightAnchor="121.0">
          <font>
             <Font name="Arial" size="18.0" />
          </font>
       </TextField>
-      <TextField fx:id="txtRating" layoutX="31.0" layoutY="165.0" prefHeight="38.0" prefWidth="86.0" AnchorPane.leftAnchor="31.0" AnchorPane.rightAnchor="121.0">
+      <TextField fx:id="txtIMDB" layoutX="31.0" layoutY="165.0" prefHeight="38.0" prefWidth="86.0" AnchorPane.leftAnchor="31.0" AnchorPane.rightAnchor="121.0">
          <font>
             <Font name="Arial" size="18.0" />
          </font>
       </TextField>
-      <TextField fx:id="txtFile" layoutX="31.0" layoutY="247.0" prefHeight="38.0" prefWidth="335.0" AnchorPane.leftAnchor="31.0" AnchorPane.rightAnchor="121.0">
+      <TextField fx:id="txtRating" layoutX="31.0" layoutY="247.0" prefHeight="38.0" prefWidth="335.0" AnchorPane.leftAnchor="31.0" AnchorPane.rightAnchor="121.0">
          <font>
             <Font name="Arial" size="18.0" />
          </font>
       </TextField>
-      <DatePicker fx:id="PckLast" layoutX="30.0" layoutY="329.0" />
+      <DatePicker fx:id="PckLast" layoutX="30.0" layoutY="411.0" />
       <Label layoutX="33.0" layoutY="69.0" text="Name">
          <font>
             <Font name="Arial" size="16.0" />
          </font>
       </Label>
-      <Label layoutX="30.0" layoutY="141.0" text="Rating">
+      <Label layoutX="30.0" layoutY="141.0" text="IMDB Rating">
          <font>
             <Font name="Arial" size="16.0" />
          </font>
       </Label>
-      <Label layoutX="31.0" layoutY="223.0" text="FilePath">
+      <Label layoutX="31.0" layoutY="223.0" text="Personal Rating">
          <font>
             <Font name="Arial" size="16.0" />
          </font>
       </Label>
-      <Label layoutX="33.0" layoutY="305.0" text="Last time viewed">
+      <Label layoutX="33.0" layoutY="387.0" text="Last time viewed">
          <font>
             <Font name="Arial" size="16.0" />
          </font>
@@ -50,10 +50,20 @@
             <Font name="Arial" size="12.0" />
          </font>
       </Label>
-      <Button layoutX="30.0" layoutY="381.0" mnemonicParsing="false" onAction="#EditMovie" text="Edit">
+      <Button layoutX="30.0" layoutY="463.0" mnemonicParsing="false" onAction="#EditMovie" text="Edit">
          <font>
             <Font name="Arial" size="16.0" />
          </font>
       </Button>
+      <TextField fx:id="txtFile" layoutX="37.0" layoutY="329.0" prefHeight="38.0" prefWidth="335.0" AnchorPane.leftAnchor="31.0" AnchorPane.rightAnchor="121.0">
+         <font>
+            <Font name="Arial" size="18.0" />
+         </font>
+      </TextField>
+      <Label layoutX="31.0" layoutY="309.0" text="FilePath">
+         <font>
+            <Font name="Arial" size="16.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>

@@ -58,6 +58,7 @@ public class CatMovDAO implements ICatMovDAO{
                     CatMovConnection catMovConnection = new CatMovConnection(
                             rs.getInt("MovID"),
                             rs.getString("Name"),
+                            rs.getDouble("PersonalRating"),
                             rs.getDouble("Rating"),
                             rs.getString("FilePath"),
                             rs.getString("LastView"),
@@ -86,6 +87,7 @@ public class CatMovDAO implements ICatMovDAO{
                     CatMovConnection catMovConnection = new CatMovConnection(
                             rs.getInt("MovID"),
                             rs.getString("Name"),
+                            rs.getDouble("PersonalRating"),
                             rs.getDouble("Rating"),
                             rs.getString("FilePath"),
                             rs.getString("LastView"),
@@ -153,6 +155,7 @@ public class CatMovDAO implements ICatMovDAO{
                     CatMovConnection catMovConnection = new CatMovConnection(
                             rs.getInt("MovID"),
                             rs.getString("Name"),
+                            rs.getDouble("PersonalRating"),
                             rs.getDouble("Rating"),
                             rs.getString("FilePath"),
                             rs.getString("LastView"),

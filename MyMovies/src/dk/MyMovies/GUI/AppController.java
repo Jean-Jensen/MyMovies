@@ -42,6 +42,8 @@ public class AppController implements Initializable {
     public Button btnEditCat;
     public TextField search;
     @FXML
+    private Slider sliderVolume;
+    @FXML
     private TableColumn colImdb;
     @FXML
     private Label lblTimeVal;
@@ -85,6 +87,8 @@ public class AppController implements Initializable {
     private Label lblSliderValue;
     private ObservableList<CatMovConnection> originalItems;
 
+    private boolean paused = false;
+
 
     private FileChooser.ExtensionFilter filter1 = new FileChooser.ExtensionFilter(".mp4 files", "*.mp4");
     private FileChooser.ExtensionFilter filter2 = new FileChooser.ExtensionFilter(".mpeg4 files", "*.mpeg4");
@@ -100,6 +104,7 @@ public class AppController implements Initializable {
             showErrorDialog(new MyMoviesExceptions("Error initializing AppController: " + e.getMessage(), e));
             throw new RuntimeException(e);
         }
+        sliderVolume.setVisible(false);
         rightClickMenu();
         RatingSlider();
         checkBoxCat();
@@ -126,8 +131,8 @@ public class AppController implements Initializable {
         if (!allCatMovConnections.isEmpty()) {
             tblMovie.getItems().clear();
             tblMovie.getItems().addAll(allCatMovConnections);
-
             colName.setCellValueFactory(new PropertyValueFactory<>("name"));
+            colImdb.setCellValueFactory(new PropertyValueFactory<>("IMDBRating"));
             colRating.setCellValueFactory(new PropertyValueFactory<>("rating"));
             colLast.setCellValueFactory(new PropertyValueFactory<>("lastView"));
             colCat.setCellValueFactory(new PropertyValueFactory<>("categoryName"));
@@ -227,7 +232,7 @@ public class AppController implements Initializable {
                 catMovConnections.add(catMovMap.get(movie.getId()));
             } else {
                 // If the movie doesn't have a category, create a new CatMovConnection without a category and add it to the list
-                catMovConnections.add(new CatMovConnection(movie.getId(), movie.getName(), movie.getRating(), movie.getFilePath(), movie.getLastView(), -1));
+                catMovConnections.add(new CatMovConnection(movie.getId(), movie.getName(), movie.getRating(), movie.getIMDBRating(), movie.getFilePath(), movie.getLastView(), -1));
             }
         }
     }
@@ -292,7 +297,7 @@ public class AppController implements Initializable {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("FXML/EditMovieScene.fxml"));
             Parent root = loader.load();
             EditMovieController controller = loader.getController();
-            controller.setData(selected.getId(),selected.getName(),String.valueOf(selected.getRating()),selected.getFilePath(), selected.getLastView(), this);
+            controller.setData(selected.getId(),selected.getName(),String.valueOf(selected.getRating()),String.valueOf(selected.getIMDBRating()),selected.getFilePath(), selected.getLastView(), this);
             openNewWindow(root);
         }
     }
@@ -329,6 +334,42 @@ public class AppController implements Initializable {
     }
 
     public void editCategory(ActionEvent actionEvent) {}
+
+    private void setupCategoryListView() {
+        // Create a context menu
+        ContextMenu contextMenu = new ContextMenu();
+
+        // Create a menu item for removing a category
+        MenuItem removeCategoryItem = new MenuItem("Remove Category");
+        removeCategoryItem.setOnAction(event -> {
+            // Get the selected category
+            CheckBox selectedCategory = lvCategories.getSelectionModel().getSelectedItem();
+            if (selectedCategory != null) {
+                // Get the category ID from the CheckBox's user data
+                int categoryId = (int) selectedCategory.getUserData();
+                try {
+                    // Delete the category
+                    bllCat.deleteCategory(categoryId);
+
+                    // Remove the CheckBox from the ListView
+                    lvCategories.getItems().remove(selectedCategory);
+                    refreshRightClickMenu();
+                } catch (Exception e) {
+                    logger.log(Level.SEVERE, "Error removing category: AppController - ", e);
+                    showErrorDialog(new MyMoviesExceptions("Error removing category - " + e.getMessage(), e));
+                }
+            }
+        });
+        // Add the menu item to the context menu
+        contextMenu.getItems().add(removeCategoryItem);
+
+        // Set the context menu on the ListView
+        lvCategories.setContextMenu(contextMenu);
+    }
+
+    //////////////////////////////////////////////////////////
+    ////////////////////MediaPlayer stuff/////////////////////
+    //////////////////////////////////////////////////////////
 
     public void Play(ActionEvent actionEvent) {
         player.play();
@@ -373,7 +414,9 @@ public class AppController implements Initializable {
             player.currentTimeProperty().addListener(new ChangeListener<Duration>() {
                 @Override
                 public void changed(ObservableValue<? extends Duration> observable, Duration oldValue, Duration newValue) {
-                    progressSlider.setValue(newValue.toSeconds()); //setting the progressbars value to be the new time value
+                    if(!paused){
+                        progressSlider.setValue(newValue.toSeconds()); //setting the progressbars value to be the new time value
+                    }
                 }
             });
         }
@@ -385,36 +428,17 @@ public class AppController implements Initializable {
         }
     }
 
-    private void setupCategoryListView() {
-        // Create a context menu
-        ContextMenu contextMenu = new ContextMenu();
-
-        // Create a menu item for removing a category
-        MenuItem removeCategoryItem = new MenuItem("Remove Category");
-        removeCategoryItem.setOnAction(event -> {
-            // Get the selected category
-            CheckBox selectedCategory = lvCategories.getSelectionModel().getSelectedItem();
-            if (selectedCategory != null) {
-                // Get the category ID from the CheckBox's user data
-                int categoryId = (int) selectedCategory.getUserData();
-                try {
-                    // Delete the category
-                    bllCat.deleteCategory(categoryId);
-
-                    // Remove the CheckBox from the ListView
-                    lvCategories.getItems().remove(selectedCategory);
-                    refreshRightClickMenu();
-                } catch (Exception e) {
-                    logger.log(Level.SEVERE, "Error removing category: AppController - ", e);
-                    showErrorDialog(new MyMoviesExceptions("Error removing category - " + e.getMessage(), e));
-                }
-            }
-        });
-        // Add the menu item to the context menu
-        contextMenu.getItems().add(removeCategoryItem);
-
-        // Set the context menu on the ListView
-        lvCategories.setContextMenu(contextMenu);
+    public void toggleVolumeSlider(ActionEvent actionEvent) {
+        if(sliderVolume.isVisible()){
+            sliderVolume.setVisible(false);
+        } else {
+            sliderVolume.setVisible(true);
+        }
+    }
+    public void setVolume(MouseEvent mouseEvent) {
+        if(player != null){
+            //player.setVolume();
+        }
     }
 
     public void searchName(KeyEvent keyEvent) {
@@ -528,6 +552,7 @@ public class AppController implements Initializable {
             }
         });
     }
+
 
 
 }
