@@ -43,8 +43,7 @@ public class AppController implements Initializable {
     public TextField search;
     @FXML
     private Slider sliderVolume;
-    @FXML
-    private TableColumn colImdb;
+
     @FXML
     private Label lblTimeVal;
     @FXML
@@ -79,6 +78,8 @@ public class AppController implements Initializable {
     private TableColumn<CatMovConnection, Double> colRating;
     @FXML
     private TableColumn<CatMovConnection, String> colLast;
+    @FXML
+    private TableColumn<CatMovConnection, String> colImdb;
     @FXML
     private ListView<CheckBox> lvCategories;
     @FXML
