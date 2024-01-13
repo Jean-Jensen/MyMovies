@@ -1,6 +1,6 @@
 package dk.MyMovies.GUI;
 
-import dk.MyMovies.BE.CatMovConnection;
+import dk.MyMovies.BE.CatMovConnectionBE;
 import dk.MyMovies.BE.Category;
 import dk.MyMovies.BE.Movie;
 import dk.MyMovies.BLL.BLLCatMov;
@@ -60,7 +60,7 @@ public class AppController implements Initializable {
     private static final Logger logger = Logger.getLogger(AppController.class.getName());
 
     @FXML
-    private TableView<CatMovConnection> tblMovie;
+    private TableView<CatMovConnectionBE> tblMovie;
     @FXML
     private TableView<Category> tblCategory;
     @FXML
@@ -71,22 +71,22 @@ public class AppController implements Initializable {
     private Button btnEdit;
 
     @FXML
-    private TableColumn<CatMovConnection, String> colName;
+    private TableColumn<CatMovConnectionBE, String> colName;
     @FXML
-    private TableColumn<CatMovConnection, String> colCat;
+    private TableColumn<CatMovConnectionBE, String> colCat;
     @FXML
-    private TableColumn<CatMovConnection, Double> colRating;
+    private TableColumn<CatMovConnectionBE, Double> colRating;
     @FXML
-    private TableColumn<CatMovConnection, String> colLast;
+    private TableColumn<CatMovConnectionBE, String> colLast;
     @FXML
-    private TableColumn<CatMovConnection, String> colImdb;
+    private TableColumn<CatMovConnectionBE, String> colImdb;
     @FXML
     private ListView<CheckBox> lvCategories;
     @FXML
     private Slider ratingSlider;
     @FXML
     private Label lblSliderValue;
-    private ObservableList<CatMovConnection> originalItems;
+    private ObservableList<CatMovConnectionBE> originalItems;
 
     private boolean paused = false;
 
@@ -116,22 +116,23 @@ public class AppController implements Initializable {
 
     //display movie data on table
     public void displayMovies() throws MyMoviesExceptions {
-        List<CatMovConnection> mapCatMovConnections = bllCatMov.getAllCatMovConnections();
+        List<CatMovConnectionBE> mapCatMovConnectionBES = bllCatMov.getAllCatMovConnections();
         List<Movie> allMovies = bllMov.getAllMovies();
 
         // Using getCatMovMap method to avoid duplicate code
-        Map<Integer, CatMovConnection> catMovMap = getCatMovMap(mapCatMovConnections);
+        Map<Integer, CatMovConnectionBE> catMovMap = getCatMovMap(mapCatMovConnectionBES);
 
         // Create a new list to hold all movies
-        List<CatMovConnection> allCatMovConnections = new ArrayList<>();
-        listAll(allCatMovConnections, allMovies, catMovMap);
+        List<CatMovConnectionBE> allCatMovConnectionBES = new ArrayList<>();
+        listAll(allCatMovConnectionBES, allMovies, catMovMap);
 
         //Observable list created for our search menu
-        originalItems = FXCollections.observableArrayList(allCatMovConnections);
-
-        if (!allCatMovConnections.isEmpty()) {
+        originalItems = FXCollections.observableArrayList(allCatMovConnectionBES);
+//This can be put into a new method but many things call it, and it would require alot of
+// changing so maybe if we have time we can figure that out.
+        if (!allCatMovConnectionBES.isEmpty()) {
             tblMovie.getItems().clear();
-            tblMovie.getItems().addAll(allCatMovConnections);
+            tblMovie.getItems().addAll(allCatMovConnectionBES);
             colName.setCellValueFactory(new PropertyValueFactory<>("name"));
             colImdb.setCellValueFactory(new PropertyValueFactory<>("IMDBRating"));
             colRating.setCellValueFactory(new PropertyValueFactory<>("rating"));
@@ -164,25 +165,25 @@ public class AppController implements Initializable {
                     selectedCategoryIds.add((Integer) ((CheckBox) item).getUserData());
                 }
             }
-            List<CatMovConnection> catMovConnections;
+            List<CatMovConnectionBE> catMovConnectionBES;
             if (selectedCategoryIds.isEmpty()) {
                 // Retrieve all movies and their categories
                // List<CatMovConnection> mapCatMovConnections = bllCatMov.getAllCatMovConnections();
                 List<Movie> allMovies = bllMov.getAllMovies();
 
                 // Using getCatMovMap method to avoid duplicate code in displayMovies
-                Map<Integer, CatMovConnection> catMovMap = getCatMovMap(bllCatMov.getAllCatMovConnections());
+                Map<Integer, CatMovConnectionBE> catMovMap = getCatMovMap(bllCatMov.getAllCatMovConnections());
 
                 // Create a new list to hold all movies
-                catMovConnections = new ArrayList<>();
+                catMovConnectionBES = new ArrayList<>();
                 // Using listAll method to avoid duplicate code in displayMovies
-                listAll(catMovConnections, allMovies, catMovMap);
+                listAll(catMovConnectionBES, allMovies, catMovMap);
             } else {
                 List<Integer> movieIds = bllCatMov.getMoviesForCategories(selectedCategoryIds);
-                catMovConnections = bllCatMov.getCatMovConnectionsByIds(movieIds);
+                catMovConnectionBES = bllCatMov.getCatMovConnectionsByIds(movieIds);
             }
 
-            ObservableList<CatMovConnection> observableMovies = FXCollections.observableArrayList(catMovConnections);
+            ObservableList<CatMovConnectionBE> observableMovies = FXCollections.observableArrayList(catMovConnectionBES);
             tblMovie.setItems(observableMovies);
         } catch (MyMoviesExceptions e) {
             logger.log(Level.SEVERE, "Error retrieving movies for categories: AppController - ", e);
@@ -225,32 +226,32 @@ public class AppController implements Initializable {
 
     //This makes it so movies will all be listed in our table regardless of if it has a category or not
     // it takes an input for CatMovConnection, Movie and the Map containing our keys
-    private void listAll(List<CatMovConnection> catMovConnections, List<Movie> allMovies, Map<Integer, CatMovConnection> catMovMap) {
+    private void listAll(List<CatMovConnectionBE> catMovConnectionBES, List<Movie> allMovies, Map<Integer, CatMovConnectionBE> catMovMap) {
         for (Movie movie : allMovies) {
             //We are using the catMovMap to efficiently tell if a movie has a category
             if (catMovMap.containsKey(movie.getId())) {
                 // If the movie has a category, add the CatMovConnection to the list
-                catMovConnections.add(catMovMap.get(movie.getId()));
+                catMovConnectionBES.add(catMovMap.get(movie.getId()));
             } else {
                 // If the movie doesn't have a category, create a new CatMovConnection without a category and add it to the list
-                catMovConnections.add(new CatMovConnection(movie.getId(), movie.getName(), movie.getRating(), movie.getIMDBRating(), movie.getFilePath(), movie.getLastView(), -1));
+                catMovConnectionBES.add(new CatMovConnectionBE(movie.getId(), movie.getName(), movie.getRating(), movie.getIMDBRating(), movie.getFilePath(), movie.getLastView(), -1));
             }
         }
     }
 
-    private Map<Integer, CatMovConnection> getCatMovMap(List<CatMovConnection> catMovConnections) {
+    private Map<Integer, CatMovConnectionBE> getCatMovMap(List<CatMovConnectionBE> catMovConnectionBES) {
         //making a map which is similar(can store Objects) to the primary key on a database but its local/faster but wont save when program is closed which is ok in this case
-        Map<Integer, CatMovConnection> catMovMap = new HashMap<>();
-        for (CatMovConnection catMovConnection : catMovConnections) {
+        Map<Integer, CatMovConnectionBE> catMovMap = new HashMap<>();
+        for (CatMovConnectionBE catMovConnectionBE : catMovConnectionBES) {
             //I am checking to see if my catMovConnection has a key in the map
-            if (catMovMap.containsKey(catMovConnection.getId())) {
+            if (catMovMap.containsKey(catMovConnectionBE.getId())) {
                 //Gets the CatMovConnection connected to this ID
-                CatMovConnection existingCatMovConnection = catMovMap.get(catMovConnection.getId());
+                CatMovConnectionBE existingCatMovConnectionBE = catMovMap.get(catMovConnectionBE.getId());
                 // taking our existing CatMovConnection and adding , + the new category
-                existingCatMovConnection.setCategoryName(existingCatMovConnection.getCategoryName() + ", " + catMovConnection.getCategoryName());
+                existingCatMovConnectionBE.setCategoryName(existingCatMovConnectionBE.getCategoryName() + ", " + catMovConnectionBE.getCategoryName());
             } else {
                 //If there is no key then add it to map using the ID as its key with .put(key, value);
-                catMovMap.put(catMovConnection.getId(), catMovConnection);
+                catMovMap.put(catMovConnectionBE.getId(), catMovConnectionBE);
             }
         }
         return catMovMap;
@@ -451,10 +452,10 @@ public class AppController implements Initializable {
             tblMovie.getItems().setAll(originalItems);
         } else {
             // Create a new list for the filtered items
-            List<CatMovConnection> filteredItems = new ArrayList<>();
+            List<CatMovConnectionBE> filteredItems = new ArrayList<>();
 
             // Filter the original items based on the search text
-            for (CatMovConnection item : originalItems) {
+            for (CatMovConnectionBE item : originalItems) {
                 if (item.getName().toLowerCase().contains(searchText)) {
                     filteredItems.add(item);
                 }
@@ -500,7 +501,7 @@ public class AppController implements Initializable {
                 // Add Category submenu
                 MenuItem categoryItem = new MenuItem(category.getCatName());
                 categoryItem.setOnAction(actionEvent -> {
-                    CatMovConnection selectedCatMov = tblMovie.getSelectionModel().getSelectedItem();
+                    CatMovConnectionBE selectedCatMov = tblMovie.getSelectionModel().getSelectedItem();
                     if (selectedCatMov != null) {
                         try {
                             bllCatMov.addMovieToCategory(category.getCatId(), selectedCatMov.getId());
@@ -531,12 +532,12 @@ public class AppController implements Initializable {
             if (selectedMovie != null) {
                 removeCategory.getItems().clear(); // Clear the old categories
                 try {
-                    List<CatMovConnection> catMovConnections = bllCatMov.getCategoriesForMovie(selectedMovie.getId());
-                    for (CatMovConnection catMovConnection : catMovConnections) {
-                        MenuItem categoryItem = new MenuItem(catMovConnection.getName());
+                    List<CatMovConnectionBE> catMovConnectionBES = bllCatMov.getCategoriesForMovie(selectedMovie.getId());
+                    for (CatMovConnectionBE catMovConnectionBE : catMovConnectionBES) {
+                        MenuItem categoryItem = new MenuItem(catMovConnectionBE.getCategoryName());
                         categoryItem.setOnAction(actionEvent -> {
                             try {
-                                bllCatMov.removeMovieFromCategory(catMovConnection.getCatMovID());
+                                bllCatMov.removeMovieFromCategory(catMovConnectionBE.getCatMovID());
                                 // Refresh the movie table to reflect the changes
                                 displayMovies();
                             } catch (MyMoviesExceptions e) {

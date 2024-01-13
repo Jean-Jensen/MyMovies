@@ -114,7 +114,7 @@
                   <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="Prev" />
                   <Button fx:id="playbtn" onAction="#Play" prefHeight="25.0" prefWidth="26.0" styleClass="playButton" text="Play" />
                   <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="40.0" text="Next" />
-                  <Button mnemonicParsing="false" onAction="#toggleFullScreen" text="FullScreen">
+                  <Button mnemonicParsing="false" text="FullScreen">
                      <HBox.margin>
                         <Insets />
                      </HBox.margin></Button>
