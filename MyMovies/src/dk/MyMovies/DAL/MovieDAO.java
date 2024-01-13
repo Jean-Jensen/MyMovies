@@ -183,31 +183,6 @@ public class MovieDAO implements IMovieDAO {
         }
     }
 
-    public void searchMovie(String search){
-        try(Connection con = cm.getConnection()){
-            String sql = "SELECT * FROM Movie WHERE Name LIKE ?";
-            PreparedStatement pstmt = con.prepareStatement(sql);
-            pstmt.setString(1, search);
-
-            pstmt.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException("Error searching for movie " + search + "\n" + e.getMessage(), e);
-        }
-    }
-
-    public void searchMovie(String search, double rating){
-        try(Connection con = cm.getConnection()){
-            String sql = "SELECT * FROM Movie WHERE Name LIKE ? AND Rating = ?";
-            PreparedStatement pstmt = con.prepareStatement(sql);
-            pstmt.setString(1, search);
-            pstmt.setString(2, search);
-
-            pstmt.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException("Error searching for movie " + search + "\n" + e.getMessage(), e);
-        }
-    }
-
    /*public List<Movie> getMoviesByIds(List<Integer> movID) throws MyMoviesExceptions {
         if (movID.isEmpty()) {
             return new ArrayList<>();
@@ -265,4 +240,15 @@ public class MovieDAO implements IMovieDAO {
         return movies;
     }
 
+    public void getAllMovieNames(String search){
+        try(Connection con = cm.getConnection()){
+            String sql = "SELECT * FROM Movie WHERE Name = ?";
+            PreparedStatement pstmt = con.prepareStatement(sql);
+            pstmt.setString(1, search);
+
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("Error searching for movie " + search + "\n" + e.getMessage(), e);
+        }
+    }
 }
