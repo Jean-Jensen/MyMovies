@@ -47,7 +47,7 @@ public class CatMovDAO implements ICatMovDAO{
     public List<CatMovConnection> getCategoriesForMovie(int movID) throws MyMoviesExceptions {
         List<CatMovConnection> catMovConnections = new ArrayList<>();
         try(Connection con = cm.getConnection()){
-            String sql = "SELECT Category.*, Movie.MovID, Movie.Rating, Movie.FilePath, Movie.LastView, CatMovie.ID as CatMovID FROM Category " +
+            String sql = "SELECT Category.*, Movie.MovID, Movie.PersonalRating, Movie.Rating, Movie.FilePath, Movie.LastView, CatMovie.ID as CatMovID FROM Category " +
                     "JOIN CatMovie ON Category.CatID = CatMovie.CatID " +
                     "JOIN Movie ON Movie.MovID = CatMovie.MovID " +
                     "WHERE CatMovie.MovID = ?";
