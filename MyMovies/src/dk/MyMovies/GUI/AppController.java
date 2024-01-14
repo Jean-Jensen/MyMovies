@@ -117,7 +117,7 @@ public class AppController implements Initializable {
             checkForUselessMovies();
         } catch (MyMoviesExceptions | IOException e) {
             logger.log(Level.SEVERE, "Error initializing AppController", e);
-            showErrorDialog(new MyMoviesExceptions("Error initializing AppController: " + e.getMessage(), e));
+            showErrorDialog(new MyMoviesExceptions("Error initializing AppController: ", e));
             throw new RuntimeException(e);
         }
         sliderVolume.setVisible(false);
@@ -170,7 +170,7 @@ public class AppController implements Initializable {
             }
         } catch (MyMoviesExceptions e) {
             logger.log(Level.SEVERE, "Error retrieving all categories: AppController - ", e);
-            showErrorDialog(new MyMoviesExceptions("error retrieving all categories - " + e.getMessage(), e));
+            showErrorDialog(new MyMoviesExceptions("Error retrieving all categories", e));
         }
     }
 
@@ -204,7 +204,7 @@ public class AppController implements Initializable {
             tblMovie.setItems(observableMovies);
         } catch (MyMoviesExceptions e) {
             logger.log(Level.SEVERE, "Error retrieving movies for categories: AppController - ", e);
-            showErrorDialog(new MyMoviesExceptions("error retrieving movies for categories - " + e.getMessage(), e));
+            showErrorDialog(new MyMoviesExceptions("Error retrieving movies for categories", e));
         }
     }
 
@@ -221,7 +221,7 @@ public class AppController implements Initializable {
             }
         } catch (MyMoviesExceptions e) {
             logger.log(Level.SEVERE, "Error retrieving all movies with a rating below 6 that were last opened 2 years ago - ");
-            showErrorDialog((new MyMoviesExceptions("Error retrieving all movies with a rating below 6 that were last opened 2 years ago - " + e.getMessage(), e)));
+            showErrorDialog((new MyMoviesExceptions("Error retrieving all movies with a rating below 6 that were last opened 2 years ago", e)));
             throw new RuntimeException(e);
         }
     }
@@ -375,7 +375,7 @@ public class AppController implements Initializable {
                     refreshRightClickMenu();
                 } catch (Exception e) {
                     logger.log(Level.SEVERE, "Error removing category: AppController - ", e);
-                    showErrorDialog(new MyMoviesExceptions("Error removing category - " + e.getMessage(), e));
+                    showErrorDialog(new MyMoviesExceptions("Error removing category", e));
                 }
             }
         });
@@ -567,7 +567,7 @@ public class AppController implements Initializable {
             }
         } catch (MyMoviesExceptions e) {
             logger.log(Level.SEVERE, "Error retrieving all categories: AppController - ", e);
-            showErrorDialog(new MyMoviesExceptions("Error retrieving all categories - " + e.getMessage(), e));
+            showErrorDialog(new MyMoviesExceptions("Error retrieving all categories for right click menu", e));
         }
         return addCategoryMenu;
     }
@@ -592,14 +592,14 @@ public class AppController implements Initializable {
                                 displayMovies();
                             } catch (MyMoviesExceptions e) {
                                 logger.log(Level.SEVERE, "Error removing movie from category: AppController", e);
-                                showErrorDialog(new MyMoviesExceptions("error removing movie from category" + e.getMessage(), e));
+                                showErrorDialog(new MyMoviesExceptions("Error removing movie from category", e));
                             }
                         });
                         removeCategory.getItems().add(categoryItem);
                     }
                 } catch (MyMoviesExceptions e) {
                     logger.log(Level.SEVERE, "Error retrieving categories for movie: AppController", e);
-                    showErrorDialog(new MyMoviesExceptions("error retrieving categories for movie" + e.getMessage(), e));
+                    showErrorDialog(new MyMoviesExceptions("Error retrieving categories for movie in right click menu", e));
                 }
             }
         });
