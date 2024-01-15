@@ -8,6 +8,7 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
@@ -112,7 +113,7 @@
                        </HBox.margin>
                    </Button>
                    <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" styleClass="backwardButton" text="Backward" />
-                   <Button fx:id="playbtn" onAction="#Play" prefHeight="25.0" prefWidth="26.0" styleClass="playButton" text="Play" />
+                  <ToggleButton fx:id="togglePlayPause" mnemonicParsing="false" onAction="#togglePlayPause"/>
                    <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="40.0" styleClass="forwardButton" text="Forward" />
                    <Button mnemonicParsing="false" styleClass="fullscreenButton" text="FullScreen">
                    <HBox.margin>

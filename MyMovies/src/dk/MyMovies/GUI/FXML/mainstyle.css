@@ -171,3 +171,10 @@ Button:hover {
     -fx-max-height: 20px;
 }
 
+.playPauseButton {
+    -fx-background-color: transparent;
+    -fx-min-width: 20px;
+    -fx-min-height: 20px;
+    -fx-max-width: 20px;
+    -fx-max-height: 20px;
+}
