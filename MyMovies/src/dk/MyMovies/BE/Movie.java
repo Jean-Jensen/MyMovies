@@ -5,16 +5,18 @@ public class Movie {
 
     private int MovID;
     private String name;
+    private double IMDBRating;
     private double rating;
     private String filePath;
     private String lastView;
 
 
 
-    public Movie(int id, String name, double rating, String filePath, String lastView){
+    public Movie(int id, String name, double rating, double IMDB, String filePath, String lastView){
         MovID = id;
         this.name = name;
         this.rating = rating;
+        IMDBRating = IMDB;
         this.filePath = filePath;
         this.lastView = lastView;
     }
@@ -38,6 +40,11 @@ public class Movie {
         this.lastView = lastView;
     }
 
+    //For right Click menu
+    public Movie() {
+
+    }
+
 
     public int getId() {
         return MovID;
@@ -57,6 +64,10 @@ public class Movie {
 
     public void setRating(double rating) {
         this.rating = rating;
+    }
+
+    public double getIMDBRating() {
+        return IMDBRating;
     }
 
     public String getFilePath() {

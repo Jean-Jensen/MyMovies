@@ -1,14 +1,11 @@
 package dk.MyMovies.BLL;
 
-import dk.MyMovies.BE.CatMovConnection;
-import dk.MyMovies.BE.Category;
-import dk.MyMovies.BE.Movie;
+import dk.MyMovies.BE.CatMovConnectionBE;
 import dk.MyMovies.DAL.CatMovDAO;
 import dk.MyMovies.DAL.ICatMovDAO;
 import dk.MyMovies.Exceptions.MyMoviesExceptions;
-import java.sql.ResultSet;
+
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class BLLCatMov {
@@ -30,7 +27,7 @@ public class BLLCatMov {
         }
     }
 
-    public List<CatMovConnection> getCategoriesForMovie(int movID) throws MyMoviesExceptions {
+    public List<CatMovConnectionBE> getCategoriesForMovie(int movID) throws MyMoviesExceptions {
         try {
             return catMovDAO.getCategoriesForMovie(movID);
         } catch (MyMoviesExceptions e) {
@@ -47,7 +44,7 @@ public class BLLCatMov {
     }
 
 
-    public List<CatMovConnection> getAllCatMovConnections() throws MyMoviesExceptions {
+    public List<CatMovConnectionBE> getAllCatMovConnections() throws MyMoviesExceptions {
         try {
             return catMovDAO.getAllCatMovConnections();
         } catch (MyMoviesExceptions e) {
@@ -55,7 +52,7 @@ public class BLLCatMov {
         }
     }
 
-    public List<CatMovConnection> getCatMovConnectionsByIds(List<Integer> movIDs) throws MyMoviesExceptions {
+    public List<CatMovConnectionBE> getCatMovConnectionsByIds(List<Integer> movIDs) throws MyMoviesExceptions {
         try {
             return catMovDAO.getCatMovConnectionsByIds(movIDs);
         } catch (MyMoviesExceptions e) {
