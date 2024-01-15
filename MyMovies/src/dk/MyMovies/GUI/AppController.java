@@ -463,7 +463,19 @@ public class AppController implements Initializable {
         };
     }
 
+    public void skipBackward(ActionEvent actionEvent) {
+        if (player != null) {
+            Duration currentTime = player.getCurrentTime();
+            player.seek(Duration.seconds(currentTime.toSeconds() -  10));
+        }
+    }
 
+    public void skipForward(ActionEvent actionEvent) {
+        if (player != null) {
+            Duration currentTime = player.getCurrentTime();
+            player.seek(Duration.seconds(currentTime.toSeconds() +  10));
+        }
+    }
 
     public void Stop(ActionEvent actionEvent) {
         player.stop();
@@ -681,6 +693,4 @@ public class AppController implements Initializable {
             }
         });
     }
-
-
 }

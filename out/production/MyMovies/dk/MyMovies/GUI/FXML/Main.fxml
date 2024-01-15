@@ -112,9 +112,9 @@
                            <Insets left="150.0" />
                        </HBox.margin>
                    </Button>
-                   <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" styleClass="backwardButton" text="Backward" />
-                  <ToggleButton fx:id="togglePlayPause" mnemonicParsing="false" onAction="#togglePlayPause"/>
-                   <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="40.0" styleClass="forwardButton" text="Forward" />
+                   <Button mnemonicParsing="false" onAction="#skipBackward" prefHeight="25.0" prefWidth="25.0" styleClass="backwardButton" text="Backward" />
+                  <ToggleButton fx:id="togglePlayPause" mnemonicParsing="false" onAction="#togglePlayPause" />
+                   <Button mnemonicParsing="false" onAction="#skipForward" prefHeight="25.0" prefWidth="40.0" styleClass="forwardButton" text="Forward" />
                    <Button mnemonicParsing="false" styleClass="fullscreenButton" text="FullScreen">
                    <HBox.margin>
                         <Insets />
