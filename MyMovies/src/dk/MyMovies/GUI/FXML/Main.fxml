@@ -37,9 +37,9 @@
                     <children>
                         <Label text="Rating" />
                   <CheckBox fx:id="checkRating" mnemonicParsing="false" prefHeight="18.0" prefWidth="14.0" text="CheckBox" />
-                        <Label fx:id="lblSliderValue" text="0" textFill="WHITE">
+                        <Label fx:id="lblSliderValue" text="IMDB Rating: 0" textFill="WHITE">
                             <HBox.margin>
-                                <Insets left="165.0" />
+                                <Insets left="95.0" />
                             </HBox.margin>
                         </Label>
                     </children>
