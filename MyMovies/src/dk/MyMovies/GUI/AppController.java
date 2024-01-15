@@ -6,7 +6,6 @@ import dk.MyMovies.BE.Movie;
 import dk.MyMovies.BLL.BLLCatMov;
 import dk.MyMovies.BLL.BLLCategory;
 import dk.MyMovies.BLL.BLLMovie;
-import dk.MyMovies.DAL.ConnectionManager;
 import dk.MyMovies.Exceptions.MyMoviesExceptions;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -29,7 +28,6 @@ import javafx.scene.media.MediaView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-
 import javafx.scene.image.ImageView;
 import java.io.File;
 import java.io.IOException;
@@ -40,38 +38,21 @@ import java.util.logging.Logger;
 
 public class AppController implements Initializable {
 
-    public Button btnAddCat;
-    public Button btnEditCat;
-    public TextField search;
-    @FXML
-    private Slider sliderVolume;
 
-    @FXML
-    private Label lblTimeVal;
-    @FXML
-    private Slider progressSlider;
-
-    @FXML
-    private MediaView mediaView;
-    private MediaPlayer player;
-    private ConnectionManager con = new ConnectionManager();
     private BLLCategory bllCat = new BLLCategory();
     private BLLMovie bllMov = new BLLMovie();
     private BLLCatMov bllCatMov = new BLLCatMov();
-    private ContextMenu rightClickMenu;
-    private static final Logger logger = Logger.getLogger(AppController.class.getName());
-
+    public Button btnAddCat;
+    @FXML
+    private ToggleButton togglePlayPause;
+    @FXML
+    private Slider sliderVolume;
+    @FXML
+    private Slider progressSlider;
+    @FXML
+    private MediaView mediaView;
     @FXML
     private TableView<CatMovConnectionBE> tblMovie;
-    @FXML
-    private TableView<Category> tblCategory;
-    @FXML
-    private Button btnAdd;
-    @FXML
-    private Button btnDelete;
-    @FXML
-    private Button btnEdit;
-
     @FXML
     private TableColumn<CatMovConnectionBE, String> colName;
     @FXML
@@ -88,7 +69,16 @@ public class AppController implements Initializable {
     private Slider ratingSlider;
     @FXML
     private Label lblSliderValue;
+    private MediaPlayer player;
+    private ChangeListener<MediaPlayer.Status> playPauseListener;
+    ImageView playView = new ImageView();
+    ImageView pauseView = new ImageView();
     private ObservableList<CatMovConnectionBE> originalItems;
+    private FileChooser.ExtensionFilter filter1 = new FileChooser.ExtensionFilter(".mp4 files", "*.mp4");
+    private FileChooser.ExtensionFilter filter2 = new FileChooser.ExtensionFilter(".mpeg4 files", "*.mpeg4");
+    private static final Logger logger = Logger.getLogger(AppController.class.getName());
+    private ContextMenu rightClickMenu;
+
     @FXML
     private Button star1;
     @FXML
@@ -99,15 +89,8 @@ public class AppController implements Initializable {
     private Button star4;
     @FXML
     private Button star5;
-
     private final Image emptyStar = new Image("file:/C:/Users/Iulia/Documents/GitHub/MyMovies/MyMovies/src/dk/MyMovies/GUI/Images/starempty.png");
     private final Image filledStar = new Image("file:/C:/Users/Iulia/Documents/GitHub/MyMovies/MyMovies/src/dk/MyMovies/GUI/Images/starfill.png");
-
-    private boolean paused = false;
-
-
-    private FileChooser.ExtensionFilter filter1 = new FileChooser.ExtensionFilter(".mp4 files", "*.mp4");
-    private FileChooser.ExtensionFilter filter2 = new FileChooser.ExtensionFilter(".mpeg4 files", "*.mpeg4");
 
 
     @Override
@@ -124,6 +107,7 @@ public class AppController implements Initializable {
         rightClickMenu();
         RatingSlider();
         checkBoxCat();
+        playPauseImage();
     }
 
 
@@ -218,7 +202,7 @@ public class AppController implements Initializable {
     private void checkForUselessMovies() throws IOException {
         try {
             List<Movie> useless = bllMov.getUselessMovies();
-            if(!useless.isEmpty()){
+            if (!useless.isEmpty()) {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("FXML/DeleteWarningScene.fxml"));
                 Parent root = loader.load();
                 Stage stage = new Stage();
@@ -294,8 +278,8 @@ public class AppController implements Initializable {
         chooser.getExtensionFilters().addAll(filter1, filter2); //applying filters so we can only select MP4s and MPEG4s
         File selected = chooser.showOpenDialog(tblMovie.getScene().getWindow()); //opening the filechooser in from our window
 
-        if(selected != null){
-            String name = selected.getName().substring(0,selected.getName().indexOf('.'));
+        if (selected != null) {
+            String name = selected.getName().substring(0, selected.getName().indexOf('.'));
 
             //we don't set rating or last time viewed since you can't get that from just the file alone.
             bllMov.createMovie(name, null, selected.getPath(), null);
@@ -307,7 +291,7 @@ public class AppController implements Initializable {
     @FXML
     private void deleteMovie(ActionEvent actionEvent) throws IOException {
         Movie selected = tblMovie.getSelectionModel().getSelectedItem();
-        if(selected != null){
+        if (selected != null) {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("FXML/DeleteMovieScene.fxml"));
             Parent root = loader.load();
             DeleteMovieController controller = loader.getController();
@@ -320,23 +304,22 @@ public class AppController implements Initializable {
     @FXML
     private void editMovie(ActionEvent actionEvent) throws IOException {
         Movie selected = tblMovie.getSelectionModel().getSelectedItem();
-        if(selected != null){
+        if (selected != null) {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("FXML/EditMovieScene.fxml"));
             Parent root = loader.load();
             EditMovieController controller = loader.getController();
-            controller.setData(selected.getId(),selected.getName(),String.valueOf(selected.getRating()),String.valueOf(selected.getIMDBRating()),selected.getFilePath(), selected.getLastView(), this);
+            controller.setData(selected.getId(), selected.getName(), String.valueOf(selected.getRating()), String.valueOf(selected.getIMDBRating()), selected.getFilePath(), selected.getLastView(), this);
             openNewWindow(root);
         }
     }
 
     //open a new window (just to avoid repeating code)
-    private void openNewWindow(Parent root){
+    private void openNewWindow(Parent root) {
         Scene scene = new Scene(root);
         Stage stag = new Stage();
         stag.setScene(scene);
         stag.show();
     }
-
 
 
     //////////////////////////////////////////////////////////
@@ -360,7 +343,6 @@ public class AppController implements Initializable {
         }
     }
 
-    public void editCategory(ActionEvent actionEvent) {}
 
     private void setupCategoryListView() {
         // Create a context menu
@@ -398,8 +380,76 @@ public class AppController implements Initializable {
     ////////////////////MediaPlayer stuff/////////////////////
     //////////////////////////////////////////////////////////
 
-    public void Play(ActionEvent actionEvent) {
-        player.play();
+    public void togglePlayPause(ActionEvent actionEvent) {
+        Movie selected = tblMovie.getSelectionModel().getSelectedItem();
+        if (selected != null) {
+            File file = new File(selected.getFilePath());
+            if (file.exists()) {
+                Media media = new Media(file.toURI().toString());
+                //added a check to have the button play the newly selected song .getMedia equals .getSource
+                if (player == null || !player.getMedia().getSource().equals(media.getSource())) {
+                    setMediaPlayer(null);
+                }
+            }
+        }
+
+        MediaPlayer.Status status = player.getStatus();
+
+        if (status == MediaPlayer.Status.PLAYING) {
+            player.pause();
+        } else if (status == MediaPlayer.Status.PAUSED || status == MediaPlayer.Status.READY || status == MediaPlayer.Status.STOPPED) {
+            player.play();
+        }
+
+    }
+
+    private void playPauseImage() {
+        Image playImage = new Image("/dk/MyMovies/GUI/Images/playbtn.png");
+        Image pauseImage = new Image("/dk/MyMovies/GUI/Images/starfill.png");
+
+        playView = new ImageView(playImage);
+        playView.setFitWidth(26);
+        playView.setFitHeight(25);
+
+        pauseView = new ImageView(pauseImage);
+        pauseView.setFitWidth(26);
+        pauseView.setFitHeight(25);
+
+        // Set initial graphic
+        togglePlayPause.setGraphic(playView);
+
+        // Add the listener to the status property of the media player
+        if (player != null) {
+            player.statusProperty().addListener(playPauseListener);
+        }
+
+        //use css after this
+        togglePlayPause.getStyleClass().add("playPauseButton");
+
+    }
+
+    private void playPauseListener() {
+        playPauseListener = (obs, oldStatus, newStatus) -> {
+            if (newStatus == MediaPlayer.Status.PAUSED || newStatus == MediaPlayer.Status.STOPPED || newStatus == MediaPlayer.Status.READY) {
+                togglePlayPause.setGraphic(playView);
+            } else if (newStatus == MediaPlayer.Status.PLAYING) {
+                togglePlayPause.setGraphic(pauseView);
+            }
+        };
+    }
+
+    public void skipBackward(ActionEvent actionEvent) {
+        if (player != null) {
+            Duration currentTime = player.getCurrentTime();
+            player.seek(Duration.seconds(currentTime.toSeconds() -  10));
+        }
+    }
+
+    public void skipForward(ActionEvent actionEvent) {
+        if (player != null) {
+            Duration currentTime = player.getCurrentTime();
+            player.seek(Duration.seconds(currentTime.toSeconds() +  10));
+        }
     }
 
     public void Stop(ActionEvent actionEvent) {
@@ -455,6 +505,11 @@ public class AppController implements Initializable {
                 player = new MediaPlayer(media);
                 mediaView.setMediaPlayer(player);
                 setProgressSlider();
+                //added a listener for the play/pause button when Mediaplayer is created
+                playPauseListener();
+                if (player != null) {
+                    player.statusProperty().addListener(playPauseListener);
+                }
             } else {
                 System.out.println("File not found: " + selected.getFilePath());
             }
@@ -474,9 +529,7 @@ public class AppController implements Initializable {
             player.currentTimeProperty().addListener(new ChangeListener<Duration>() {
                 @Override
                 public void changed(ObservableValue<? extends Duration> observable, Duration oldValue, Duration newValue) {
-                    if(!paused){
-                        progressSlider.setValue(newValue.toSeconds()); //setting the progressbars value to be the new time value
-                    }
+                    progressSlider.setValue(newValue.toSeconds()); //setting the progressbars value to be the new time value
                 }
             });
         }
@@ -613,7 +666,4 @@ public class AppController implements Initializable {
             }
         });
     }
-
-
-
 }
