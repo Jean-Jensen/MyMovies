@@ -51,9 +51,9 @@ public class AppController implements Initializable {
     private TextField txtSearch;
     @FXML
     private Slider sliderVolume;
-    private ToggleButton togglePlayPause;
     @FXML
-    private Slider sliderVolume;
+    private ToggleButton togglePlayPause;
+
 
     @FXML
     private Label lblTimeVal;
@@ -346,6 +346,9 @@ public class AppController implements Initializable {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("FXML/EditMovieScene.fxml"));
             Parent root = loader.load();
             EditMovieController controller = loader.getController();
+            if(selected.getLastView() == null){
+                selected.setLastView("");
+            }
             controller.setData(selected.getId(), selected.getName(), String.valueOf(selected.getRating()), String.valueOf(selected.getIMDBRating()), selected.getFilePath(), selected.getLastView(), this);
             openNewWindow(root);
         }
@@ -611,7 +614,7 @@ public class AppController implements Initializable {
 
             if(selectedCatIds.isEmpty()){
                 // Filter the original items based on the search text
-                for (CatMovConnection item : originalItems) {
+                for (CatMovConnectionBE item : originalItems) {
                     if(checkRating.isSelected()){
                         if(item.getName().toLowerCase().contains(searchText)
                                 && item.getRating() == Double.parseDouble(lblSliderValue.getText())){
@@ -626,20 +629,22 @@ public class AppController implements Initializable {
                 }
             } else {
                 List<Integer> MovIds = bllCatMov.getMoviesForCategories(selectedCatIds);
-                List<CatMovConnection> catMovConnections = bllCatMov.getCatMovConnectionsByIds(MovIds);
+                List<CatMovConnectionBE> catMovConnections = bllCatMov.getCatMovConnectionsByIds(MovIds);
+                Map<Integer,CatMovConnectionBE> CatMovMap = getCatMovMap(catMovConnections);
 
-                for (CatMovConnection item : catMovConnections) {
+                for(Map.Entry<Integer,CatMovConnectionBE> current: CatMovMap.entrySet()){
                     if(checkRating.isSelected()){
-                        if(item.getName().toLowerCase().contains(searchText)
-                                && item.getRating() == Double.parseDouble(lblSliderValue.getText())){
-                            filteredItems.add(item);
+                        if(current.getValue().getName().toLowerCase().contains(searchText)
+                                && current.getValue().getRating() == Double.parseDouble(lblSliderValue.getText())){
+                            filteredItems.add(CatMovMap.get(current.getKey()));
                         }
                     } else {
-                        if (item.getName().toLowerCase().contains(searchText)) {
-                            filteredItems.add(item);
+                        if (current.getValue().getName().toLowerCase().contains(searchText)) {
+                            filteredItems.add(current.getValue());
                         }
                     }
                 }
+
             }
 
             // Update the table items

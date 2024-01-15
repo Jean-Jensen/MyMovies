@@ -109,7 +109,7 @@
                      <HBox.margin>
                         <Insets left="10.0" />
                      </HBox.margin></Button>
-                  <Slider fx:id="sliderVolume" onMousePressed="#setVolume" style="-fx-background-color: transparent;" />
+                  <Slider fx:id="sliderVolume" style="-fx-background-color: transparent;" />
                    <Button mnemonicParsing="false" onAction="#Stop" prefHeight="30.0" prefWidth="29.0" styleClass="stopButton" text="Stop">
                        <HBox.margin>
                            <Insets left="150.0" />
