@@ -158,8 +158,11 @@ public class AppController implements Initializable {
         }
     }
 
+    //Lists all the categories in the listview and gives them checkboxes
     public void checkBoxCat() {
         try {
+            //clear the list before this is called so when we add a new one, it doesnt duplicate list
+            lvCategories.getItems().clear();
             List<Category> categories = bllCat.getAllCategory();
             for (Category category : categories) {
                 CheckBox checkBox = new CheckBox(category.getCatName());
@@ -174,12 +177,13 @@ public class AppController implements Initializable {
         }
     }
 
+    //This updates the movie table based on selected categories
     private void updateMovieTable() {
         try {
             List<Integer> selectedCategoryIds = new ArrayList<>();
-            for (Object item : lvCategories.getItems()) {
-                if (item instanceof CheckBox && ((CheckBox) item).isSelected()) {
-                    selectedCategoryIds.add((Integer) ((CheckBox) item).getUserData());
+            for (CheckBox item : lvCategories.getItems()) {
+                if (item != null && item.isSelected()) {
+                    selectedCategoryIds.add((Integer) item.getUserData());
                 }
             }
             List<CatMovConnectionBE> catMovConnectionBES;
@@ -200,6 +204,9 @@ public class AppController implements Initializable {
                 catMovConnectionBES = bllCatMov.getCatMovConnectionsByIds(movieIds);
             }
 
+            //Observable list for search
+            originalItems = FXCollections.observableArrayList(catMovConnectionBES);
+            //by making a second observable list we keep our list even if search has been removed
             ObservableList<CatMovConnectionBE> observableMovies = FXCollections.observableArrayList(catMovConnectionBES);
             tblMovie.setItems(observableMovies);
         } catch (MyMoviesExceptions e) {
@@ -256,6 +263,7 @@ public class AppController implements Initializable {
         }
     }
 
+    //Use this to show movies only once if they have multiple categories
     private Map<Integer, CatMovConnectionBE> getCatMovMap(List<CatMovConnectionBE> catMovConnectionBES) {
         //making a map which is similar(can store Objects) to the primary key on a database but its local/faster but wont save when program is closed which is ok in this case
         Map<Integer, CatMovConnectionBE> catMovMap = new HashMap<>();
@@ -514,6 +522,7 @@ public class AppController implements Initializable {
             tblMovie.getItems().setAll(filteredItems);
         }
     }
+
     //////////////////////////////////////////////////////////
     ////////////////////Right Click Menu//////////////////////
     /////////////////////////////////////////////////////////
