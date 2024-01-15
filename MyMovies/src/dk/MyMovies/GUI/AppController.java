@@ -101,6 +101,14 @@ public class AppController implements Initializable {
     @FXML
     private Button star5;
 
+    //Button[] stars = new Button[]{star1, star2, star3, star4, star5};
+    //for loop, make two methods (filled, unfilled star)
+
+
+
+
+
+
     private ChangeListener<MediaPlayer.Status> playPauseListener;
     ImageView playView = new ImageView();
     ImageView pauseView = new ImageView();
@@ -130,12 +138,39 @@ public class AppController implements Initializable {
         RatingSlider();
         checkBoxCat();
         playPauseImage();
+        setStars();
+
+
     }
 
 
     //////////////////////////////////////////////////////////
     ////////////////////GUI Stuff/////////////////////////////
     /////////////////////////////////////////////////////////
+    private void unfilledStars(List<Button> stars, int index){
+        for (int i = 0; i <= index; i++) {
+            stars.get(i).getStyleClass().add("starButton");
+            stars.get(i).getStyleClass().remove("starfilledButton");
+        }
+    }
+
+    private void filledStars(List<Button> stars, int index) {
+        for (int i = 0; i <= index; i++) {
+                stars.get(i).getStyleClass().add("starfilledButton");
+                stars.get(i).getStyleClass().remove("starButton");
+        }
+    }
+
+    private void setStars() {
+        List<Button> stars = Arrays.asList(star1, star2, star3, star4, star5);
+
+        for (int i = 0; i < stars.size(); i++) {
+            final int starIndex = i;
+            stars.get(i).setOnMouseEntered(event -> filledStars(stars, starIndex));
+            stars.get(i).setOnMouseExited(event -> unfilledStars(stars, starIndex));
+        }
+    }
+
 
     //display movie data on table
     public void displayMovies() throws MyMoviesExceptions {
@@ -492,12 +527,10 @@ public class AppController implements Initializable {
             clickedStar.getStyleClass().add("starfilledButton");
             clickedStar.getStyleClass().remove("starButton");
         }
-        /*if (clickedStar.getStyleClass().contains("starfilledButton")) {
+        else if (clickedStar.getStyleClass().contains("starfilledButton")) {
             clickedStar.getStyleClass().add("starButton");
             clickedStar.getStyleClass().remove("starfilledButton");
-        }*/
-
-
+        }
     }
 
 
