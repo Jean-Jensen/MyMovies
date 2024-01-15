@@ -612,7 +612,7 @@ public class AppController implements Initializable {
                 for (CatMovConnectionBE item : originalItems) {
                     if(checkRating.isSelected()){
                         if(item.getName().toLowerCase().contains(searchText)
-                                && item.getRating() == Double.parseDouble(lblSliderValue.getText())){
+                                && item.getIMDBRating() == Double.parseDouble(lblSliderValue.getText())){
                             filteredItems.add(item);
                         }
                     } else {
@@ -630,7 +630,7 @@ public class AppController implements Initializable {
                 for(Map.Entry<Integer,CatMovConnectionBE> current: CatMovMap.entrySet()){
                     if(checkRating.isSelected()){
                         if(current.getValue().getName().toLowerCase().contains(searchText)
-                                && current.getValue().getRating() == Double.parseDouble(lblSliderValue.getText())){
+                                && current.getValue().getIMDBRating() == Double.parseDouble(lblSliderValue.getText())){
                             filteredItems.add(CatMovMap.get(current.getKey()));
                         }
                     } else {
