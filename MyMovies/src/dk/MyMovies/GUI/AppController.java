@@ -6,7 +6,6 @@ import dk.MyMovies.BE.Movie;
 import dk.MyMovies.BLL.BLLCatMov;
 import dk.MyMovies.BLL.BLLCategory;
 import dk.MyMovies.BLL.BLLMovie;
-import dk.MyMovies.DAL.ConnectionManager;
 import dk.MyMovies.Exceptions.MyMoviesExceptions;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -29,7 +28,6 @@ import javafx.scene.media.MediaView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-
 import javafx.scene.image.ImageView;
 import java.io.File;
 import java.io.IOException;
@@ -40,9 +38,11 @@ import java.util.logging.Logger;
 
 public class AppController implements Initializable {
 
+
+    private BLLCategory bllCat = new BLLCategory();
+    private BLLMovie bllMov = new BLLMovie();
+    private BLLCatMov bllCatMov = new BLLCatMov();
     public Button btnAddCat;
-    public Button btnEditCat;
-    public TextField search;
     @FXML
     private TableColumn colID;
     @FXML
@@ -59,27 +59,10 @@ public class AppController implements Initializable {
     private Label lblTimeVal;
     @FXML
     private Slider progressSlider;
-
     @FXML
     private MediaView mediaView;
-    private MediaPlayer player;
-    private ConnectionManager con = new ConnectionManager();
-    private BLLCategory bllCat = new BLLCategory();
-    private BLLMovie bllMov = new BLLMovie();
-    private BLLCatMov bllCatMov = new BLLCatMov();
-    private ContextMenu rightClickMenu;
-    private static final Logger logger = Logger.getLogger(AppController.class.getName());
-
     @FXML
     private TableView<CatMovConnectionBE> tblMovie;
-    @FXML
-    private TableView<Category> tblCategory;
-    @FXML
-    private Button btnAdd;
-    @FXML
-    private Button btnDelete;
-    @FXML
-    private Button btnEdit;
     @FXML
     private TableColumn<CatMovConnectionBE, String> colName;
     @FXML
@@ -96,7 +79,16 @@ public class AppController implements Initializable {
     private Slider ratingSlider;
     @FXML
     private Label lblSliderValue;
+    private MediaPlayer player;
+    private ChangeListener<MediaPlayer.Status> playPauseListener;
+    ImageView playView = new ImageView();
+    ImageView pauseView = new ImageView();
     private ObservableList<CatMovConnectionBE> originalItems;
+    private FileChooser.ExtensionFilter filter1 = new FileChooser.ExtensionFilter(".mp4 files", "*.mp4");
+    private FileChooser.ExtensionFilter filter2 = new FileChooser.ExtensionFilter(".mpeg4 files", "*.mpeg4");
+    private static final Logger logger = Logger.getLogger(AppController.class.getName());
+    private ContextMenu rightClickMenu;
+
     @FXML
     private Button star1;
     @FXML
@@ -107,11 +99,6 @@ public class AppController implements Initializable {
     private Button star4;
     @FXML
     private Button star5;
-
-    private ChangeListener<MediaPlayer.Status> playPauseListener;
-    ImageView playView = new ImageView();
-    ImageView pauseView = new ImageView();
-
     private final Image emptyStar = new Image("file:/C:/Users/Iulia/Documents/GitHub/MyMovies/MyMovies/src/dk/MyMovies/GUI/Images/starempty.png");
     private final Image filledStar = new Image("file:/C:/Users/Iulia/Documents/GitHub/MyMovies/MyMovies/src/dk/MyMovies/GUI/Images/starfill.png");
 
@@ -384,8 +371,6 @@ public class AppController implements Initializable {
         }
     }
 
-    public void editCategory(ActionEvent actionEvent) {
-    }
 
     private void setupCategoryListView() {
         // Create a context menu
@@ -483,7 +468,19 @@ public class AppController implements Initializable {
         };
     }
 
+    public void skipBackward(ActionEvent actionEvent) {
+        if (player != null) {
+            Duration currentTime = player.getCurrentTime();
+            player.seek(Duration.seconds(currentTime.toSeconds() -  10));
+        }
+    }
 
+    public void skipForward(ActionEvent actionEvent) {
+        if (player != null) {
+            Duration currentTime = player.getCurrentTime();
+            player.seek(Duration.seconds(currentTime.toSeconds() +  10));
+        }
+    }
 
     public void Stop(ActionEvent actionEvent) {
         player.stop();
@@ -762,6 +759,4 @@ public class AppController implements Initializable {
             }
         });
     }
-
-
 }
