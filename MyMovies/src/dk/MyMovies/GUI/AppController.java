@@ -117,7 +117,7 @@ public class AppController implements Initializable {
             checkForUselessMovies();
         } catch (MyMoviesExceptions | IOException e) {
             logger.log(Level.SEVERE, "Error initializing AppController", e);
-            showErrorDialog(new MyMoviesExceptions("Error initializing AppController: " + e.getMessage(), e));
+            showErrorDialog(new MyMoviesExceptions("Error initializing AppController: ", e));
             throw new RuntimeException(e);
         }
         sliderVolume.setVisible(false);
@@ -158,8 +158,11 @@ public class AppController implements Initializable {
         }
     }
 
+    //Lists all the categories in the listview and gives them checkboxes
     public void checkBoxCat() {
         try {
+            //clear the list before this is called so when we add a new one, it doesnt duplicate list
+            lvCategories.getItems().clear();
             List<Category> categories = bllCat.getAllCategory();
             for (Category category : categories) {
                 CheckBox checkBox = new CheckBox(category.getCatName());
@@ -170,16 +173,17 @@ public class AppController implements Initializable {
             }
         } catch (MyMoviesExceptions e) {
             logger.log(Level.SEVERE, "Error retrieving all categories: AppController - ", e);
-            showErrorDialog(new MyMoviesExceptions("error retrieving all categories - " + e.getMessage(), e));
+            showErrorDialog(new MyMoviesExceptions("Error retrieving all categories", e));
         }
     }
 
+    //This updates the movie table based on selected categories
     private void updateMovieTable() {
         try {
             List<Integer> selectedCategoryIds = new ArrayList<>();
-            for (Object item : lvCategories.getItems()) {
-                if (item instanceof CheckBox && ((CheckBox) item).isSelected()) {
-                    selectedCategoryIds.add((Integer) ((CheckBox) item).getUserData());
+            for (CheckBox item : lvCategories.getItems()) {
+                if (item != null && item.isSelected()) {
+                    selectedCategoryIds.add((Integer) item.getUserData());
                 }
             }
             List<CatMovConnectionBE> catMovConnectionBES;
@@ -200,11 +204,14 @@ public class AppController implements Initializable {
                 catMovConnectionBES = bllCatMov.getCatMovConnectionsByIds(movieIds);
             }
 
+            //Observable list for search
+            originalItems = FXCollections.observableArrayList(catMovConnectionBES);
+            //by making a second observable list we keep our list even if search has been removed
             ObservableList<CatMovConnectionBE> observableMovies = FXCollections.observableArrayList(catMovConnectionBES);
             tblMovie.setItems(observableMovies);
         } catch (MyMoviesExceptions e) {
             logger.log(Level.SEVERE, "Error retrieving movies for categories: AppController - ", e);
-            showErrorDialog(new MyMoviesExceptions("error retrieving movies for categories - " + e.getMessage(), e));
+            showErrorDialog(new MyMoviesExceptions("Error retrieving movies for categories", e));
         }
     }
 
@@ -221,7 +228,7 @@ public class AppController implements Initializable {
             }
         } catch (MyMoviesExceptions e) {
             logger.log(Level.SEVERE, "Error retrieving all movies with a rating below 6 that were last opened 2 years ago - ");
-            showErrorDialog((new MyMoviesExceptions("Error retrieving all movies with a rating below 6 that were last opened 2 years ago - " + e.getMessage(), e)));
+            showErrorDialog((new MyMoviesExceptions("Error retrieving all movies with a rating below 6 that were last opened 2 years ago", e)));
             throw new RuntimeException(e);
         }
     }
@@ -256,6 +263,7 @@ public class AppController implements Initializable {
         }
     }
 
+    //Use this to show movies only once if they have multiple categories
     private Map<Integer, CatMovConnectionBE> getCatMovMap(List<CatMovConnectionBE> catMovConnectionBES) {
         //making a map which is similar(can store Objects) to the primary key on a database but its local/faster but wont save when program is closed which is ok in this case
         Map<Integer, CatMovConnectionBE> catMovMap = new HashMap<>();
@@ -375,7 +383,7 @@ public class AppController implements Initializable {
                     refreshRightClickMenu();
                 } catch (Exception e) {
                     logger.log(Level.SEVERE, "Error removing category: AppController - ", e);
-                    showErrorDialog(new MyMoviesExceptions("Error removing category - " + e.getMessage(), e));
+                    showErrorDialog(new MyMoviesExceptions("Error removing category", e));
                 }
             }
         });
@@ -514,6 +522,7 @@ public class AppController implements Initializable {
             tblMovie.getItems().setAll(filteredItems);
         }
     }
+
     //////////////////////////////////////////////////////////
     ////////////////////Right Click Menu//////////////////////
     /////////////////////////////////////////////////////////
@@ -567,7 +576,7 @@ public class AppController implements Initializable {
             }
         } catch (MyMoviesExceptions e) {
             logger.log(Level.SEVERE, "Error retrieving all categories: AppController - ", e);
-            showErrorDialog(new MyMoviesExceptions("Error retrieving all categories - " + e.getMessage(), e));
+            showErrorDialog(new MyMoviesExceptions("Error retrieving all categories for right click menu", e));
         }
         return addCategoryMenu;
     }
@@ -592,14 +601,14 @@ public class AppController implements Initializable {
                                 displayMovies();
                             } catch (MyMoviesExceptions e) {
                                 logger.log(Level.SEVERE, "Error removing movie from category: AppController", e);
-                                showErrorDialog(new MyMoviesExceptions("error removing movie from category" + e.getMessage(), e));
+                                showErrorDialog(new MyMoviesExceptions("Error removing movie from category", e));
                             }
                         });
                         removeCategory.getItems().add(categoryItem);
                     }
                 } catch (MyMoviesExceptions e) {
                     logger.log(Level.SEVERE, "Error retrieving categories for movie: AppController", e);
-                    showErrorDialog(new MyMoviesExceptions("error retrieving categories for movie" + e.getMessage(), e));
+                    showErrorDialog(new MyMoviesExceptions("Error retrieving categories for movie in right click menu", e));
                 }
             }
         });
