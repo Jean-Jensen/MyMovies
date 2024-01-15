@@ -196,6 +196,8 @@ public class AppController implements Initializable {
             } else {
                 List<Integer> movieIds = bllCatMov.getMoviesForCategories(selectedCategoryIds);
                 catMovConnectionBES = bllCatMov.getCatMovConnectionsByIds(movieIds);
+                Map<Integer, CatMovConnectionBE> catMovMap = getCatMovMap(catMovConnectionBES);
+                catMovConnectionBES = catMovMap.values().stream().toList();
             }
 
             //Observable list for search
