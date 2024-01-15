@@ -44,9 +44,19 @@ public class AppController implements Initializable {
     private BLLCatMov bllCatMov = new BLLCatMov();
     public Button btnAddCat;
     @FXML
-    private ToggleButton togglePlayPause;
+    private TableColumn colID;
+    @FXML
+    private CheckBox checkRating;
+    @FXML
+    private TextField txtSearch;
     @FXML
     private Slider sliderVolume;
+    @FXML
+    private ToggleButton togglePlayPause;
+
+
+    @FXML
+    private Label lblTimeVal;
     @FXML
     private Slider progressSlider;
     @FXML
@@ -92,7 +102,6 @@ public class AppController implements Initializable {
     private final Image emptyStar = new Image("file:/C:/Users/Iulia/Documents/GitHub/MyMovies/MyMovies/src/dk/MyMovies/GUI/Images/starempty.png");
     private final Image filledStar = new Image("file:/C:/Users/Iulia/Documents/GitHub/MyMovies/MyMovies/src/dk/MyMovies/GUI/Images/starfill.png");
 
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         try {
@@ -133,6 +142,7 @@ public class AppController implements Initializable {
 // changing so maybe if we have time we can figure that out.
         if (!allCatMovConnectionBES.isEmpty()) {
             tblMovie.getItems().clear();
+            colID.setCellValueFactory(new PropertyValueFactory<>("Id"));
             tblMovie.getItems().addAll(allCatMovConnectionBES);
             colName.setCellValueFactory(new PropertyValueFactory<>("name"));
             colImdb.setCellValueFactory(new PropertyValueFactory<>("IMDBRating"));
@@ -186,6 +196,8 @@ public class AppController implements Initializable {
             } else {
                 List<Integer> movieIds = bllCatMov.getMoviesForCategories(selectedCategoryIds);
                 catMovConnectionBES = bllCatMov.getCatMovConnectionsByIds(movieIds);
+                Map<Integer, CatMovConnectionBE> catMovMap = getCatMovMap(catMovConnectionBES);
+                catMovConnectionBES = catMovMap.values().stream().toList();
             }
 
             //Observable list for search
@@ -197,6 +209,17 @@ public class AppController implements Initializable {
             logger.log(Level.SEVERE, "Error retrieving movies for categories: AppController - ", e);
             showErrorDialog(new MyMoviesExceptions("Error retrieving movies for categories", e));
         }
+    }
+
+    //gets all ID checkboxes which have been ticked. made its own method to avoid repeating code
+    private List<Integer> getSelectedCategoryIDs(){
+        List<Integer> selectedIds = new ArrayList<>();
+        for (Object item : lvCategories.getItems()) {
+            if (item instanceof CheckBox && ((CheckBox) item).isSelected()) {
+                selectedIds.add((Integer) ((CheckBox) item).getUserData());
+            }
+        }
+        return selectedIds;
     }
 
     private void checkForUselessMovies() throws IOException {
@@ -228,7 +251,7 @@ public class AppController implements Initializable {
 
     public void RatingSlider() {
         ratingSlider.valueProperty().addListener((observable, oldValue, newValue) ->
-                lblSliderValue.setText("Rating: " + String.format("%.0f", newValue)));
+                lblSliderValue.setText("IMDB Rating: " + String.valueOf(ratingSlider.getValue()).substring(0,3)));
 
     }
 
@@ -308,6 +331,9 @@ public class AppController implements Initializable {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("FXML/EditMovieScene.fxml"));
             Parent root = loader.load();
             EditMovieController controller = loader.getController();
+            if(selected.getLastView() == null){
+                selected.setLastView("");
+            }
             controller.setData(selected.getId(), selected.getName(), String.valueOf(selected.getRating()), String.valueOf(selected.getIMDBRating()), selected.getFilePath(), selected.getLastView(), this);
             openNewWindow(root);
         }
@@ -377,7 +403,7 @@ public class AppController implements Initializable {
     }
 
     //////////////////////////////////////////////////////////
-    ////////////////////MediaPlayer stuff/////////////////////
+    ////////////////////MediaPlayer functions/////////////////
     //////////////////////////////////////////////////////////
 
     public void togglePlayPause(ActionEvent actionEvent) {
@@ -400,6 +426,8 @@ public class AppController implements Initializable {
         } else if (status == MediaPlayer.Status.PAUSED || status == MediaPlayer.Status.READY || status == MediaPlayer.Status.STOPPED) {
             player.play();
         }
+
+        setVolumeSlider();
 
     }
 
@@ -548,13 +576,22 @@ public class AppController implements Initializable {
             sliderVolume.setVisible(true);
         }
     }
-    public void setVolume(MouseEvent mouseEvent) {
+    private void setVolumeSlider() {
         if(player != null){
-            //player.setVolume();
+            sliderVolume.setValue(player.getVolume() * 100 );
+            //mediaplayer volume is usually between 0-1 and our slider is between 0-100, so we're multiplying by 100
+            //setting our slider value to the mediaplayers automatic volume value
+
+            sliderVolume.valueProperty().addListener((observable, oldValue, newValue) -> {
+                //setting the volume of the mediaplayer to be the sliders new value
+                double sliderVal = newValue.doubleValue();
+                player.setVolume(sliderVal/100);
+                //we need to divideby 100 since we multiplied the value by 100 earlier
+            });
         }
     }
 
-    public void searchName(KeyEvent keyEvent) {
+    public void searchName(KeyEvent keyEvent) throws MyMoviesExceptions {
         TextField source = (TextField) keyEvent.getSource();
         String searchText = source.getText().toLowerCase();
 
@@ -565,16 +602,70 @@ public class AppController implements Initializable {
             // Create a new list for the filtered items
             List<CatMovConnectionBE> filteredItems = new ArrayList<>();
 
-            // Filter the original items based on the search text
-            for (CatMovConnectionBE item : originalItems) {
-                if (item.getName().toLowerCase().contains(searchText)) {
-                    filteredItems.add(item);
-                }
+            List<Integer> selectedCatIds = getSelectedCategoryIDs();
+            for(int i : selectedCatIds){
+                System.out.println(i);
             }
+
+            if(selectedCatIds.isEmpty()){
+                // Filter the original items based on the search text
+                for (CatMovConnectionBE item : originalItems) {
+                    if(checkRating.isSelected()){
+                        if(item.getName().toLowerCase().contains(searchText)
+                                && item.getIMDBRating() == Double.parseDouble(lblSliderValue.getText())){
+                            filteredItems.add(item);
+                        }
+                    } else {
+                        if (item.getName().toLowerCase().contains(searchText)) {
+                            filteredItems.add(item);
+                        }
+                    }
+
+                }
+            } else {
+                List<Integer> MovIds = bllCatMov.getMoviesForCategories(selectedCatIds);
+                List<CatMovConnectionBE> catMovConnections = bllCatMov.getCatMovConnectionsByIds(MovIds);
+                Map<Integer,CatMovConnectionBE> CatMovMap = getCatMovMap(catMovConnections);
+
+                for(Map.Entry<Integer,CatMovConnectionBE> current: CatMovMap.entrySet()){
+                    if(checkRating.isSelected()){
+                        if(current.getValue().getName().toLowerCase().contains(searchText)
+                                && current.getValue().getIMDBRating() == Double.parseDouble(lblSliderValue.getText())){
+                            filteredItems.add(CatMovMap.get(current.getKey()));
+                        }
+                    } else {
+                        if (current.getValue().getName().toLowerCase().contains(searchText)) {
+                            filteredItems.add(current.getValue());
+                        }
+                    }
+                }
+
+            }
+
             // Update the table items
             tblMovie.getItems().setAll(filteredItems);
         }
     }
+
+    /*
+    private List<CatMovConnection> filterByNameAndOrRating(List<CatMovConnection> originalList, String searchText){
+        List<CatMovConnection> filteredList = new ArrayList<>();
+        for (CatMovConnection item : originalList) {
+            if(checkRating.isSelected()){
+                if(item.getName().toLowerCase().contains(searchText)
+                        && item.getRating() == Double.parseDouble(lblSliderValue.getText())){
+                    filteredList.add(item);
+                }
+            } else {
+                if (item.getName().toLowerCase().contains(searchText)) {
+                    filteredList.add(item);
+                }
+            }
+        }
+
+        return filteredList;
+    }
+     */
 
     //////////////////////////////////////////////////////////
     ////////////////////Right Click Menu//////////////////////
