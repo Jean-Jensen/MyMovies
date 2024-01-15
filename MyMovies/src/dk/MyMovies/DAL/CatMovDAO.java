@@ -1,8 +1,6 @@
 package dk.MyMovies.DAL;
 
-import dk.MyMovies.BE.CatMovConnection;
-import dk.MyMovies.BE.Category;
-import dk.MyMovies.BE.Movie;
+import dk.MyMovies.BE.CatMovConnectionBE;
 import dk.MyMovies.Exceptions.MyMoviesExceptions;
 
 import java.sql.Connection;
@@ -44,47 +42,46 @@ public class CatMovDAO implements ICatMovDAO{
 
     // This method is used to get the categories for a specific movie from the database. Used in rightClickMenuRemoveCategory
     //to create a list for the submenu
-    public List<CatMovConnection> getCategoriesForMovie(int movID) throws MyMoviesExceptions {
-        List<CatMovConnection> catMovConnections = new ArrayList<>();
-        try(Connection con = cm.getConnection()){
-            String sql = "SELECT Category.*, Movie.MovID, Movie.PersonalRating, Movie.Rating, Movie.FilePath, Movie.LastView, CatMovie.ID as CatMovID FROM Category " +
+    public List<CatMovConnectionBE> getCategoriesForMovie(int movID) throws MyMoviesExceptions {
+        List<CatMovConnectionBE> catMovConnectionBES = new ArrayList<>();
+        try (Connection con = cm.getConnection()) {
+            String sql = "SELECT Category.Name, ID FROM Category " +
+                    //I join the CatMovie table with Category via FROM Category
                     "JOIN CatMovie ON Category.CatID = CatMovie.CatID " +
+                    //I join my newly joined CatMovie/Category table to Movie
                     "JOIN Movie ON Movie.MovID = CatMovie.MovID " +
+                    //Filter out everything unless it matches my parameter
                     "WHERE CatMovie.MovID = ?";
             PreparedStatement pstmt = con.prepareStatement(sql);
             pstmt.setInt(1, movID);
-            try(ResultSet rs = pstmt.executeQuery()){
-                while(rs.next()){
-                    CatMovConnection catMovConnection = new CatMovConnection(
-                            rs.getInt("MovID"),
-                            rs.getString("Name"),
-                            rs.getDouble("PersonalRating"),
-                            rs.getDouble("Rating"),
-                            rs.getString("FilePath"),
-                            rs.getString("LastView"),
-                            rs.getInt("CatMovID")
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    CatMovConnectionBE catMovConnectionBE = new CatMovConnectionBE(
+                            rs.getInt("ID"),
+                            rs.getString("Name")
                     );
-                    catMovConnections.add(catMovConnection);
+                    catMovConnectionBES.add(catMovConnectionBE);
                 }
             }
         } catch (SQLException e) {
             throw new MyMoviesExceptions("Error listing movies categories: DAO Error - " + e.getMessage(), e);
         }
-        return catMovConnections;
+        return catMovConnectionBES;
     }
 
 
     // This method is used to get all movie-category connections from the database. -Used in displayMovies and updateMovieTable
-    public List<CatMovConnection> getAllCatMovConnections() throws MyMoviesExceptions {
-        List<CatMovConnection> catMovConnections = new ArrayList<>();
+    public List<CatMovConnectionBE> getAllCatMovConnections() throws MyMoviesExceptions {
+        List<CatMovConnectionBE> catMovConnectionBES = new ArrayList<>();
         try(Connection con = cm.getConnection()){
+            //In this I rename Category.name to CategoryName using 'as' so I can set it later, due to it having the same name on our tables
             String sql = "SELECT Movie.*, Category.Name as CategoryName, CatMovie.ID as CatMovID FROM CatMovie " +
                     "JOIN Movie ON CatMovie.MovID = Movie.MovID " +
                     "JOIN Category ON CatMovie.CatID = Category.CatID";
             PreparedStatement pstmt = con.prepareStatement(sql);
             try(ResultSet rs = pstmt.executeQuery()){
                 while(rs.next()){
-                    CatMovConnection catMovConnection = new CatMovConnection(
+                    CatMovConnectionBE catMovConnectionBE = new CatMovConnectionBE(
                             rs.getInt("MovID"),
                             rs.getString("Name"),
                             rs.getDouble("PersonalRating"),
@@ -93,19 +90,21 @@ public class CatMovDAO implements ICatMovDAO{
                             rs.getString("LastView"),
                             rs.getInt("CatMovID")
                     );
-                    catMovConnection.setCategoryName(rs.getString("CategoryName"));
-                    catMovConnections.add(catMovConnection);
+                    //call my setter to set the name as a string so I can get it later
+                    catMovConnectionBE.setCategoryName(rs.getString("CategoryName"));
+                    catMovConnectionBES.add(catMovConnectionBE);
                 }
             }
         } catch (SQLException e) {
             throw new MyMoviesExceptions("Error retrieving all movie category connections: DAO Error - " + e.getMessage(), e);
         }
-        return catMovConnections;
+        return catMovConnectionBES;
     }
 
 
     // This method is used to get the movies for specific categories from the database. -Used in updateMovieTable
     //to create a list of movies in each category and input it into getCatMovConnectionsByIds below
+    //These next 2 could be combined, but I chose not to incase for some reason they needed to be used seperately
     public List<Integer> getMoviesForCategories(List<Integer> catIDs) throws MyMoviesExceptions {
         if (catIDs.isEmpty()) {
             return new ArrayList<>();
@@ -135,11 +134,11 @@ public class CatMovDAO implements ICatMovDAO{
 
 
     // This method is used to get the movie-category connections for specific movie IDs from the database. -Used in updateMovieTable
-    public List<CatMovConnection> getCatMovConnectionsByIds(List<Integer> movIDs) throws MyMoviesExceptions {
+    public List<CatMovConnectionBE> getCatMovConnectionsByIds(List<Integer> movIDs) throws MyMoviesExceptions {
         if (movIDs.isEmpty()) {
             return new ArrayList<>();
         }
-        List<CatMovConnection> catMovConnections = new ArrayList<>();
+        List<CatMovConnectionBE> catMovConnectionBES = new ArrayList<>();
         try(Connection con = cm.getConnection()){
             String placeholders = String.join(",", Collections.nCopies(movIDs.size(), "?"));
             String sql = "SELECT Movie.*, Category.Name as CategoryName, CatMovie.ID as CatMovID FROM CatMovie " +
@@ -152,7 +151,7 @@ public class CatMovDAO implements ICatMovDAO{
             }
             try(ResultSet rs = pstmt.executeQuery()){
                 while(rs.next()){
-                    CatMovConnection catMovConnection = new CatMovConnection(
+                    CatMovConnectionBE catMovConnectionBE = new CatMovConnectionBE(
                             rs.getInt("MovID"),
                             rs.getString("Name"),
                             rs.getDouble("PersonalRating"),
@@ -161,13 +160,13 @@ public class CatMovDAO implements ICatMovDAO{
                             rs.getString("LastView"),
                             rs.getInt("CatMovID")
                     );
-                    catMovConnection.setCategoryName(rs.getString("CategoryName"));
-                    catMovConnections.add(catMovConnection);
+                    catMovConnectionBE.setCategoryName(rs.getString("CategoryName"));
+                    catMovConnectionBES.add(catMovConnectionBE);
                 }
             }
         } catch (SQLException e) {
             throw new MyMoviesExceptions("Error retrieving movie category connections for given movie IDs: DAO Error - " + e.getMessage(), e);
         }
-        return catMovConnections;
+        return catMovConnectionBES;
     }
 }

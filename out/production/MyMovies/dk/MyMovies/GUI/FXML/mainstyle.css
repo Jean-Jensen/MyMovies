@@ -98,3 +98,83 @@ Button:hover {
     -fx-max-width: 20px;
     -fx-max-height: 20px;
 }
+
+.fullscreenButton {
+    -fx-background-image: url('/dk/MyMovies/GUI/Images/fullscreen.png');
+    -fx-background-size: contain;
+    -fx-background-color: transparent;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-min-width: 20px;
+    -fx-min-height: 20px;
+    -fx-max-width: 20px;
+    -fx-max-height: 20px;
+}
+
+.forwardButton {
+    -fx-background-image: url('/dk/MyMovies/GUI/Images/forward.png');
+    -fx-background-size: contain;
+    -fx-background-color: transparent;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-min-width: 20px;
+    -fx-min-height: 20px;
+    -fx-max-width: 20px;
+    -fx-max-height: 20px;
+}
+
+.backwardButton {
+    -fx-background-image: url('/dk/MyMovies/GUI/Images/backward.png');
+    -fx-background-size: contain;
+    -fx-background-color: transparent;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-min-width: 20px;
+    -fx-min-height: 20px;
+    -fx-max-width: 20px;
+    -fx-max-height: 20px;
+}
+
+.volumeButton {
+    -fx-background-image: url('/dk/MyMovies/GUI/Images/volume.png');
+    -fx-background-size: contain;
+    -fx-background-color: transparent;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-min-width: 20px;
+    -fx-min-height: 20px;
+    -fx-max-width: 20px;
+    -fx-max-height: 20px;
+}
+
+.starButton {
+    -fx-background-image: url('/dk/MyMovies/GUI/Images/starempty.png');
+    -fx-background-size: contain;
+    -fx-background-color: transparent;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-min-width: 20px;
+    -fx-min-height: 20px;
+    -fx-max-width: 20px;
+    -fx-max-height: 20px;
+}
+
+.starfilledButton {
+    -fx-background-image: url('/dk/MyMovies/GUI/Images/starfill.png');
+    -fx-background-size: contain;
+    -fx-background-color: transparent;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-min-width: 20px;
+    -fx-min-height: 20px;
+    -fx-max-width: 20px;
+    -fx-max-height: 20px;
+}
+
+.playPauseButton {
+    -fx-background-color: transparent;
+    -fx-min-width: 20px;
+    -fx-min-height: 20px;
+    -fx-max-width: 20px;
+    -fx-max-height: 20px;
+}
