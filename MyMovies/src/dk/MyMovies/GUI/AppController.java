@@ -47,8 +47,6 @@ public class AppController implements Initializable {
     private BLLCatMov bllCatMov = new BLLCatMov();
     public Button btnAddCat;
     @FXML
-    private TableColumn colID;
-    @FXML
     private CheckBox checkRating;
     @FXML
     private Slider sliderVolume;
@@ -76,16 +74,6 @@ public class AppController implements Initializable {
     private Slider ratingSlider;
     @FXML
     private Label lblSliderValue;
-    private MediaPlayer player;
-    private ChangeListener<MediaPlayer.Status> playPauseListener;
-    ImageView playView = new ImageView();
-    ImageView pauseView = new ImageView();
-    private ObservableList<CatMovConnectionBE> originalItems;
-    private FileChooser.ExtensionFilter filter1 = new FileChooser.ExtensionFilter(".mp4 files", "*.mp4");
-    private FileChooser.ExtensionFilter filter2 = new FileChooser.ExtensionFilter(".mpeg4 files", "*.mpeg4");
-    private static final Logger logger = Logger.getLogger(AppController.class.getName());
-    private ContextMenu rightClickMenu;
-
     @FXML
     private Button star1;
     @FXML
@@ -106,6 +94,16 @@ public class AppController implements Initializable {
     private Button star9;
     @FXML
     private Button star10;
+    private MediaPlayer player;
+    private ChangeListener<MediaPlayer.Status> playPauseListener;
+    ImageView playView = new ImageView();
+    ImageView pauseView = new ImageView();
+    private ObservableList<CatMovConnectionBE> originalItems;
+    private FileChooser.ExtensionFilter filter1 = new FileChooser.ExtensionFilter(".mp4 files", "*.mp4");
+    private FileChooser.ExtensionFilter filter2 = new FileChooser.ExtensionFilter(".mpeg4 files", "*.mpeg4");
+    private static final Logger logger = Logger.getLogger(AppController.class.getName());
+    private ContextMenu rightClickMenu;
+
 
 
 
@@ -150,7 +148,6 @@ public class AppController implements Initializable {
 // changing so maybe if we have time we can figure that out.
         if (!allCatMovConnectionBES.isEmpty()) {
             tblMovie.getItems().clear();
-            colID.setCellValueFactory(new PropertyValueFactory<>("Id"));
             tblMovie.getItems().addAll(allCatMovConnectionBES);
             colName.setCellValueFactory(new PropertyValueFactory<>("name"));
             colImdb.setCellValueFactory(new PropertyValueFactory<>("IMDBRating"));
@@ -769,12 +766,14 @@ public class AppController implements Initializable {
     @FXML
     private void handleMouseEnter(MouseEvent event) {
         Button hoveredButton = (Button) event.getSource();
+        //This converts my string "star#" to an integer .substring uses the 4th spot on each of my IDs(starting at 0) which is the # of the button
         int buttonNumber = Integer.parseInt(hoveredButton.getId().substring(4));
 
         List<Button> buttons = Arrays.asList(star1, star2, star3, star4, star5, star6, star7, star8, star9, star10);
         for (int i = 0; i < buttons.size(); i++) {
             Button button = buttons.get(i);
             if (i < buttonNumber) {
+                //short form of if else statement, and we use a modulus (%) to apply the style accordingly for even or odd
                 button.getStyleClass().remove(i % 2 == 0 ? "starEven" : "starOdd");
                 button.getStyleClass().add(i % 2 == 0 ? "starHoverEven" : "starHoverOdd");
             }
@@ -789,6 +788,7 @@ public class AppController implements Initializable {
         List<Button> buttons = Arrays.asList(star1, star2, star3, star4, star5, star6, star7, star8, star9, star10);
         for (int i = 0; i < buttonNumber; i++) {
             Button button = buttons.get(i);
+            //checks to see if button has been clicked, if not it removes the styleclass and adds the unfilled icon in the proper spots
             if (!button.getStyleClass().contains("starClickedEven") && !button.getStyleClass().contains("starClickedOdd")) {
                 button.getStyleClass().removeAll(Arrays.asList("starHoverEven", "starHoverOdd"));
                 button.getStyleClass().add(i % 2 == 0 ? "starEven" : "starOdd");
@@ -799,15 +799,18 @@ public class AppController implements Initializable {
     @FXML
     private void handleClick(MouseEvent event) {
         Button clickedButton = (Button) event.getSource();
+        //This converts my string "star#" to an integer .substring uses the 5th letter on each of my IDs which is the # of the button
         int buttonNumber = Integer.parseInt(clickedButton.getId().substring(4));
 
         List<Button> buttons = Arrays.asList(star1, star2, star3, star4, star5, star6, star7, star8, star9, star10);
         for (int i = 0; i < buttons.size(); i++) {
             Button button = buttons.get(i);
             if (i < buttonNumber) {
+                //adds the clicked image to everything below where clicked
                 button.getStyleClass().removeAll(Arrays.asList("starEven", "starOdd", "starHoverEven", "starHoverOdd"));
                 button.getStyleClass().add(i % 2 == 0 ? "starClickedEven" : "starClickedOdd");
             } else {
+                //adds the unclicked image to everything above where its been clicked
                 button.getStyleClass().removeAll(Arrays.asList("starHoverEven", "starHoverOdd", "starClickedEven", "starClickedOdd"));
                 button.getStyleClass().add(i % 2 == 0 ? "starEven" : "starOdd");
             }
