@@ -256,7 +256,7 @@ public class AppController implements Initializable {
 
     public void RatingSlider() {
         ratingSlider.valueProperty().addListener((observable, oldValue, newValue) ->
-                lblSliderValue.setText("IMDB Rating: " + String.valueOf(ratingSlider.getValue()).substring(0,3)));
+                lblSliderValue.setText(String.valueOf(ratingSlider.getValue()).substring(0,3)));
 
     }
 
