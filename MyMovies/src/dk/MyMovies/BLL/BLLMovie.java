@@ -40,4 +40,8 @@ public class BLLMovie {
     public void editMovie(int ID, String Name, Double IMDB, Double Rating, String FilePath, String LastView){
         DAO.editMovie(ID,Name,IMDB,Rating,FilePath,LastView);
     }
+    public void setPersonalRating(double rating, int movieId) throws MyMoviesExceptions {
+        DAO.setPersonalRating(rating, movieId);
+    }
+
 }

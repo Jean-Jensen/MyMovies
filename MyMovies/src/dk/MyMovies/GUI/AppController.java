@@ -123,6 +123,7 @@ public class AppController implements Initializable {
         checkBoxCat();
         playPauseImage();
         creatingStars();
+        ratingListener();
     }
 
 
@@ -144,8 +145,8 @@ public class AppController implements Initializable {
 
         //Observable list created for our search menu
         originalItems = FXCollections.observableArrayList(allCatMovConnectionBES);
-//This can be put into a new method but many things call it, and it would require alot of
-// changing so maybe if we have time we can figure that out.
+        //This can be put into a new method but many things call it, and it would require alot of
+        // changing so maybe if we have time we can figure that out.
         if (!allCatMovConnectionBES.isEmpty()) {
             tblMovie.getItems().clear();
             tblMovie.getItems().addAll(allCatMovConnectionBES);
@@ -797,12 +798,48 @@ public class AppController implements Initializable {
     }
 
     @FXML
-    private void handleClick(MouseEvent event) {
+    private void handleClick(MouseEvent event) throws MyMoviesExceptions {
         Button clickedButton = (Button) event.getSource();
         //This converts my string "star#" to an integer .substring uses the 5th letter on each of my IDs which is the # of the button
         int buttonNumber = Integer.parseInt(clickedButton.getId().substring(4));
 
         List<Button> buttons = Arrays.asList(star1, star2, star3, star4, star5, star6, star7, star8, star9, star10);
+        fillingStars(buttonNumber, buttons);
+        double rating = buttonNumber * 0.5;
+
+        CatMovConnectionBE selectedMovie = tblMovie.getSelectionModel().getSelectedItem();
+        if(selectedMovie != null) {
+            try {
+                bllMov.setPersonalRating(rating, selectedMovie.getId());
+            } catch (MyMoviesExceptions e) {
+                logger.log(Level.SEVERE, "Error setting personal rating: AppController - ", e);
+                showErrorDialog(new MyMoviesExceptions("Error setting personal rating.", e));
+            }
+            displayMovies();
+        }
+    }
+
+    private void ratingListener(){
+        //this listener sends the rating via .getRating from whatever is selected on the table
+        tblMovie.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            if (newSelection != null) {
+                //send the .getRating to the method below
+                updateStarRating(newSelection.getRating());
+            }
+        });
+    }
+
+    private void updateStarRating(double rating) {
+        //the received rating gets multiplied by 2 so it will match our button IDs (1.5 x 2 = star3)
+        int buttonNumber = (int) (rating * 2); // Convert rating to button number
+
+        List<Button> buttons = Arrays.asList(star1, star2, star3, star4, star5, star6, star7, star8, star9, star10);
+        //send star#, list to method below
+        fillingStars(buttonNumber, buttons);
+    }
+
+    private void fillingStars(int buttonNumber, List<Button> buttons) {
+        //loop made with the star list
         for (int i = 0; i < buttons.size(); i++) {
             Button button = buttons.get(i);
             if (i < buttonNumber) {
@@ -816,4 +853,5 @@ public class AppController implements Initializable {
             }
         }
     }
+
 }

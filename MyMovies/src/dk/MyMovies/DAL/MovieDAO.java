@@ -255,4 +255,16 @@ public class MovieDAO implements IMovieDAO {
             throw new RuntimeException("Error searching for movie " + search + "\n" + e.getMessage(), e);
         }
     }
+
+    public void setPersonalRating(double rating, int movieId) throws MyMoviesExceptions {
+        try (Connection con = cm.getConnection()){
+            String sql = "UPDATE Movie SET PersonalRating = ? WHERE MovID = ?";
+            PreparedStatement pstmt = con.prepareStatement(sql);
+            pstmt.setDouble(1, rating);
+            pstmt.setInt(2, movieId);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new MyMoviesExceptions("Error updating personal rating", e);
+        }
+    }
 }
