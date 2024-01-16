@@ -54,7 +54,7 @@
                         <TableColumn fx:id="colName" prefWidth="76.79997634887695" text="Title" />
                         <TableColumn fx:id="colCat" prefWidth="67.0" text="Category" />
                         <TableColumn fx:id="colImdb" prefWidth="50.39996337890625" text="IMDB" />
-                        <TableColumn fx:id="colRating" prefWidth="59.20001220703125" text="Rating" />
+                        <TableColumn fx:id="colRating" prefWidth="59.20001220703125" text="Stars" />
                         <TableColumn fx:id="colLast" prefWidth="85.59999084472656" text="Last view" />
                     </columns>
                <VBox.margin>
