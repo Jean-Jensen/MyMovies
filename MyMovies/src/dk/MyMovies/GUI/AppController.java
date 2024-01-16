@@ -12,16 +12,20 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.StackPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
@@ -38,25 +42,16 @@ import java.util.logging.Logger;
 
 public class AppController implements Initializable {
 
-
     private BLLCategory bllCat = new BLLCategory();
     private BLLMovie bllMov = new BLLMovie();
     private BLLCatMov bllCatMov = new BLLCatMov();
     public Button btnAddCat;
     @FXML
-    private TableColumn colID;
-    @FXML
     private CheckBox checkRating;
-    @FXML
-    private TextField txtSearch;
     @FXML
     private Slider sliderVolume;
     @FXML
     private ToggleButton togglePlayPause;
-
-
-    @FXML
-    private Label lblTimeVal;
     @FXML
     private Slider progressSlider;
     @FXML
@@ -79,16 +74,6 @@ public class AppController implements Initializable {
     private Slider ratingSlider;
     @FXML
     private Label lblSliderValue;
-    private MediaPlayer player;
-    private ChangeListener<MediaPlayer.Status> playPauseListener;
-    ImageView playView = new ImageView();
-    ImageView pauseView = new ImageView();
-    private ObservableList<CatMovConnectionBE> originalItems;
-    private FileChooser.ExtensionFilter filter1 = new FileChooser.ExtensionFilter(".mp4 files", "*.mp4");
-    private FileChooser.ExtensionFilter filter2 = new FileChooser.ExtensionFilter(".mpeg4 files", "*.mpeg4");
-    private static final Logger logger = Logger.getLogger(AppController.class.getName());
-    private ContextMenu rightClickMenu;
-
     @FXML
     private Button star1;
     @FXML
@@ -99,8 +84,28 @@ public class AppController implements Initializable {
     private Button star4;
     @FXML
     private Button star5;
-    private final Image emptyStar = new Image("file:/C:/Users/Iulia/Documents/GitHub/MyMovies/MyMovies/src/dk/MyMovies/GUI/Images/starempty.png");
-    private final Image filledStar = new Image("file:/C:/Users/Iulia/Documents/GitHub/MyMovies/MyMovies/src/dk/MyMovies/GUI/Images/starfill.png");
+    @FXML
+    private Button star6;
+    @FXML
+    private Button star7;
+    @FXML
+    private Button star8;
+    @FXML
+    private Button star9;
+    @FXML
+    private Button star10;
+    private MediaPlayer player;
+    private ChangeListener<MediaPlayer.Status> playPauseListener;
+    ImageView playView = new ImageView();
+    ImageView pauseView = new ImageView();
+    private ObservableList<CatMovConnectionBE> originalItems;
+    private FileChooser.ExtensionFilter filter1 = new FileChooser.ExtensionFilter(".mp4 files", "*.mp4");
+    private FileChooser.ExtensionFilter filter2 = new FileChooser.ExtensionFilter(".mpeg4 files", "*.mpeg4");
+    private static final Logger logger = Logger.getLogger(AppController.class.getName());
+    private ContextMenu rightClickMenu;
+
+
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -117,6 +122,7 @@ public class AppController implements Initializable {
         RatingSlider();
         checkBoxCat();
         playPauseImage();
+        creatingStars();
     }
 
 
@@ -142,7 +148,6 @@ public class AppController implements Initializable {
 // changing so maybe if we have time we can figure that out.
         if (!allCatMovConnectionBES.isEmpty()) {
             tblMovie.getItems().clear();
-            colID.setCellValueFactory(new PropertyValueFactory<>("Id"));
             tblMovie.getItems().addAll(allCatMovConnectionBES);
             colName.setCellValueFactory(new PropertyValueFactory<>("name"));
             colImdb.setCellValueFactory(new PropertyValueFactory<>("IMDBRating"));
@@ -436,12 +441,13 @@ public class AppController implements Initializable {
         Image pauseImage = new Image("/dk/MyMovies/GUI/Images/starfill.png");
 
         playView = new ImageView(playImage);
-        playView.setFitWidth(26);
-        playView.setFitHeight(25);
+        playView.setFitWidth(35);
+        playView.setFitHeight(35);
 
         pauseView = new ImageView(pauseImage);
-        pauseView.setFitWidth(26);
-        pauseView.setFitHeight(25);
+        pauseView.setFitWidth(35);
+        pauseView.setFitHeight(35);
+
 
         // Set initial graphic
         togglePlayPause.setGraphic(playView);
@@ -484,38 +490,6 @@ public class AppController implements Initializable {
         player.stop();
     }
 
-    @FXML
-    private void onStarHovered(MouseEvent event) {
-        Button hoveredStar = (Button) event.getSource();
-        // Change style class when hovered
-        hoveredStar.getStyleClass().add("starfilledButton");
-    }
-
-    @FXML
-    private void onStarExited(MouseEvent event) {
-        Button exitedStar = (Button) event.getSource();
-        // Change style class back to default when mouse exits
-        exitedStar.getStyleClass().remove("starfilledButton");
-    }
-
-    @FXML
-    private void onStarClicked(ActionEvent event) {
-        Button clickedStar = (Button) event.getSource();
-
-        // Toggle between filled and empty stars by changing the style class
-        if (clickedStar.getStyleClass().contains("starButton")) {
-            clickedStar.getStyleClass().add("starfilledButton");
-            clickedStar.getStyleClass().remove("starButton");
-        }
-        /*if (clickedStar.getStyleClass().contains("starfilledButton")) {
-            clickedStar.getStyleClass().add("starButton");
-            clickedStar.getStyleClass().remove("starfilledButton");
-        }*/
-
-
-    }
-
-
 
     public void Reset(ActionEvent actionEvent) {
         if(player.getStatus() != MediaPlayer.Status.READY){
@@ -544,6 +518,7 @@ public class AppController implements Initializable {
         }
     }
 
+
     public void setProgressSlider(){
         if(player != null){
             player.setOnReady(new Runnable() {
@@ -561,6 +536,22 @@ public class AppController implements Initializable {
                 }
             });
         }
+    }
+
+    public void openFullScreen(ActionEvent actionEvent) {
+        Stage fullScreenStage = new Stage();
+        MediaView fullScreenMediaView = new MediaView();
+        fullScreenMediaView.setMediaPlayer(player);
+        Scene scene = new Scene(new Group(fullScreenMediaView));
+        //add event to watch for escape key being pressed to close full screen
+        scene.addEventFilter(KeyEvent.KEY_PRESSED, ke -> {
+            if (ke.getCode() == KeyCode.ESCAPE) {
+                fullScreenStage.close();
+            }
+        });
+        fullScreenStage.setScene(scene);
+        fullScreenStage.setFullScreen(true);
+        fullScreenStage.show();
     }
 
     public void setMovieTime(MouseEvent mouseEvent) {
@@ -756,5 +747,73 @@ public class AppController implements Initializable {
                 }
             }
         });
+    }
+
+
+    //////////////////////////////////////////////////////////
+    ////////////////////Stars Rating//////////////////////////
+    /////////////////////////////////////////////////////////
+
+
+    private void creatingStars(){
+        List<Button> buttons = Arrays.asList(star1, star2, star3, star4, star5, star6, star7, star8, star9, star10);
+        for (int i = 0; i < buttons.size(); i++) {
+            Button button = buttons.get(i);
+            button.getStyleClass().add(i % 2 == 0 ? "starEven" : "starOdd");
+        }
+    }
+
+    @FXML
+    private void handleMouseEnter(MouseEvent event) {
+        Button hoveredButton = (Button) event.getSource();
+        //This converts my string "star#" to an integer .substring uses the 4th spot on each of my IDs(starting at 0) which is the # of the button
+        int buttonNumber = Integer.parseInt(hoveredButton.getId().substring(4));
+
+        List<Button> buttons = Arrays.asList(star1, star2, star3, star4, star5, star6, star7, star8, star9, star10);
+        for (int i = 0; i < buttons.size(); i++) {
+            Button button = buttons.get(i);
+            if (i < buttonNumber) {
+                //short form of if else statement, and we use a modulus (%) to apply the style accordingly for even or odd
+                button.getStyleClass().remove(i % 2 == 0 ? "starEven" : "starOdd");
+                button.getStyleClass().add(i % 2 == 0 ? "starHoverEven" : "starHoverOdd");
+            }
+        }
+    }
+
+    @FXML
+    private void handleMouseExit(MouseEvent event) {
+        Button exitedButton = (Button) event.getSource();
+        int buttonNumber = Integer.parseInt(exitedButton.getId().substring(4));
+
+        List<Button> buttons = Arrays.asList(star1, star2, star3, star4, star5, star6, star7, star8, star9, star10);
+        for (int i = 0; i < buttonNumber; i++) {
+            Button button = buttons.get(i);
+            //checks to see if button has been clicked, if not it removes the styleclass and adds the unfilled icon in the proper spots
+            if (!button.getStyleClass().contains("starClickedEven") && !button.getStyleClass().contains("starClickedOdd")) {
+                button.getStyleClass().removeAll(Arrays.asList("starHoverEven", "starHoverOdd"));
+                button.getStyleClass().add(i % 2 == 0 ? "starEven" : "starOdd");
+            }
+        }
+    }
+
+    @FXML
+    private void handleClick(MouseEvent event) {
+        Button clickedButton = (Button) event.getSource();
+        //This converts my string "star#" to an integer .substring uses the 5th letter on each of my IDs which is the # of the button
+        int buttonNumber = Integer.parseInt(clickedButton.getId().substring(4));
+
+        List<Button> buttons = Arrays.asList(star1, star2, star3, star4, star5, star6, star7, star8, star9, star10);
+        for (int i = 0; i < buttons.size(); i++) {
+            Button button = buttons.get(i);
+            if (i < buttonNumber) {
+                //adds the clicked image to everything below where clicked
+                button.getStyleClass().removeAll(Arrays.asList("starEven", "starOdd", "starHoverEven", "starHoverOdd"));
+                button.getStyleClass().add(i % 2 == 0 ? "starClickedEven" : "starClickedOdd");
+            } else {
+                //adds the unclicked image to everything above where its been clicked
+                button.getStyleClass().removeAll(Arrays.asList("starHoverEven", "starHoverOdd", "starClickedEven", "starClickedOdd"));
+                button.getStyleClass().add(i % 2 == 0 ? "starEven" : "starOdd");
+            }
+        }
     }
 }
