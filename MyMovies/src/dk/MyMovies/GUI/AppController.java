@@ -7,6 +7,7 @@ import dk.MyMovies.BLL.BLLCatMov;
 import dk.MyMovies.BLL.BLLCategory;
 import dk.MyMovies.BLL.BLLMovie;
 import dk.MyMovies.Exceptions.MyMoviesExceptions;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -808,9 +809,19 @@ public class AppController implements Initializable {
         double rating = buttonNumber * 0.5;
 
         CatMovConnectionBE selectedMovie = tblMovie.getSelectionModel().getSelectedItem();
+        int selectedIndex = tblMovie.getSelectionModel().getSelectedIndex();
         if(selectedMovie != null) {
             try {
                 bllMov.setPersonalRating(rating, selectedMovie.getId());
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        tblMovie.requestFocus();
+                        tblMovie.getSelectionModel().select(selectedIndex);
+                        tblMovie.getFocusModel().focus(selectedIndex);
+                    }
+                });
+
             } catch (MyMoviesExceptions e) {
                 logger.log(Level.SEVERE, "Error setting personal rating: AppController - ", e);
                 showErrorDialog(new MyMoviesExceptions("Error setting personal rating.", e));
