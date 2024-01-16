@@ -25,11 +25,6 @@ Text {
     -fx-background-color: #e8e8e8;
 }
 
-/* HBox labels */
-HBox {
-    -fx-spacing: 10px;
-}
-
 /* sliders and slider labels */
 Slider {
     -fx-pref-width: 143px;
@@ -81,22 +76,16 @@ Button:hover {
     -fx-background-color: transparent;
     -fx-background-repeat: no-repeat;
     -fx-background-position: center;
-    -fx-min-width: 20px;
-    -fx-min-height: 20px;
-    -fx-max-width: 20px;
-    -fx-max-height: 20px;
+    -fx-min-width: 30px;
+    -fx-min-height: 30px;
+    -fx-max-width: 30px;
+    -fx-max-height: 30px;
 }
 
-.playButton {
-    -fx-background-image: url('/dk/MyMovies/GUI/Images/playbtn.png');
-    -fx-background-size: contain;
-    -fx-background-color: transparent;
-    -fx-background-repeat: no-repeat;
-    -fx-background-position: center;
-    -fx-min-width: 20px;
-    -fx-min-height: 20px;
-    -fx-max-width: 20px;
-    -fx-max-height: 20px;
+.stopButton:hover{
+-fx-scale-x: 1.1px;
+-fx-scale-y: 1.1px;
+-fx-scale-z: 1.1px;
 }
 
 .fullscreenButton {
@@ -105,22 +94,34 @@ Button:hover {
     -fx-background-color: transparent;
     -fx-background-repeat: no-repeat;
     -fx-background-position: center;
-    -fx-min-width: 20px;
-    -fx-min-height: 20px;
-    -fx-max-width: 20px;
-    -fx-max-height: 20px;
+    -fx-min-width: 30px;
+    -fx-min-height: 30px;
+    -fx-max-width: 30px;
+    -fx-max-height: 30px;
+}
+
+.fullscreenButton:hover{
+    -fx-scale-x: 1.1px;
+    -fx-scale-y: 1.1px;
+    -fx-scale-z: 1.1px;
 }
 
 .forwardButton {
-    -fx-background-image: url('/dk/MyMovies/GUI/Images/forward.png');
+    -fx-background-image: url('/dk/MyMovies/GUI/Images/forward2.png');
     -fx-background-size: contain;
     -fx-background-color: transparent;
     -fx-background-repeat: no-repeat;
     -fx-background-position: center;
-    -fx-min-width: 20px;
-    -fx-min-height: 20px;
-    -fx-max-width: 20px;
-    -fx-max-height: 20px;
+    -fx-min-width: 35px;
+    -fx-min-height: 35px;
+    -fx-max-width: 35px;
+    -fx-max-height: 35px;
+}
+
+.forwardButton:hover {
+    -fx-scale-x: 1.1px;
+    -fx-scale-y: 1.1px;
+    -fx-scale-z: 1.1px;
 }
 
 .backwardButton {
@@ -129,10 +130,16 @@ Button:hover {
     -fx-background-color: transparent;
     -fx-background-repeat: no-repeat;
     -fx-background-position: center;
-    -fx-min-width: 20px;
-    -fx-min-height: 20px;
-    -fx-max-width: 20px;
-    -fx-max-height: 20px;
+    -fx-min-width: 30px;
+    -fx-min-height: 30px;
+    -fx-max-width: 30px;
+    -fx-max-height: 30px;
+}
+
+.backwardButton:hover {
+    -fx-scale-x: 1.1px;
+    -fx-scale-y: 1.1px;
+    -fx-scale-z: 1.1px;
 }
 
 .volumeButton {
@@ -147,34 +154,81 @@ Button:hover {
     -fx-max-height: 20px;
 }
 
-.starButton {
-    -fx-background-image: url('/dk/MyMovies/GUI/Images/starempty.png');
-    -fx-background-size: contain;
-    -fx-background-color: transparent;
-    -fx-background-repeat: no-repeat;
-    -fx-background-position: center;
-    -fx-min-width: 20px;
-    -fx-min-height: 20px;
-    -fx-max-width: 20px;
-    -fx-max-height: 20px;
-}
-
-.starfilledButton {
-    -fx-background-image: url('/dk/MyMovies/GUI/Images/starfill.png');
-    -fx-background-size: contain;
-    -fx-background-color: transparent;
-    -fx-background-repeat: no-repeat;
-    -fx-background-position: center;
-    -fx-min-width: 20px;
-    -fx-min-height: 20px;
-    -fx-max-width: 20px;
-    -fx-max-height: 20px;
-}
 
 .playPauseButton {
     -fx-background-color: transparent;
-    -fx-min-width: 20px;
-    -fx-min-height: 20px;
-    -fx-max-width: 20px;
-    -fx-max-height: 20px;
+}
+
+.playPauseButton:hover {
+    -fx-scale-x: 1.1px;
+    -fx-scale-y: 1.1px;
+    -fx-scale-z: 1.1px;
+}
+
+/*
+
+.starLeft {
+    -fx-background-image: url('/dk/MyMovies/GUI/Images/starleft.png');
+    -fx-background-size: contain;
+    -fx-background-color: transparent;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: right center;
+    -fx-min-width: 12px;
+    -fx-min-height: 16px;
+    -fx-max-width: 12px;
+    -fx-max-height: 16px;
+}
+
+.starLeft:hover {
+    -fx-scale-x: 1.1px;
+    -fx-scale-y: 1.1px;
+    -fx-scale-z: 1.1px;
+}
+
+.starRight {
+    -fx-background-image: url('/dk/MyMovies/GUI/Images/starright.png');
+    -fx-background-size: contain;
+    -fx-background-color: transparent;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: left center;
+    -fx-min-width: 12px;
+    -fx-min-height: 16px;
+    -fx-max-width: 12px;
+    -fx-max-height: 16px;
+}
+
+.starRight:hover {
+    -fx-scale-x: 1.1px;
+    -fx-scale-y: 1.1px;
+    -fx-scale-z: 1.1px;
+}*/
+
+.starButton {
+    -fx-background-size: contain;
+    -fx-background-color: transparent;
+    -fx-background-repeat: no-repeat;
+}
+
+.starEven {
+    -fx-background-image: url('/dk/MyMovies/GUI/Images/emptyleft.png');
+}
+
+.starOdd {
+    -fx-background-image: url('/dk/MyMovies/GUI/Images/emptyright.png');
+}
+
+.starHoverEven {
+    -fx-background-image: url('/dk/MyMovies/GUI/Images/starleft.png');
+}
+
+.starHoverOdd {
+    -fx-background-image: url('/dk/MyMovies/GUI/Images/starright.png');
+}
+
+.starClickedEven {
+    -fx-background-image: url('/dk/MyMovies/GUI/Images/starleft.png');
+}
+
+.starClickedOdd {
+    -fx-background-image: url('/dk/MyMovies/GUI/Images/starright.png');
 }
