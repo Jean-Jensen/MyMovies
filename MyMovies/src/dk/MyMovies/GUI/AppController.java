@@ -757,6 +757,15 @@ public class AppController implements Initializable {
     ////////////////////Stars Rating//////////////////////////
     /////////////////////////////////////////////////////////
 
+
+    private void creatingStars(){
+        List<Button> buttons = Arrays.asList(star1, star2, star3, star4, star5, star6, star7, star8, star9, star10);
+        for (int i = 0; i < buttons.size(); i++) {
+            Button button = buttons.get(i);
+            button.getStyleClass().add(i % 2 == 0 ? "starEven" : "starOdd");
+        }
+    }
+
     @FXML
     private void handleMouseEnter(MouseEvent event) {
         Button hoveredButton = (Button) event.getSource();
@@ -768,24 +777,6 @@ public class AppController implements Initializable {
             if (i < buttonNumber) {
                 button.getStyleClass().remove(i % 2 == 0 ? "starEven" : "starOdd");
                 button.getStyleClass().add(i % 2 == 0 ? "starHoverEven" : "starHoverOdd");
-            }
-        }
-    }
-
-    @FXML
-    private void handleClick(MouseEvent event) {
-        Button clickedButton = (Button) event.getSource();
-        int buttonNumber = Integer.parseInt(clickedButton.getId().substring(4));
-
-        List<Button> buttons = Arrays.asList(star1, star2, star3, star4, star5, star6, star7, star8, star9, star10);
-        for (int i = 0; i < buttons.size(); i++) {
-            Button button = buttons.get(i);
-            if (i < buttonNumber) {
-                button.getStyleClass().removeAll(Arrays.asList("starEven", "starOdd", "starHoverEven", "starHoverOdd"));
-                button.getStyleClass().add(i % 2 == 0 ? "starClickedEven" : "starClickedOdd");
-            } else {
-                button.getStyleClass().removeAll(Arrays.asList("starHoverEven", "starHoverOdd", "starClickedEven", "starClickedOdd"));
-                button.getStyleClass().add(i % 2 == 0 ? "starEven" : "starOdd");
             }
         }
     }
@@ -805,11 +796,21 @@ public class AppController implements Initializable {
         }
     }
 
-    private void creatingStars(){
+    @FXML
+    private void handleClick(MouseEvent event) {
+        Button clickedButton = (Button) event.getSource();
+        int buttonNumber = Integer.parseInt(clickedButton.getId().substring(4));
+
         List<Button> buttons = Arrays.asList(star1, star2, star3, star4, star5, star6, star7, star8, star9, star10);
         for (int i = 0; i < buttons.size(); i++) {
             Button button = buttons.get(i);
-            button.getStyleClass().add(i % 2 == 0 ? "starEven" : "starOdd");
+            if (i < buttonNumber) {
+                button.getStyleClass().removeAll(Arrays.asList("starEven", "starOdd", "starHoverEven", "starHoverOdd"));
+                button.getStyleClass().add(i % 2 == 0 ? "starClickedEven" : "starClickedOdd");
+            } else {
+                button.getStyleClass().removeAll(Arrays.asList("starHoverEven", "starHoverOdd", "starClickedEven", "starClickedOdd"));
+                button.getStyleClass().add(i % 2 == 0 ? "starEven" : "starOdd");
+            }
         }
     }
 }
