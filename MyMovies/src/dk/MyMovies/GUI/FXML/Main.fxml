@@ -39,7 +39,7 @@
                   <CheckBox fx:id="checkRating" mnemonicParsing="false" prefHeight="18.0" prefWidth="14.0" text="CheckBox" />
                         <Label fx:id="lblSliderValue" text="IMDB Rating: 0" textFill="WHITE">
                             <HBox.margin>
-                                <Insets left="95.0" />
+                                <Insets left="190.0" />
                             </HBox.margin>
                         </Label>
                     </children>
@@ -134,20 +134,20 @@
                         <Insets bottom="5.0" left="30.0" />
                      </HBox.margin>
                   </Button>
-                  <Button fx:id="star1" styleClass="starButton" onMouseEntered="#handleMouseEnter" onMouseExited="#handleMouseExit" onMouseClicked="#handleClick">
+                  <Button fx:id="star1" onMouseClicked="#handleClick" onMouseEntered="#handleMouseEnter" onMouseExited="#handleMouseExit" styleClass="starButton">
                      <HBox.margin>
                         <Insets left="150.0" />
                      </HBox.margin>
                   </Button>
-                  <Button fx:id="star2" styleClass="starButton" onMouseEntered="#handleMouseEnter" onMouseExited="#handleMouseExit" onMouseClicked="#handleClick" />
-                  <Button fx:id="star3" styleClass="starButton" onMouseEntered="#handleMouseEnter" onMouseExited="#handleMouseExit" onMouseClicked="#handleClick" />
-                  <Button fx:id="star4" styleClass="starButton" onMouseEntered="#handleMouseEnter" onMouseExited="#handleMouseExit" onMouseClicked="#handleClick" />
-                  <Button fx:id="star5" styleClass="starButton" onMouseEntered="#handleMouseEnter" onMouseExited="#handleMouseExit" onMouseClicked="#handleClick" />
-                  <Button fx:id="star6" styleClass="starButton" onMouseEntered="#handleMouseEnter" onMouseExited="#handleMouseExit" onMouseClicked="#handleClick" />
-                  <Button fx:id="star7" styleClass="starButton" onMouseEntered="#handleMouseEnter" onMouseExited="#handleMouseExit" onMouseClicked="#handleClick" />
-                  <Button fx:id="star8" styleClass="starButton" onMouseEntered="#handleMouseEnter" onMouseExited="#handleMouseExit" onMouseClicked="#handleClick" />
-                  <Button fx:id="star9" styleClass="starButton" onMouseEntered="#handleMouseEnter" onMouseExited="#handleMouseExit" onMouseClicked="#handleClick" />
-                  <Button fx:id="star10" styleClass="starButton" onMouseEntered="#handleMouseEnter" onMouseExited="#handleMouseExit" onMouseClicked="#handleClick" />
+                  <Button fx:id="star2" onMouseClicked="#handleClick" onMouseEntered="#handleMouseEnter" onMouseExited="#handleMouseExit" styleClass="starButton" />
+                  <Button fx:id="star3" onMouseClicked="#handleClick" onMouseEntered="#handleMouseEnter" onMouseExited="#handleMouseExit" styleClass="starButton" />
+                  <Button fx:id="star4" onMouseClicked="#handleClick" onMouseEntered="#handleMouseEnter" onMouseExited="#handleMouseExit" styleClass="starButton" />
+                  <Button fx:id="star5" onMouseClicked="#handleClick" onMouseEntered="#handleMouseEnter" onMouseExited="#handleMouseExit" styleClass="starButton" />
+                  <Button fx:id="star6" onMouseClicked="#handleClick" onMouseEntered="#handleMouseEnter" onMouseExited="#handleMouseExit" styleClass="starButton" />
+                  <Button fx:id="star7" onMouseClicked="#handleClick" onMouseEntered="#handleMouseEnter" onMouseExited="#handleMouseExit" styleClass="starButton" />
+                  <Button fx:id="star8" onMouseClicked="#handleClick" onMouseEntered="#handleMouseEnter" onMouseExited="#handleMouseExit" styleClass="starButton" />
+                  <Button fx:id="star9" onMouseClicked="#handleClick" onMouseEntered="#handleMouseEnter" onMouseExited="#handleMouseExit" styleClass="starButton" />
+                  <Button fx:id="star10" onMouseClicked="#handleClick" onMouseEntered="#handleMouseEnter" onMouseExited="#handleMouseExit" styleClass="starButton" />
                </children>
             </HBox>
          </children>
