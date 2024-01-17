@@ -21,11 +21,11 @@
         <VBox prefWidth="365.0" BorderPane.alignment="CENTER">
             <children>
                 <Label text="Title" textFill="white" />
-                <TextField fx:id="txtSearch" onKeyReleased="#searchName" prefHeight="8.0" prefWidth="85.0" style="-fx-background-color: #6c6179;">
+                <TextField fx:id="txtSearch" onKeyReleased="#searchName" prefHeight="8.0" prefWidth="85.0" style="-fx-background-color: #917CB9FF;">
                <VBox.margin>
                   <Insets left="5.0" />
                </VBox.margin></TextField>
-                <Label text="Categories" />
+                <Label text="Categories" textFill="WHITE" />
                 <ListView fx:id="lvCategories" prefHeight="179.0" prefWidth="360.0" style="-fx-background-color: #6c6179; -fx-region-background: #6c6179;" styleClass="listView">
                <VBox.margin>
                   <Insets left="5.0" />
@@ -36,7 +36,7 @@
                     </VBox.margin>
                     <children>
                         <Label text="Rating" textFill="#f2efef" />
-                  <CheckBox fx:id="checkRating" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="15.0" prefWidth="10.0" text="CheckBox">
+                  <CheckBox fx:id="checkRating" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="15.0" prefWidth="18.0" text="CheckBox">
                      <HBox.margin>
                         <Insets left="15.0" top="4.0" />
                      </HBox.margin></CheckBox>
@@ -51,7 +51,7 @@
                <VBox.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="4.0" />
                </VBox.margin></Slider>
-                <TableView fx:id="tblMovie" editable="true" onMousePressed="#setMediaPlayer" prefHeight="348.0" prefWidth="365.0" style="-fx-text-fill: black;" VBox.vgrow="ALWAYS">
+                <TableView fx:id="tblMovie" editable="true" onMousePressed="#setMediaPlayer" prefHeight="348.0" prefWidth="365.0" stylesheets="@mainstyle.css" VBox.vgrow="ALWAYS">
                     <columns>
                   <TableColumn fx:id="colID" prefWidth="24.000002443790436" text="ID" />
                         <TableColumn fx:id="colName" prefWidth="76.79997634887695" text="Title" />
@@ -73,7 +73,7 @@
    <center>
       <VBox BorderPane.alignment="CENTER">
          <children>
-            <StackPane fx:id="stackPane" prefWidth="708.0" style="-fx-background-color: black;" VBox.vgrow="SOMETIMES">
+            <StackPane fx:id="stackPane" prefWidth="708.0" VBox.vgrow="SOMETIMES">
                <VBox.margin>
                   <Insets bottom="10.0" />
                </VBox.margin>
@@ -97,15 +97,15 @@
          <children>
             <HBox alignment="CENTER_LEFT">
                <children>
-                      <Button fx:id="btnAdd" mnemonicParsing="false" onAction="#addMovie" text="Add Movie">
+                      <Button fx:id="btnAdd" mnemonicParsing="false" onAction="#addMovie" prefHeight="26.0" prefWidth="158.0" text="Add Movie">
                      <HBox.margin>
-                        <Insets left="56.0" />
+                        <Insets left="30.0" right="5.0" />
                      </HBox.margin></Button>
-                  <Button fx:id="btnEdit" mnemonicParsing="false" onAction="#editMovie" text="Edit Movie">
+                  <Button fx:id="btnEdit" mnemonicParsing="false" onAction="#editMovie" prefHeight="26.0" prefWidth="157.0" text="Edit Movie">
                      <HBox.margin>
-                        <Insets left="2.0" />
+                        <Insets left="2.0" right="5.0" />
                      </HBox.margin></Button>
-                  <Button fx:id="btnAddCat" mnemonicParsing="false" onAction="#addCategory" text="Add Category">
+                  <Button fx:id="btnAddCat" mnemonicParsing="false" onAction="#addCategory" prefHeight="26.0" prefWidth="157.0" text="Add Category">
                      <HBox.margin>
                         <Insets left="2.0" />
                      </HBox.margin></Button>

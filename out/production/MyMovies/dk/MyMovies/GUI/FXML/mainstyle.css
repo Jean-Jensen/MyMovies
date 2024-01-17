@@ -25,7 +25,7 @@ Text {
     -fx-text-fill: white; /* Set the text color */
 }
 
-#lvCategories.list-view.categories .list-cell:hover {
+.list-cell:hover {
     -fx-background-color: #7a42de; /* Set the background color on hover */
 }
 
@@ -52,6 +52,17 @@ TableColumn {
     -fx-font-size: 14px;
     -fx-text-fill: #ffffff;
     -fx-base: #6c6179;
+}
+
+.table-view .column-header {
+    -fx-font-size: 14px;
+    -fx-text-fill: #ffffff;
+    -fx-background-color: #6656d0; /* Set the background color */
+}
+
+.table-row-cell .table-cell {
+    -fx-text-fill: #ffffff; /* Set the text color */
+    -fx-font-size: 14px; /* Set the font size */
 }
 
 /* buttons */
