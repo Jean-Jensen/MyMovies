@@ -5,6 +5,7 @@ import dk.MyMovies.BE.Movie;
 import dk.MyMovies.Exceptions.MyMoviesExceptions;
 
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -214,6 +215,18 @@ public class MovieDAO implements IMovieDAO {
             pstmt.executeUpdate();
         } catch (SQLException e) {
             throw new MyMoviesExceptions("Error updating personal rating", e);
+        }
+    }
+
+    public void updateLastView(LocalDateTime lastView, int movieId) throws MyMoviesExceptions {
+        try (Connection con = cm.getConnection()){
+            String sql = "UPDATE Movie SET LastView = ? WHERE MovID = ?";
+            PreparedStatement pstmt = con.prepareStatement(sql);
+            pstmt.setTimestamp(1, Timestamp.valueOf(lastView));
+            pstmt.setInt(2, movieId);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new MyMoviesExceptions("Error updating last view date", e);
         }
     }
 }

@@ -106,7 +106,7 @@
                      <HBox.margin>
                         <Insets left="2.0" />
                      </HBox.margin></Button>
-                  <Button mnemonicParsing="false" onAction="#toggleVolumeSlider" prefHeight="30.0" prefWidth="26.0" text="Volume">
+                  <Button mnemonicParsing="false" styleClass="volumeButton" onAction="#toggleVolumeSlider" prefHeight="30.0" prefWidth="26.0" text="Volume">
                      <HBox.margin>
                         <Insets left="70.0" />
                      </HBox.margin>
