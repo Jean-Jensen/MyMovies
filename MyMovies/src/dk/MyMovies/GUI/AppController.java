@@ -37,6 +37,8 @@ import javafx.scene.image.ImageView;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -310,9 +312,12 @@ public class AppController implements Initializable {
 
         if (selected != null) {
             String name = selected.getName().substring(0, selected.getName().indexOf('.'));
+            LocalDate currentDate = LocalDate.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            String formattedDate = currentDate.format(formatter);
 
             //we don't set rating or last time viewed since you can't get that from just the file alone.
-            bllMov.createMovie(name, null, selected.getPath(), null);
+            bllMov.createMovie(name, null, selected.getPath(), formattedDate);
             displayMovies();
         }
     }
