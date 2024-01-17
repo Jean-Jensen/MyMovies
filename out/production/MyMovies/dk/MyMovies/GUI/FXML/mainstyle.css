@@ -114,13 +114,14 @@ Button:hover {
     -fx-background-color: transparent;
     -fx-background-repeat: no-repeat;
     -fx-background-position: center;
-    -fx-min-width: 35px;
-    -fx-min-height: 35px;
-    -fx-max-width: 35px;
-    -fx-max-height: 35px;
+    -fx-min-width: 30px;
+    -fx-min-height: 30px;
+    -fx-max-width: 30px;
+    -fx-max-height: 30px;
 }
 
 .forwardButton:hover {
+    -fx-background-image: url('/dk/MyMovies/GUI/Images/forwardhover.png');
     -fx-scale-x: 1.1px;
     -fx-scale-y: 1.1px;
     -fx-scale-z: 1.1px;
