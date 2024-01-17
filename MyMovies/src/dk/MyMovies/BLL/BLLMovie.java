@@ -5,6 +5,7 @@ import dk.MyMovies.BE.Movie;
 import dk.MyMovies.DAL.MovieDAO;
 import dk.MyMovies.Exceptions.MyMoviesExceptions;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class BLLMovie {
@@ -42,6 +43,10 @@ public class BLLMovie {
     }
     public void setPersonalRating(double rating, int movieId) throws MyMoviesExceptions {
         DAO.setPersonalRating(rating, movieId);
+    }
+
+    public void updateLastView(LocalDateTime lastView, int movieId) throws MyMoviesExceptions {
+        DAO.updateLastView(lastView, movieId);
     }
 
 }

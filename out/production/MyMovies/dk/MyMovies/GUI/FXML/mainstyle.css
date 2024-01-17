@@ -139,7 +139,6 @@ Button:hover {
 }
 
 .backwardButton:hover {
-    -fx-background-image: url('/dk/MyMovies/GUI/Images/backwardhover.png');
     -fx-scale-x: 1.1px;
     -fx-scale-y: 1.1px;
     -fx-scale-z: 1.1px;

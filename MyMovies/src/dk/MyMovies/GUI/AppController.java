@@ -38,6 +38,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.logging.Level;
@@ -312,11 +313,12 @@ public class AppController implements Initializable {
 
         if (selected != null) {
             String name = selected.getName().substring(0, selected.getName().indexOf('.'));
+
             LocalDate currentDate = LocalDate.now();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             String formattedDate = currentDate.format(formatter);
 
-            //we don't set rating or last time viewed since you can't get that from just the file alone.
+            //we don't set rating since you can't get that from just the file alone.
             bllMov.createMovie(name, null, selected.getPath(), formattedDate);
             displayMovies();
         }
@@ -428,6 +430,17 @@ public class AppController implements Initializable {
                 if (player == null || !player.getMedia().getSource().equals(media.getSource())) {
                     setMediaPlayer(null);
                 }
+
+                // Update the last view date of the selected movie
+                LocalDateTime currentDateTime = LocalDateTime.now();
+                try {
+                    bllMov.updateLastView(currentDateTime, selected.getId());
+                    displayMovies();
+                } catch (MyMoviesExceptions e) {
+                    logger.log(Level.SEVERE, "Error updating last view date", e);
+                    showErrorDialog(new MyMoviesExceptions("Error updating last view date", e));
+                }
+
             }
         }
 
@@ -440,7 +453,6 @@ public class AppController implements Initializable {
         }
 
         setVolumeSlider();
-
     }
 
     private void playPauseImage() {
