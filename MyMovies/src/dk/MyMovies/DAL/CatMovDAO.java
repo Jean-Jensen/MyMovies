@@ -115,11 +115,15 @@ public class CatMovDAO implements ICatMovDAO{
             //We use Collections to manipulate the list with .nCopies(int n, Object o)
             //.nCopies uses CatIDs.size as the int for list size and uses "?" for the objects in the list before sending it to the SQL query
             String placeholders = String.join(",", Collections.nCopies(catIDs.size(), "?"));
-            String sql = "SELECT MovID FROM CatMovie WHERE CatID IN (" + placeholders + ")";
+            String sql = "SELECT MovID FROM CatMovie WHERE CatID IN (" + placeholders + ") GROUP BY MovID HAVING COUNT(DISTINCT CatID) = ?";
+
             PreparedStatement pstmt = con.prepareStatement(sql);
             for (int i = 0; i < catIDs.size(); i++) {
                 pstmt.setInt(i + 1, catIDs.get(i));
             }
+
+            pstmt.setInt(catIDs.size() + 1, catIDs.size());
+
             try(ResultSet rs = pstmt.executeQuery()){
                 while(rs.next()){
                     movieIds.add(rs.getInt("MovID"));
