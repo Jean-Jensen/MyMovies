@@ -6,30 +6,33 @@ import dk.MyMovies.BE.Movie;
 import dk.MyMovies.BLL.BLLCatMov;
 import dk.MyMovies.BLL.BLLCategory;
 import dk.MyMovies.BLL.BLLMovie;
-import dk.MyMovies.DAL.ConnectionManager;
 import dk.MyMovies.Exceptions.MyMoviesExceptions;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.StackPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-
 import javafx.scene.image.ImageView;
 import java.io.File;
 import java.io.IOException;
@@ -40,39 +43,22 @@ import java.util.logging.Logger;
 
 public class AppController implements Initializable {
 
-    public Button btnAddCat;
-    public Button btnEditCat;
-    public TextField search;
-    @FXML
-    private ToggleButton togglePlayPause;
-    @FXML
-    private Slider sliderVolume;
-
-    @FXML
-    private Label lblTimeVal;
-    @FXML
-    private Slider progressSlider;
-
-    @FXML
-    private MediaView mediaView;
-    private MediaPlayer player;
-    private ConnectionManager con = new ConnectionManager();
     private BLLCategory bllCat = new BLLCategory();
     private BLLMovie bllMov = new BLLMovie();
     private BLLCatMov bllCatMov = new BLLCatMov();
-    private ContextMenu rightClickMenu;
-    private static final Logger logger = Logger.getLogger(AppController.class.getName());
-
+    public Button btnAddCat;
+    @FXML
+    private CheckBox checkRating;
+    @FXML
+    private Slider sliderVolume;
+    @FXML
+    private ToggleButton togglePlayPause;
+    @FXML
+    private Slider progressSlider;
+    @FXML
+    private MediaView mediaView;
     @FXML
     private TableView<CatMovConnectionBE> tblMovie;
-    @FXML
-    private TableView<Category> tblCategory;
-    @FXML
-    private Button btnAdd;
-    @FXML
-    private Button btnDelete;
-    @FXML
-    private Button btnEdit;
     @FXML
     private TableColumn<CatMovConnectionBE, String> colName;
     @FXML
@@ -89,7 +75,6 @@ public class AppController implements Initializable {
     private Slider ratingSlider;
     @FXML
     private Label lblSliderValue;
-    private ObservableList<CatMovConnectionBE> originalItems;
     @FXML
     private Button star1;
     @FXML
@@ -100,27 +85,27 @@ public class AppController implements Initializable {
     private Button star4;
     @FXML
     private Button star5;
-
-    //Button[] stars = new Button[]{star1, star2, star3, star4, star5};
-    //for loop, make two methods (filled, unfilled star)
-
-
-
-
-
-
+    @FXML
+    private Button star6;
+    @FXML
+    private Button star7;
+    @FXML
+    private Button star8;
+    @FXML
+    private Button star9;
+    @FXML
+    private Button star10;
+    private MediaPlayer player;
     private ChangeListener<MediaPlayer.Status> playPauseListener;
     ImageView playView = new ImageView();
     ImageView pauseView = new ImageView();
-
-    private final Image emptyStar = new Image("file:/C:/Users/Iulia/Documents/GitHub/MyMovies/MyMovies/src/dk/MyMovies/GUI/Images/starempty.png");
-    private final Image filledStar = new Image("file:/C:/Users/Iulia/Documents/GitHub/MyMovies/MyMovies/src/dk/MyMovies/GUI/Images/starfill.png");
-
-    private boolean paused = false;
-
-
+    private ObservableList<CatMovConnectionBE> originalItems;
     private FileChooser.ExtensionFilter filter1 = new FileChooser.ExtensionFilter(".mp4 files", "*.mp4");
     private FileChooser.ExtensionFilter filter2 = new FileChooser.ExtensionFilter(".mpeg4 files", "*.mpeg4");
+    private static final Logger logger = Logger.getLogger(AppController.class.getName());
+    private ContextMenu rightClickMenu;
+
+
 
 
     @Override
@@ -138,39 +123,14 @@ public class AppController implements Initializable {
         RatingSlider();
         checkBoxCat();
         playPauseImage();
-        setStars();
-
-
+        creatingStars();
+        ratingListener();
     }
 
 
     //////////////////////////////////////////////////////////
     ////////////////////GUI Stuff/////////////////////////////
     /////////////////////////////////////////////////////////
-    private void unfilledStars(List<Button> stars, int index){
-        for (int i = 0; i <= index; i++) {
-            stars.get(i).getStyleClass().add("starButton");
-            stars.get(i).getStyleClass().remove("starfilledButton");
-        }
-    }
-
-    private void filledStars(List<Button> stars, int index) {
-        for (int i = 0; i <= index; i++) {
-                stars.get(i).getStyleClass().add("starfilledButton");
-                stars.get(i).getStyleClass().remove("starButton");
-        }
-    }
-
-    private void setStars() {
-        List<Button> stars = Arrays.asList(star1, star2, star3, star4, star5);
-
-        for (int i = 0; i < stars.size(); i++) {
-            final int starIndex = i;
-            stars.get(i).setOnMouseEntered(event -> filledStars(stars, starIndex));
-            stars.get(i).setOnMouseExited(event -> unfilledStars(stars, starIndex));
-        }
-    }
-
 
     //display movie data on table
     public void displayMovies() throws MyMoviesExceptions {
@@ -186,8 +146,8 @@ public class AppController implements Initializable {
 
         //Observable list created for our search menu
         originalItems = FXCollections.observableArrayList(allCatMovConnectionBES);
-//This can be put into a new method but many things call it, and it would require alot of
-// changing so maybe if we have time we can figure that out.
+        //This can be put into a new method but many things call it, and it would require alot of
+        // changing so maybe if we have time we can figure that out.
         if (!allCatMovConnectionBES.isEmpty()) {
             tblMovie.getItems().clear();
             tblMovie.getItems().addAll(allCatMovConnectionBES);
@@ -243,6 +203,8 @@ public class AppController implements Initializable {
             } else {
                 List<Integer> movieIds = bllCatMov.getMoviesForCategories(selectedCategoryIds);
                 catMovConnectionBES = bllCatMov.getCatMovConnectionsByIds(movieIds);
+                Map<Integer, CatMovConnectionBE> catMovMap = getCatMovMap(catMovConnectionBES);
+                catMovConnectionBES = catMovMap.values().stream().toList();
             }
 
             //Observable list for search
@@ -254,6 +216,17 @@ public class AppController implements Initializable {
             logger.log(Level.SEVERE, "Error retrieving movies for categories: AppController - ", e);
             showErrorDialog(new MyMoviesExceptions("Error retrieving movies for categories", e));
         }
+    }
+
+    //gets all ID checkboxes which have been ticked. made its own method to avoid repeating code
+    private List<Integer> getSelectedCategoryIDs(){
+        List<Integer> selectedIds = new ArrayList<>();
+        for (Object item : lvCategories.getItems()) {
+            if (item instanceof CheckBox && ((CheckBox) item).isSelected()) {
+                selectedIds.add((Integer) ((CheckBox) item).getUserData());
+            }
+        }
+        return selectedIds;
     }
 
     private void checkForUselessMovies() throws IOException {
@@ -285,7 +258,7 @@ public class AppController implements Initializable {
 
     public void RatingSlider() {
         ratingSlider.valueProperty().addListener((observable, oldValue, newValue) ->
-                lblSliderValue.setText("Rating: " + String.format("%.0f", newValue)));
+                lblSliderValue.setText(String.valueOf(ratingSlider.getValue()).substring(0,3)));
 
     }
 
@@ -365,6 +338,9 @@ public class AppController implements Initializable {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("FXML/EditMovieScene.fxml"));
             Parent root = loader.load();
             EditMovieController controller = loader.getController();
+            if(selected.getLastView() == null){
+                selected.setLastView("");
+            }
             controller.setData(selected.getId(), selected.getName(), String.valueOf(selected.getRating()), String.valueOf(selected.getIMDBRating()), selected.getFilePath(), selected.getLastView(), this);
             openNewWindow(root);
         }
@@ -400,8 +376,6 @@ public class AppController implements Initializable {
         }
     }
 
-    public void editCategory(ActionEvent actionEvent) {
-    }
 
     private void setupCategoryListView() {
         // Create a context menu
@@ -436,9 +410,8 @@ public class AppController implements Initializable {
     }
 
     //////////////////////////////////////////////////////////
-    ////////////////////MediaPlayer stuff/////////////////////
+    ////////////////////MediaPlayer functions/////////////////
     //////////////////////////////////////////////////////////
-
 
     public void togglePlayPause(ActionEvent actionEvent) {
         Movie selected = tblMovie.getSelectionModel().getSelectedItem();
@@ -461,6 +434,8 @@ public class AppController implements Initializable {
             player.play();
         }
 
+        setVolumeSlider();
+
     }
 
     private void playPauseImage() {
@@ -468,12 +443,13 @@ public class AppController implements Initializable {
         Image pauseImage = new Image("/dk/MyMovies/GUI/Images/starfill.png");
 
         playView = new ImageView(playImage);
-        playView.setFitWidth(26);
-        playView.setFitHeight(25);
+        playView.setFitWidth(35);
+        playView.setFitHeight(35);
 
         pauseView = new ImageView(pauseImage);
-        pauseView.setFitWidth(26);
-        pauseView.setFitHeight(25);
+        pauseView.setFitWidth(35);
+        pauseView.setFitHeight(35);
+
 
         // Set initial graphic
         togglePlayPause.setGraphic(playView);
@@ -498,41 +474,23 @@ public class AppController implements Initializable {
         };
     }
 
+    public void skipBackward(ActionEvent actionEvent) {
+        if (player != null) {
+            Duration currentTime = player.getCurrentTime();
+            player.seek(Duration.seconds(currentTime.toSeconds() -  10));
+        }
+    }
 
+    public void skipForward(ActionEvent actionEvent) {
+        if (player != null) {
+            Duration currentTime = player.getCurrentTime();
+            player.seek(Duration.seconds(currentTime.toSeconds() +  10));
+        }
+    }
 
     public void Stop(ActionEvent actionEvent) {
         player.stop();
     }
-
-    @FXML
-    private void onStarHovered(MouseEvent event) {
-        Button hoveredStar = (Button) event.getSource();
-        // Change style class when hovered
-        hoveredStar.getStyleClass().add("starfilledButton");
-    }
-
-    @FXML
-    private void onStarExited(MouseEvent event) {
-        Button exitedStar = (Button) event.getSource();
-        // Change style class back to default when mouse exits
-        exitedStar.getStyleClass().remove("starfilledButton");
-    }
-
-    @FXML
-    private void onStarClicked(ActionEvent event) {
-        Button clickedStar = (Button) event.getSource();
-
-        // Toggle between filled and empty stars by changing the style class
-        if (clickedStar.getStyleClass().contains("starButton")) {
-            clickedStar.getStyleClass().add("starfilledButton");
-            clickedStar.getStyleClass().remove("starButton");
-        }
-        else if (clickedStar.getStyleClass().contains("starfilledButton")) {
-            clickedStar.getStyleClass().add("starButton");
-            clickedStar.getStyleClass().remove("starfilledButton");
-        }
-    }
-
 
 
     public void Reset(ActionEvent actionEvent) {
@@ -562,6 +520,7 @@ public class AppController implements Initializable {
         }
     }
 
+
     public void setProgressSlider(){
         if(player != null){
             player.setOnReady(new Runnable() {
@@ -575,12 +534,26 @@ public class AppController implements Initializable {
             player.currentTimeProperty().addListener(new ChangeListener<Duration>() {
                 @Override
                 public void changed(ObservableValue<? extends Duration> observable, Duration oldValue, Duration newValue) {
-                    if(!paused){
-                        progressSlider.setValue(newValue.toSeconds()); //setting the progressbars value to be the new time value
-                    }
+                    progressSlider.setValue(newValue.toSeconds()); //setting the progressbars value to be the new time value
                 }
             });
         }
+    }
+
+    public void openFullScreen(ActionEvent actionEvent) {
+        Stage fullScreenStage = new Stage();
+        MediaView fullScreenMediaView = new MediaView();
+        fullScreenMediaView.setMediaPlayer(player);
+        Scene scene = new Scene(new Group(fullScreenMediaView));
+        //add event to watch for escape key being pressed to close full screen
+        scene.addEventFilter(KeyEvent.KEY_PRESSED, ke -> {
+            if (ke.getCode() == KeyCode.ESCAPE) {
+                fullScreenStage.close();
+            }
+        });
+        fullScreenStage.setScene(scene);
+        fullScreenStage.setFullScreen(true);
+        fullScreenStage.show();
     }
 
     public void setMovieTime(MouseEvent mouseEvent) {
@@ -596,13 +569,22 @@ public class AppController implements Initializable {
             sliderVolume.setVisible(true);
         }
     }
-    public void setVolume(MouseEvent mouseEvent) {
+    private void setVolumeSlider() {
         if(player != null){
-            //player.setVolume();
+            sliderVolume.setValue(player.getVolume() * 100 );
+            //mediaplayer volume is usually between 0-1 and our slider is between 0-100, so we're multiplying by 100
+            //setting our slider value to the mediaplayers automatic volume value
+
+            sliderVolume.valueProperty().addListener((observable, oldValue, newValue) -> {
+                //setting the volume of the mediaplayer to be the sliders new value
+                double sliderVal = newValue.doubleValue();
+                player.setVolume(sliderVal/100);
+                //we need to divideby 100 since we multiplied the value by 100 earlier
+            });
         }
     }
 
-    public void searchName(KeyEvent keyEvent) {
+    public void searchName(KeyEvent keyEvent) throws MyMoviesExceptions {
         TextField source = (TextField) keyEvent.getSource();
         String searchText = source.getText().toLowerCase();
 
@@ -613,16 +595,70 @@ public class AppController implements Initializable {
             // Create a new list for the filtered items
             List<CatMovConnectionBE> filteredItems = new ArrayList<>();
 
-            // Filter the original items based on the search text
-            for (CatMovConnectionBE item : originalItems) {
-                if (item.getName().toLowerCase().contains(searchText)) {
-                    filteredItems.add(item);
-                }
+            List<Integer> selectedCatIds = getSelectedCategoryIDs();
+            for(int i : selectedCatIds){
+                System.out.println(i);
             }
+
+            if(selectedCatIds.isEmpty()){
+                // Filter the original items based on the search text
+                for (CatMovConnectionBE item : originalItems) {
+                    if(checkRating.isSelected()){
+                        if(item.getName().toLowerCase().contains(searchText)
+                                && item.getIMDBRating() == Double.parseDouble(lblSliderValue.getText())){
+                            filteredItems.add(item);
+                        }
+                    } else {
+                        if (item.getName().toLowerCase().contains(searchText)) {
+                            filteredItems.add(item);
+                        }
+                    }
+
+                }
+            } else {
+                List<Integer> MovIds = bllCatMov.getMoviesForCategories(selectedCatIds);
+                List<CatMovConnectionBE> catMovConnections = bllCatMov.getCatMovConnectionsByIds(MovIds);
+                Map<Integer,CatMovConnectionBE> CatMovMap = getCatMovMap(catMovConnections);
+
+                for(Map.Entry<Integer,CatMovConnectionBE> current: CatMovMap.entrySet()){
+                    if(checkRating.isSelected()){
+                        if(current.getValue().getName().toLowerCase().contains(searchText)
+                                && current.getValue().getIMDBRating() == Double.parseDouble(lblSliderValue.getText())){
+                            filteredItems.add(CatMovMap.get(current.getKey()));
+                        }
+                    } else {
+                        if (current.getValue().getName().toLowerCase().contains(searchText)) {
+                            filteredItems.add(current.getValue());
+                        }
+                    }
+                }
+
+            }
+
             // Update the table items
             tblMovie.getItems().setAll(filteredItems);
         }
     }
+
+    /*
+    private List<CatMovConnection> filterByNameAndOrRating(List<CatMovConnection> originalList, String searchText){
+        List<CatMovConnection> filteredList = new ArrayList<>();
+        for (CatMovConnection item : originalList) {
+            if(checkRating.isSelected()){
+                if(item.getName().toLowerCase().contains(searchText)
+                        && item.getRating() == Double.parseDouble(lblSliderValue.getText())){
+                    filteredList.add(item);
+                }
+            } else {
+                if (item.getName().toLowerCase().contains(searchText)) {
+                    filteredList.add(item);
+                }
+            }
+        }
+
+        return filteredList;
+    }
+     */
 
     //////////////////////////////////////////////////////////
     ////////////////////Right Click Menu//////////////////////
@@ -715,5 +751,118 @@ public class AppController implements Initializable {
         });
     }
 
+
+    //////////////////////////////////////////////////////////
+    ////////////////////Stars Rating//////////////////////////
+    /////////////////////////////////////////////////////////
+
+
+    private void creatingStars(){
+        List<Button> buttons = Arrays.asList(star1, star2, star3, star4, star5, star6, star7, star8, star9, star10);
+        for (int i = 0; i < buttons.size(); i++) {
+            Button button = buttons.get(i);
+            button.getStyleClass().add(i % 2 == 0 ? "starEven" : "starOdd");
+        }
+    }
+
+    @FXML
+    private void handleMouseEnter(MouseEvent event) {
+        Button hoveredButton = (Button) event.getSource();
+        //This converts my string "star#" to an integer .substring uses the 4th spot on each of my IDs(starting at 0) which is the # of the button
+        int buttonNumber = Integer.parseInt(hoveredButton.getId().substring(4));
+
+        List<Button> buttons = Arrays.asList(star1, star2, star3, star4, star5, star6, star7, star8, star9, star10);
+        for (int i = 0; i < buttons.size(); i++) {
+            Button button = buttons.get(i);
+            if (i < buttonNumber) {
+                //short form of if else statement, and we use a modulus (%) to apply the style accordingly for even or odd
+                button.getStyleClass().remove(i % 2 == 0 ? "starEven" : "starOdd");
+                button.getStyleClass().add(i % 2 == 0 ? "starHoverEven" : "starHoverOdd");
+            }
+        }
+    }
+
+    @FXML
+    private void handleMouseExit(MouseEvent event) {
+        Button exitedButton = (Button) event.getSource();
+        int buttonNumber = Integer.parseInt(exitedButton.getId().substring(4));
+
+        List<Button> buttons = Arrays.asList(star1, star2, star3, star4, star5, star6, star7, star8, star9, star10);
+        for (int i = 0; i < buttonNumber; i++) {
+            Button button = buttons.get(i);
+            //checks to see if button has been clicked, if not it removes the styleclass and adds the unfilled icon in the proper spots
+            if (!button.getStyleClass().contains("starClickedEven") && !button.getStyleClass().contains("starClickedOdd")) {
+                button.getStyleClass().removeAll(Arrays.asList("starHoverEven", "starHoverOdd"));
+                button.getStyleClass().add(i % 2 == 0 ? "starEven" : "starOdd");
+            }
+        }
+    }
+
+    @FXML
+    private void handleClick(MouseEvent event) throws MyMoviesExceptions {
+        Button clickedButton = (Button) event.getSource();
+        //This converts my string "star#" to an integer .substring uses the 5th letter on each of my IDs which is the # of the button
+        int buttonNumber = Integer.parseInt(clickedButton.getId().substring(4));
+
+        List<Button> buttons = Arrays.asList(star1, star2, star3, star4, star5, star6, star7, star8, star9, star10);
+        fillingStars(buttonNumber, buttons);
+        double rating = buttonNumber * 0.5;
+
+        CatMovConnectionBE selectedMovie = tblMovie.getSelectionModel().getSelectedItem();
+        int selectedIndex = tblMovie.getSelectionModel().getSelectedIndex();
+        if(selectedMovie != null) {
+            try {
+                bllMov.setPersonalRating(rating, selectedMovie.getId());
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        tblMovie.requestFocus();
+                        tblMovie.getSelectionModel().select(selectedIndex);
+                        tblMovie.getFocusModel().focus(selectedIndex);
+                    }
+                });
+
+            } catch (MyMoviesExceptions e) {
+                logger.log(Level.SEVERE, "Error setting personal rating: AppController - ", e);
+                showErrorDialog(new MyMoviesExceptions("Error setting personal rating.", e));
+            }
+            displayMovies();
+        }
+    }
+
+    private void ratingListener(){
+        //this listener sends the rating via .getRating from whatever is selected on the table
+        tblMovie.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            if (newSelection != null) {
+                //send the .getRating to the method below
+                updateStarRating(newSelection.getRating());
+            }
+        });
+    }
+
+    private void updateStarRating(double rating) {
+        //the received rating gets multiplied by 2 so it will match our button IDs (1.5 x 2 = star3)
+        int buttonNumber = (int) (rating * 2); // Convert rating to button number
+
+        List<Button> buttons = Arrays.asList(star1, star2, star3, star4, star5, star6, star7, star8, star9, star10);
+        //send star#, list to method below
+        fillingStars(buttonNumber, buttons);
+    }
+
+    private void fillingStars(int buttonNumber, List<Button> buttons) {
+        //loop made with the star list
+        for (int i = 0; i < buttons.size(); i++) {
+            Button button = buttons.get(i);
+            if (i < buttonNumber) {
+                //adds the clicked image to everything below where clicked
+                button.getStyleClass().removeAll(Arrays.asList("starEven", "starOdd", "starHoverEven", "starHoverOdd"));
+                button.getStyleClass().add(i % 2 == 0 ? "starClickedEven" : "starClickedOdd");
+            } else {
+                //adds the unclicked image to everything above where its been clicked
+                button.getStyleClass().removeAll(Arrays.asList("starHoverEven", "starHoverOdd", "starClickedEven", "starClickedOdd"));
+                button.getStyleClass().add(i % 2 == 0 ? "starEven" : "starOdd");
+            }
+        }
+    }
 
 }
