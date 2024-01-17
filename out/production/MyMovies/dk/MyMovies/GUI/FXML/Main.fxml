@@ -16,7 +16,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.media.MediaView?>
 
-<BorderPane prefHeight="561.0" prefWidth="1105.0" style="-fx-background-color: #312744;" stylesheets="@mainstyle.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dk.MyMovies.GUI.AppController">
+<BorderPane prefHeight="561.0" prefWidth="1105.0" style="-fx-background-color: #312744;" stylesheets="@mainstyle.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dk.MyMovies.GUI.AppController">
     <left>
         <VBox prefWidth="365.0" BorderPane.alignment="CENTER">
             <children>
@@ -106,7 +106,7 @@
                      <HBox.margin>
                         <Insets left="2.0" />
                      </HBox.margin></Button>
-                  <Button mnemonicParsing="false" styleClass="volumeButton" onAction="#toggleVolumeSlider" prefHeight="30.0" prefWidth="26.0" text="Volume">
+                  <Button mnemonicParsing="false" onAction="#toggleVolumeSlider" prefHeight="30.0" prefWidth="26.0" styleClass="volumeButton">
                      <HBox.margin>
                         <Insets left="70.0" />
                      </HBox.margin>
