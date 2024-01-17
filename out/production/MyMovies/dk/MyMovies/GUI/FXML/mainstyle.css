@@ -6,7 +6,7 @@
 /* labels */
 Label {
     -fx-font-size: 14px;
-    -fx-text-fill: #ffffff;
+
 }
 
 /* text fields */
@@ -19,17 +19,19 @@ Text {
     -fx-text-fill: #ffffff;
 }
 /* list view */
-#lvCategories {
-    -fx-font-size: 14px;
-    -fx-pref-width: 263px;
-    -fx-background-color: #e8e8e8;
+.listView {
+    -fx-control-inner-background: #917cb9; /* Set the background color */
+    -fx-background-color: #6c6179; /* Set the background color */
+    -fx-text-fill: white; /* Set the text color */
 }
 
-/* sliders and slider labels */
-Slider {
-    -fx-pref-width: 143px;
-    -fx-background-color: #e8e8e8;
+#lvCategories.list-view.categories .list-cell:hover {
+    -fx-background-color: #7a42de; /* Set the background color on hover */
 }
+
+
+
+    /* sliders and slider labels */
 
 #lblSliderValue {
     -fx-font-size: 14px;
@@ -49,7 +51,7 @@ TableView {
 TableColumn {
     -fx-font-size: 14px;
     -fx-text-fill: #ffffff;
-    -fx-base: transparent;
+    -fx-base: #6c6179;
 }
 
 /* buttons */
@@ -140,6 +142,7 @@ Button:hover {
 }
 
 .backwardButton:hover {
+    -fx-background-image: url('/dk/MyMovies/GUI/Images/backwardhover.png');
     -fx-scale-x: 1.1px;
     -fx-scale-y: 1.1px;
     -fx-scale-z: 1.1px;
@@ -241,3 +244,42 @@ Button:hover {
 .starClickedOdd {
     -fx-background-image: url('/dk/MyMovies/GUI/Images/starright.png');
 }
+
+
+.volumeSlider .track {
+    -fx-background-color: #cfbed7;
+}
+
+.volumeSlider .thumb {
+    -fx-background-color: #5E17EB;
+    -fx-background-radius: 10;
+    -fx-padding: 5px;
+    -fx-effect: dropshadow(gaussian, #917cb9, 20, 0, 0, 0);
+
+
+
+
+}
+
+.ratingSlider .track {
+        -fx-background-color: #cfbed7;
+    }
+
+    .ratingSlider .thumb {
+        -fx-background-color: #5E17EB;
+        -fx-background-radius: 10;
+        -fx-padding: 5px;
+        -fx-effect: dropshadow(gaussian, #917cb9, 20, 0, 0, 0);
+
+
+    }
+.progressSlider .track {
+    -fx-background-color: #cfbed7;
+        }
+
+        .progressSlider .thumb {
+            -fx-background-color: #5E17EB;
+            -fx-background-radius: 10;
+            -fx-padding: 5px;
+            -fx-effect: dropshadow(gaussian, #917cb9, 20, 0, 0, 0);
+        }
