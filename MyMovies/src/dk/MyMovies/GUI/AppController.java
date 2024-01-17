@@ -440,7 +440,7 @@ public class AppController implements Initializable {
 
     private void playPauseImage() {
         Image playImage = new Image("/dk/MyMovies/GUI/Images/playbtn.png");
-        Image pauseImage = new Image("/dk/MyMovies/GUI/Images/starfill.png");
+        Image pauseImage = new Image("/dk/MyMovies/GUI/Images/pausebtn.png");
 
         playView = new ImageView(playImage);
         playView.setFitWidth(35);
