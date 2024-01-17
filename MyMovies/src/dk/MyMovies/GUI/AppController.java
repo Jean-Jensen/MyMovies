@@ -7,6 +7,7 @@ import dk.MyMovies.BLL.BLLCatMov;
 import dk.MyMovies.BLL.BLLCategory;
 import dk.MyMovies.BLL.BLLMovie;
 import dk.MyMovies.Exceptions.MyMoviesExceptions;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -36,6 +37,9 @@ import javafx.scene.image.ImageView;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -123,6 +127,8 @@ public class AppController implements Initializable {
         checkBoxCat();
         playPauseImage();
         creatingStars();
+        ratingListener();
+        pauseMovieTableSelection();
     }
 
 
@@ -144,8 +150,8 @@ public class AppController implements Initializable {
 
         //Observable list created for our search menu
         originalItems = FXCollections.observableArrayList(allCatMovConnectionBES);
-//This can be put into a new method but many things call it, and it would require alot of
-// changing so maybe if we have time we can figure that out.
+        //This can be put into a new method but many things call it, and it would require alot of
+        // changing so maybe if we have time we can figure that out.
         if (!allCatMovConnectionBES.isEmpty()) {
             tblMovie.getItems().clear();
             tblMovie.getItems().addAll(allCatMovConnectionBES);
@@ -309,8 +315,12 @@ public class AppController implements Initializable {
         if (selected != null) {
             String name = selected.getName().substring(0, selected.getName().indexOf('.'));
 
-            //we don't set rating or last time viewed since you can't get that from just the file alone.
-            bllMov.createMovie(name, null, selected.getPath(), null);
+            LocalDate currentDate = LocalDate.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            String formattedDate = currentDate.format(formatter);
+
+            //we don't set rating since you can't get that from just the file alone.
+            bllMov.createMovie(name, null, selected.getPath(), formattedDate);
             displayMovies();
         }
     }
@@ -421,6 +431,17 @@ public class AppController implements Initializable {
                 if (player == null || !player.getMedia().getSource().equals(media.getSource())) {
                     setMediaPlayer(null);
                 }
+
+                // Update the last view date of the selected movie
+                LocalDateTime currentDateTime = LocalDateTime.now();
+                try {
+                    bllMov.updateLastView(currentDateTime, selected.getId());
+                    displayMovies();
+                } catch (MyMoviesExceptions e) {
+                    logger.log(Level.SEVERE, "Error updating last view date", e);
+                    showErrorDialog(new MyMoviesExceptions("Error updating last view date", e));
+                }
+
             }
         }
 
@@ -433,12 +454,20 @@ public class AppController implements Initializable {
         }
 
         setVolumeSlider();
-
     }
+
+    private void pauseMovieTableSelection(){
+        tblMovie.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            if (player != null && player.getStatus() == MediaPlayer.Status.PLAYING) {
+                player.pause();
+            }
+        });
+    }
+
 
     private void playPauseImage() {
         Image playImage = new Image("/dk/MyMovies/GUI/Images/playbtn.png");
-        Image pauseImage = new Image("/dk/MyMovies/GUI/Images/starfill.png");
+        Image pauseImage = new Image("/dk/MyMovies/GUI/Images/pausebtn.png");
 
         playView = new ImageView(playImage);
         playView.setFitWidth(35);
@@ -797,12 +826,58 @@ public class AppController implements Initializable {
     }
 
     @FXML
-    private void handleClick(MouseEvent event) {
+    private void handleClick(MouseEvent event) throws MyMoviesExceptions {
         Button clickedButton = (Button) event.getSource();
         //This converts my string "star#" to an integer .substring uses the 5th letter on each of my IDs which is the # of the button
         int buttonNumber = Integer.parseInt(clickedButton.getId().substring(4));
 
         List<Button> buttons = Arrays.asList(star1, star2, star3, star4, star5, star6, star7, star8, star9, star10);
+        fillingStars(buttonNumber, buttons);
+        double rating = buttonNumber * 0.5;
+
+        CatMovConnectionBE selectedMovie = tblMovie.getSelectionModel().getSelectedItem();
+        int selectedIndex = tblMovie.getSelectionModel().getSelectedIndex();
+        if(selectedMovie != null) {
+            try {
+                bllMov.setPersonalRating(rating, selectedMovie.getId());
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        tblMovie.requestFocus();
+                        tblMovie.getSelectionModel().select(selectedIndex);
+                        tblMovie.getFocusModel().focus(selectedIndex);
+                    }
+                });
+
+            } catch (MyMoviesExceptions e) {
+                logger.log(Level.SEVERE, "Error setting personal rating: AppController - ", e);
+                showErrorDialog(new MyMoviesExceptions("Error setting personal rating.", e));
+            }
+            displayMovies();
+        }
+    }
+
+    private void ratingListener(){
+        //this listener sends the rating via .getRating from whatever is selected on the table
+        tblMovie.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            if (newSelection != null) {
+                //send the .getRating to the method below
+                updateStarRating(newSelection.getRating());
+            }
+        });
+    }
+
+    private void updateStarRating(double rating) {
+        //the received rating gets multiplied by 2 so it will match our button IDs (1.5 x 2 = star3)
+        int buttonNumber = (int) (rating * 2); // Convert rating to button number
+
+        List<Button> buttons = Arrays.asList(star1, star2, star3, star4, star5, star6, star7, star8, star9, star10);
+        //send star#, list to method below
+        fillingStars(buttonNumber, buttons);
+    }
+
+    private void fillingStars(int buttonNumber, List<Button> buttons) {
+        //loop made with the star list
         for (int i = 0; i < buttons.size(); i++) {
             Button button = buttons.get(i);
             if (i < buttonNumber) {
@@ -816,4 +891,5 @@ public class AppController implements Initializable {
             }
         }
     }
+
 }

@@ -1,14 +1,16 @@
 package dk.MyMovies.DAL;
 
-import com.microsoft.sqlserver.jdbc.SQLServerException;
+
 import dk.MyMovies.BE.Movie;
 import dk.MyMovies.Exceptions.MyMoviesExceptions;
 
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
+
+
 
 public class MovieDAO implements IMovieDAO {
     ConnectionManager cm = new ConnectionManager();
@@ -38,13 +40,14 @@ public class MovieDAO implements IMovieDAO {
         return movies;
     }
 
+
     public List<Movie> getUselessMovies() throws MyMoviesExceptions {
         List<Movie> movies = new ArrayList<>();
         Long currentTime = System.currentTimeMillis();
         java.sql.Date currentDate = new java.sql.Date(currentTime);
         currentDate.setYear(currentDate.getYear() - 2);
         try(Connection con = cm.getConnection()){
-            String sql = "SELECT * FROM Movie WHERE Rating <= 6 AND LastView >= " + currentDate.toString();
+            String sql = "SELECT * FROM Movie WHERE PersonalRating <= 3 AND LastView >= " + currentDate.toString();
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             while(rs.next()){
@@ -101,31 +104,17 @@ public class MovieDAO implements IMovieDAO {
         }
     }
 
-    /*
-    public void deleteAllUselessMovies() throws MyMoviesExceptions {
-        List<Movie> movies = new ArrayList<>();
-        Long currentTime = System.currentTimeMillis();
-        java.sql.Date currentDate = new java.sql.Date(currentTime);
-        currentDate.setYear(currentDate.getYear() + 2);
-        System.out.println(currentDate);
-        try(Connection con = cm.getConnection()){
-            String sql = "DELETE FROM Movie WHERE Rating <= 6 AND LastView > " + currentDate.toString();
-            Statement stmt = con.createStatement();
-            stmt.executeQuery(sql);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            throw new MyMoviesExceptions("Error deleting all movies where rating <= 6 and LastView " + currentDate,e);
-        }
-    }
-
-     */
 
     public void createMovie(String name, Double rating, String filePath, String LastView) throws MyMoviesExceptions {
         try(Connection con = cm.getConnection()){
             String sql = "INSERT INTO Movie(Name, Rating, FilePath, LastView) VALUES(?,?,?,?)";
             PreparedStatement pstmt = con.prepareStatement(sql);
             pstmt.setString(1,name);
-            pstmt.setDouble(2,rating);
+            if (rating != null) {
+                pstmt.setDouble(2, rating);
+            } else {
+                pstmt.setNull(2, Types.DOUBLE);
+            }
             pstmt.setString(3,filePath);
             pstmt.setDate(4, Date.valueOf(LastView));
 
@@ -186,34 +175,6 @@ public class MovieDAO implements IMovieDAO {
         }
     }
 
-   /*public List<Movie> getMoviesByIds(List<Integer> movID) throws MyMoviesExceptions {
-        if (movID.isEmpty()) {
-            return new ArrayList<>();
-        }
-        List<Movie> movies = new ArrayList<>();
-        try(Connection con = cm.getConnection()){
-            String sql = "SELECT * FROM Movie WHERE MovID IN (" + movID.stream().map(String::valueOf).collect(Collectors.joining(",")) + ")";
-            Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            while(rs.next()){
-                int id = rs.getInt("MovID");
-                String name = rs.getString("Name");
-                double rating = rs.getDouble("Rating");
-                String filePath = rs.getString("FilePath");
-                String date = "";
-                if(rs.getDate("LastView") != null){
-                    date = rs.getDate("LastView").toString();
-                }
-                Movie mov = new Movie(id,name,rating,filePath,date);
-                movies.add(mov);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            throw new MyMoviesExceptions("Error retrieving movies by ids",e);
-        }
-        return movies;
-    }*/
-
     public List<Movie> getMoviesByIds(List<Integer> movID) throws MyMoviesExceptions {
         if (movID.isEmpty()) {
             return new ArrayList<>();
@@ -244,15 +205,28 @@ public class MovieDAO implements IMovieDAO {
         return movies;
     }
 
-    public void getAllMovieNames(String search){
-        try(Connection con = cm.getConnection()){
-            String sql = "SELECT * FROM Movie WHERE Name = ?";
-            PreparedStatement pstmt = con.prepareStatement(sql);
-            pstmt.setString(1, search);
 
+    public void setPersonalRating(double rating, int movieId) throws MyMoviesExceptions {
+        try (Connection con = cm.getConnection()){
+            String sql = "UPDATE Movie SET PersonalRating = ? WHERE MovID = ?";
+            PreparedStatement pstmt = con.prepareStatement(sql);
+            pstmt.setDouble(1, rating);
+            pstmt.setInt(2, movieId);
             pstmt.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException("Error searching for movie " + search + "\n" + e.getMessage(), e);
+            throw new MyMoviesExceptions("Error updating personal rating", e);
+        }
+    }
+
+    public void updateLastView(LocalDateTime lastView, int movieId) throws MyMoviesExceptions {
+        try (Connection con = cm.getConnection()){
+            String sql = "UPDATE Movie SET LastView = ? WHERE MovID = ?";
+            PreparedStatement pstmt = con.prepareStatement(sql);
+            pstmt.setTimestamp(1, Timestamp.valueOf(lastView));
+            pstmt.setInt(2, movieId);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new MyMoviesExceptions("Error updating last view date", e);
         }
     }
 }
