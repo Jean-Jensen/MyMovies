@@ -37,6 +37,9 @@ import javafx.scene.image.ImageView;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -125,6 +128,7 @@ public class AppController implements Initializable {
         playPauseImage();
         creatingStars();
         ratingListener();
+        pauseMovieTableSelection();
     }
 
 
@@ -311,8 +315,12 @@ public class AppController implements Initializable {
         if (selected != null) {
             String name = selected.getName().substring(0, selected.getName().indexOf('.'));
 
-            //we don't set rating or last time viewed since you can't get that from just the file alone.
-            bllMov.createMovie(name, null, selected.getPath(), null);
+            LocalDate currentDate = LocalDate.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            String formattedDate = currentDate.format(formatter);
+
+            //we don't set rating since you can't get that from just the file alone.
+            bllMov.createMovie(name, null, selected.getPath(), formattedDate);
             displayMovies();
         }
     }
@@ -423,6 +431,17 @@ public class AppController implements Initializable {
                 if (player == null || !player.getMedia().getSource().equals(media.getSource())) {
                     setMediaPlayer(null);
                 }
+
+                // Update the last view date of the selected movie
+                LocalDateTime currentDateTime = LocalDateTime.now();
+                try {
+                    bllMov.updateLastView(currentDateTime, selected.getId());
+                    displayMovies();
+                } catch (MyMoviesExceptions e) {
+                    logger.log(Level.SEVERE, "Error updating last view date", e);
+                    showErrorDialog(new MyMoviesExceptions("Error updating last view date", e));
+                }
+
             }
         }
 
@@ -435,8 +454,16 @@ public class AppController implements Initializable {
         }
 
         setVolumeSlider();
-
     }
+
+    private void pauseMovieTableSelection(){
+        tblMovie.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            if (player != null && player.getStatus() == MediaPlayer.Status.PLAYING) {
+                player.pause();
+            }
+        });
+    }
+
 
     private void playPauseImage() {
         Image playImage = new Image("/dk/MyMovies/GUI/Images/playbtn.png");
