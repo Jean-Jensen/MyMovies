@@ -128,6 +128,7 @@ public class AppController implements Initializable {
         playPauseImage();
         creatingStars();
         ratingListener();
+        pauseMovieTableSelection();
     }
 
 
@@ -454,6 +455,15 @@ public class AppController implements Initializable {
 
         setVolumeSlider();
     }
+
+    private void pauseMovieTableSelection(){
+        tblMovie.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            if (player != null && player.getStatus() == MediaPlayer.Status.PLAYING) {
+                player.pause();
+            }
+        });
+    }
+
 
     private void playPauseImage() {
         Image playImage = new Image("/dk/MyMovies/GUI/Images/playbtn.png");
