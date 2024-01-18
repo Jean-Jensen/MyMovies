@@ -239,6 +239,8 @@ public class AppController implements Initializable {
             if (!useless.isEmpty()) {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("FXML/DeleteWarningScene.fxml"));
                 Parent root = loader.load();
+                DeleteWarningSceneController controller = loader.getController();
+                controller.setAppController(this);
                 Stage stage = new Stage();
                 stage.setScene(new Scene(root));
                 stage.setAlwaysOnTop(true);
@@ -623,9 +625,7 @@ public class AppController implements Initializable {
             List<CatMovConnectionBE> filteredItems = new ArrayList<>();
 
             List<Integer> selectedCatIds = getSelectedCategoryIDs();
-            for(int i : selectedCatIds){
-                System.out.println(i);
-            }
+
 
             if(selectedCatIds.isEmpty()){
                 // Filter the original items based on the search text
