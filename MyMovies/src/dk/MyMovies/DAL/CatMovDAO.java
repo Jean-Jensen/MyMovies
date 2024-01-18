@@ -102,9 +102,8 @@ public class CatMovDAO implements ICatMovDAO{
     }
 
 
-    // This method is used to get the movies for specific categories from the database. -Used in updateMovieTable
+    // This method is used to get the movies for specific categories from the database. -Used in updateMovieTable & searchName
     //to create a list of movies in each category and input it into getCatMovConnectionsByIds below
-    //These next 2 could be combined, but I chose not to incase for some reason they needed to be used seperately
     public List<Integer> getMoviesForCategories(List<Integer> catIDs) throws MyMoviesExceptions {
         if (catIDs.isEmpty()) {
             return new ArrayList<>();

@@ -47,9 +47,10 @@ public class MovieDAO implements IMovieDAO {
         java.sql.Date currentDate = new java.sql.Date(currentTime);
         currentDate.setYear(currentDate.getYear() - 2);
         try(Connection con = cm.getConnection()){
-            String sql = "SELECT * FROM Movie WHERE PersonalRating <= 3 AND LastView >= " + currentDate.toString();
-            Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
+            String sql = "SELECT * FROM Movie WHERE PersonalRating <= 3 AND LastView <= ?";
+            PreparedStatement pstmt = con.prepareStatement(sql);
+            pstmt.setDate(1, currentDate);
+            ResultSet rs = pstmt.executeQuery();
             while(rs.next()){
                 int id = rs.getInt("MovID");
                 String name = rs.getString("Name");
@@ -65,7 +66,7 @@ public class MovieDAO implements IMovieDAO {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            throw new MyMoviesExceptions("Error retrieving all movies where rating <= 6 and LastView " + currentDate,e);
+            throw new MyMoviesExceptions("Error retrieving all movies where rating <= 3 and LastView " + currentDate,e);
         }
 
         return movies;
