@@ -26,7 +26,7 @@
                   <Insets left="5.0" />
                </VBox.margin></TextField>
                 <Label text="Categories" textFill="WHITE" />
-                <ListView fx:id="lvCategories" prefHeight="179.0" prefWidth="360.0" style="-fx-background-color: #6c6179; -fx-region-background: #6c6179;" styleClass="listView">
+                <ListView fx:id="lvCategories" prefHeight="179.0" prefWidth="360.0" style="-fx-background-color: #6c6179;" styleClass="listView">
                <VBox.margin>
                   <Insets left="5.0" />
                </VBox.margin></ListView>
