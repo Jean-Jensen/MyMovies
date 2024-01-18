@@ -280,9 +280,6 @@ Button:hover {
         -fx-background-color: #5E17EB;
         -fx-background-radius: 10;
         -fx-padding: 5px;
-        -fx-effect: dropshadow(gaussian, #917cb9, 20, 0, 0, 0);
-
-
     }
 .progressSlider .track {
     -fx-background-color: #cfbed7;

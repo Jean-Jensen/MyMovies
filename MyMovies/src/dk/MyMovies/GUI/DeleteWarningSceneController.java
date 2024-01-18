@@ -29,6 +29,7 @@ public class DeleteWarningSceneController implements Initializable {
     @FXML
     private TableColumn<Movie, Double> colRating;
     private BLLMovie bllMov = new BLLMovie();
+    private AppController controller;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -44,23 +45,28 @@ public class DeleteWarningSceneController implements Initializable {
         ObservableList<Movie> value = FXCollections.observableArrayList();
         try {
             value.setAll(bllMov.getUselessMovies());
-            System.out.println("weeeeeee");
         } catch (MyMoviesExceptions e) {
             throw new RuntimeException(e);
         }
         tblMov.setItems(value);
     }
 
+    public void setAppController(AppController control){
+        controller = control;
+    }
+
     public void deleteAllUseless(ActionEvent actionEvent) throws MyMoviesExceptions {
         bllMov.deleteAllUselessMovies();
+        controller.displayMovies();
         closeWindow(actionEvent);
     }
 
-    public void deleteSelected(ActionEvent actionEvent) {
+    public void deleteSelected(ActionEvent actionEvent) throws MyMoviesExceptions {
         Movie selected = tblMov.getSelectionModel().getSelectedItem();
         if(selected != null){
             bllMov.deleteMovie(selected.getId());
         }
+        controller.displayMovies();
     }
 
     public void closeWindow(ActionEvent actionEvent) {
