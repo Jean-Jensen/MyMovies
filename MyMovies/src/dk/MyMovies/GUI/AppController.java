@@ -13,7 +13,6 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -26,7 +25,6 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.StackPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
@@ -522,13 +520,6 @@ public class AppController implements Initializable {
     }
 
 
-    public void Reset(ActionEvent actionEvent) {
-        if(player.getStatus() != MediaPlayer.Status.READY){
-            player.seek(Duration.ZERO);
-            progressSlider.setValue(0);
-        }
-    }
-
     public void setMediaPlayer(MouseEvent mouseEvent) {
         Movie selected = tblMovie.getSelectionModel().getSelectedItem();
         if(selected !=null){
@@ -667,25 +658,6 @@ public class AppController implements Initializable {
         }
     }
 
-    /*
-    private List<CatMovConnection> filterByNameAndOrRating(List<CatMovConnection> originalList, String searchText){
-        List<CatMovConnection> filteredList = new ArrayList<>();
-        for (CatMovConnection item : originalList) {
-            if(checkRating.isSelected()){
-                if(item.getName().toLowerCase().contains(searchText)
-                        && item.getRating() == Double.parseDouble(lblSliderValue.getText())){
-                    filteredList.add(item);
-                }
-            } else {
-                if (item.getName().toLowerCase().contains(searchText)) {
-                    filteredList.add(item);
-                }
-            }
-        }
-
-        return filteredList;
-    }
-     */
 
     //////////////////////////////////////////////////////////
     ////////////////////Right Click Menu//////////////////////
